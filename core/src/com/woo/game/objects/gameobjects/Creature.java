@@ -3,6 +3,8 @@ package com.woo.game.objects.gameobjects;
 import java.util.HashMap;
 
 public class Creature extends GameObject {
+    public String type = "Creature";
+
     public double health;
     public double healthMax;
     public double energy;
@@ -10,7 +12,7 @@ public class Creature extends GameObject {
     public double secondaryResource;
     public double secondaryResourceMax;
     public Creature target;
-
+    //TODO:GCD, ABILITIES,...
 
 
     public int level;

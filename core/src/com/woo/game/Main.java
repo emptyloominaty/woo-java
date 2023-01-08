@@ -10,10 +10,8 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-
-
+import com.woo.game.objects.gameobjects.GOControl;
 
 
 public class Main extends ApplicationAdapter {
@@ -34,7 +32,12 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void create () {
 
+		GOControl goControl = new GOControl();
+		goControl.reset();
 
+
+
+		//---------------------------------------------------------------------------
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 
