@@ -3,7 +3,7 @@ package com.woo.game.objects.gameobjects;
 import java.util.HashMap;
 
 public class Creature extends GameObject {
-    public String type = "Creature";
+    public String type;
 
     public double health;
     public double healthMax;
@@ -21,8 +21,8 @@ public class Creature extends GameObject {
 
     public HashMap<String, Double> stats = new HashMap<>();
 
-    Creature(String name, String description, boolean solid, boolean interactable, double x, double y, String spritePath) {
-        super(name, description, solid, interactable, x, y, spritePath);
+    public Creature(String name, String description, boolean solid, boolean interactable, double x, double y, String spritePath) {
+        super(name, description, solid, interactable, x, y, spritePath,"Creature");
 
 
         this.stats.put("haste", 10.0); //....

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.woo.game.objects.gameobjects.Creature;
 import com.woo.game.objects.gameobjects.GOControl;
 
 
@@ -35,6 +36,14 @@ public class Main extends ApplicationAdapter {
 		GOControl goControl = new GOControl();
 		goControl.reset();
 
+		Creature testCreature = new Creature("test","test",false,false,50,40,"");
+		goControl.addCreature(testCreature);
+		Creature testCreature2 = new Creature("test","test",false,false,50,40,"");
+		goControl.addCreature(testCreature2);
+		testCreature.test();
+		testCreature2.test();
+		goControl.removeGameObject(0);
+		testCreature.test();
 
 
 		//---------------------------------------------------------------------------
