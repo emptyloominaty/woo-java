@@ -50,9 +50,62 @@ public class GOControl {
         creatures.get(id).updateTypeId(id);
     }
 
-    //TODO: addSpell
-    //TODO: addItem
-    //TODO: addWorldObject
+    //goControl.addSpell(new Spell());
+    public void addSpell(Spell object) {
+        int id;
+        if (spellsFree.size()>0) {
+            int idF = spellsFree.size()-1;
+            id = spellsFree.get(idF);
+            spellsFree.remove(idF);
+        } else {
+            id = spells.size();
+        }
+        if (spells.size()<=id) {
+            spells.add(object);
+        } else {
+            spells.set(id,object);
+        }
+        addGameObject(object);
+        spells.get(id).updateTypeId(id);
+    }
+
+    //goControl.addItem(new Item());
+    public void addItem(Item object) {
+        int id;
+        if (itemsFree.size()>0) {
+            int idF = itemsFree.size()-1;
+            id = itemsFree.get(idF);
+            itemsFree.remove(idF);
+        } else {
+            id = items.size();
+        }
+        if (items.size()<=id) {
+            items.add(object);
+        } else {
+            items.set(id,object);
+        }
+        addGameObject(object);
+        items.get(id).updateTypeId(id);
+    }
+
+    //goControl.addWorldObject(new WorldObject());
+    public void addWorldObject(WorldObject object) {
+        int id;
+        if (worldObjectsFree.size()>0) {
+            int idF = worldObjectsFree.size()-1;
+            id = worldObjectsFree.get(idF);
+            worldObjectsFree.remove(idF);
+        } else {
+            id = worldObjects.size();
+        }
+        if (worldObjects.size()<=id) {
+            worldObjects.add(object);
+        } else {
+            worldObjects.set(id,object);
+        }
+        addGameObject(object);
+        worldObjects.get(id).updateTypeId(id);
+    }
 
 
     private void addGameObject(GameObject object) {
@@ -78,5 +131,69 @@ public class GOControl {
         gameObjectsFree.add(id);
     }
 
+    //--------------------------------------------------------------------------------------------
+   /* public void addCreature(Creature creature) {
+        addObject(creature, creaturesFree, creatures);
+    }
+
+    public void addSpell(Spell spell) {
+        addObject(spell, spellsFree, spells);
+    }
+
+    public <T> void addObject(T object, ArrayList<Integer> freeIds, ArrayList<T> objects) {
+        int id;
+        if (freeIds.size() > 0) {
+            int idF = freeIds.size() - 1;
+            id = freeIds.get(idF);
+            freeIds.remove(idF);
+        } else {
+            id = objects.size();
+        }
+        if (objects.size() <= id) {
+            objects.add(object);
+        } else {
+            objects.set(id, object);
+        }
+        addGameObject((GameObject) object);
+        objects.get(id).updateTypeId(id); //<--???
+    }*/
+    //--------------------------------------------------------------------------------------------
+    /*
+    private void addObjectHelper(Object object, ArrayList<Integer> freeIds, ArrayList<Object> objects) {
+    int id;
+    if (freeIds.size() > 0) {
+        int idF = freeIds.size() - 1;
+        id = freeIds.get(idF);
+        freeIds.remove(idF);
+    } else {
+        id = objects.size();
+    }
+    if (objects.size() <= id) {
+        objects.add(object);
+    } else {
+        objects.set(id, object);
+    }
+    addGameObject(object);
+}
+
+public void addCreature(Creature creature) {
+    addObjectHelper(creature, creaturesFree, creatures);
+    creature.updateTypeId(creature.getTypeId());
+}
+
+public void addSpell(Spell spell) {
+    addObjectHelper(spell, spellsFree, spells);
+    spell.updateTypeId(spell.getTypeId());
+}
+
+public void addItem(Item item) {
+    addObjectHelper(item, itemsFree, items);
+    item.updateTypeId(item.getTypeId());
+}
+
+public void addWorldObject(WorldObject worldObject) {
+    addObjectHelper(worldObject, worldObjectsFree, worldObjects);
+    worldObject.updateTypeId(worldObject.getTypeId());
+}*/
 
 }

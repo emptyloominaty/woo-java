@@ -11,8 +11,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.woo.game.objects.gameobjects.Creature;
-import com.woo.game.objects.gameobjects.GOControl;
+
+import com.woo.game.objects.gameobjects.*;
 
 
 public class Main extends ApplicationAdapter {
@@ -36,14 +36,29 @@ public class Main extends ApplicationAdapter {
 		GOControl goControl = new GOControl();
 		goControl.reset();
 
+		Creature player = new Creature("Player","",false,false,0,0,""); //TODO:Player Class
+		goControl.addCreature(player);
+		//--Test
 		Creature testCreature = new Creature("test","test",false,false,50,40,"");
 		goControl.addCreature(testCreature);
-		Creature testCreature2 = new Creature("test","test",false,false,50,40,"");
+		Creature testCreature2 = new Creature("test2","test",false,false,50,40,"");
 		goControl.addCreature(testCreature2);
-		testCreature.test();
-		testCreature2.test();
-		goControl.removeGameObject(0);
-		testCreature.test();
+		Spell testSpell = new Spell("test3","test",false,false,50,40,"");
+		goControl.addSpell(testSpell);
+		Item testItem = new Item("test4","test",false,false,50,40,"");
+		goControl.addItem(testItem);
+		WorldObject testWorldObject = new WorldObject("test5","test",false,false,50,40,"");
+		goControl.addWorldObject(testWorldObject);
+		Creature testCreature3 = new Creature("test6","test",false,false,50,40,"");
+		goControl.addCreature(testCreature3);
+
+		goControl.removeGameObject(1);
+		for (int i = 0; i<goControl.gameObjects.size(); i++) {
+			System.out.println(i+": ");
+			goControl.gameObjects.get(i).test();
+
+		}
+		//--End Test
 
 
 		//---------------------------------------------------------------------------
@@ -85,6 +100,8 @@ public class Main extends ApplicationAdapter {
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 1);
 		float delta = Gdx.graphics.getDeltaTime();
+		GlobalVars.delta = delta;
+		GlobalVars.fps = 1/delta;
 
 		handleInput();
 		cam.update();

@@ -1,6 +1,6 @@
 package com.woo.game.objects.gameobjects;
 
-import com.woo.game.Init;
+import com.woo.game.GlobalVars;
 
 public class GameObject {
     public String name;
@@ -18,7 +18,7 @@ public class GameObject {
     public int sizeX = 64;
     public int sizeY = 64;
 
-    public int rotation = 0;
+    public double direction = 0;
 
     public double x;
     public double y;
@@ -48,7 +48,7 @@ public class GameObject {
     }
 
     public void test() {
-        System.out.println(name+" "+type+" "+destroyed);
+        System.out.println(name+" | "+type+" | "+destroyed+" | id:"+id+" | typeId:"+typeId);
     }
 
     public void updateId(int id) {
@@ -58,4 +58,16 @@ public class GameObject {
     public void updateTypeId(int id) {
         this.typeId = id;
     }
+
+    public void move(double moveSpeed) {
+        double speed = (moveSpeed*GlobalVars.pxToMeter) * GlobalVars.delta;
+        double angleInRadian = (direction-180) / 180 * Math.PI;
+
+        double vx = Math.sin(angleInRadian) * speed;
+        double vy = Math.cos(angleInRadian) * speed;
+
+        x += vx;
+        y += vy;
+    }
+
 }
