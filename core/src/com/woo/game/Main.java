@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.woo.game.objects.gameobjects.*;
+import com.woo.game.objects.gameobjects.creatures.Player;
 
 
 public class Main extends ApplicationAdapter {
@@ -32,16 +33,17 @@ public class Main extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		GlobalVars.init();
 
 		GOControl goControl = new GOControl();
 		goControl.reset();
 
-		Creature player = new Creature("Player","",false,false,0,0,""); //TODO:Player Class
+		Player player = new Player("Player","",false,false,0,0,"",0);
 		goControl.addCreature(player);
 		//--Test
-		Creature testCreature = new Creature("test","test",false,false,50,40,"");
+		Creature testCreature = new Creature("test","test",false,false,50,40,"",1);
 		goControl.addCreature(testCreature);
-		Creature testCreature2 = new Creature("test2","test",false,false,50,40,"");
+		Creature testCreature2 = new Creature("test2","test",false,false,50,40,"",2);
 		goControl.addCreature(testCreature2);
 		Spell testSpell = new Spell("test3","test",false,false,50,40,"");
 		goControl.addSpell(testSpell);
@@ -49,7 +51,7 @@ public class Main extends ApplicationAdapter {
 		goControl.addItem(testItem);
 		WorldObject testWorldObject = new WorldObject("test5","test",false,false,50,40,"");
 		goControl.addWorldObject(testWorldObject);
-		Creature testCreature3 = new Creature("test6","test",false,false,50,40,"");
+		Creature testCreature3 = new Creature("test6","test",false,false,50,40,"",1);
 		goControl.addCreature(testCreature3);
 
 		goControl.removeGameObject(1);
@@ -58,6 +60,9 @@ public class Main extends ApplicationAdapter {
 			goControl.gameObjects.get(i).test();
 
 		}
+		Player testxD = (Player) goControl.creatures.get(0);//.testPlayer();
+		testxD.testPlayer();
+		goControl.creatures.get(0).test();
 		//--End Test
 
 
