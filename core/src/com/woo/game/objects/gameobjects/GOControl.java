@@ -3,22 +3,22 @@ package com.woo.game.objects.gameobjects;
 import java.util.ArrayList;
 
 public class GOControl {
-    public ArrayList<Integer> gameObjectsFree;
-    public ArrayList<GameObject> gameObjects;
+    public static ArrayList<Integer> gameObjectsFree;
+    public static ArrayList<GameObject> gameObjects;
 
-    public ArrayList<Integer> creaturesFree;
-    public ArrayList<Creature> creatures;
+    public static ArrayList<Integer> creaturesFree;
+    public static ArrayList<Creature> creatures;
 
-    public ArrayList<Integer> itemsFree;
-    public ArrayList<Item> items;
+    public static ArrayList<Integer> itemsFree;
+    public static ArrayList<Item> items;
 
-    public ArrayList<Integer> worldObjectsFree;
-    public ArrayList<WorldObject> worldObjects;
+    public static ArrayList<Integer> worldObjectsFree;
+    public static ArrayList<WorldObject> worldObjects;
 
-    public ArrayList<Integer> spellsFree;
-    public ArrayList<Spell> spells;
+    public static ArrayList<Integer> spellsFree;
+    public static ArrayList<Spell> spells;
 
-    public void reset() {
+    public static void reset() {
         gameObjects = new ArrayList<GameObject>();
         gameObjectsFree = new ArrayList<Integer>();
         creatures = new ArrayList<Creature>();
@@ -32,7 +32,7 @@ public class GOControl {
     }
 
     //goControl.addCreature(new Creature());
-    public void addCreature(Creature object) {
+    public static void addCreature(Creature object) {
         int id;
         if (creaturesFree.size()>0) {
             int idF = creaturesFree.size()-1;
@@ -51,7 +51,7 @@ public class GOControl {
     }
 
     //goControl.addSpell(new Spell());
-    public void addSpell(Spell object) {
+    public static void addSpell(Spell object) {
         int id;
         if (spellsFree.size()>0) {
             int idF = spellsFree.size()-1;
@@ -70,7 +70,7 @@ public class GOControl {
     }
 
     //goControl.addItem(new Item());
-    public void addItem(Item object) {
+    public static void addItem(Item object) {
         int id;
         if (itemsFree.size()>0) {
             int idF = itemsFree.size()-1;
@@ -89,7 +89,7 @@ public class GOControl {
     }
 
     //goControl.addWorldObject(new WorldObject());
-    public void addWorldObject(WorldObject object) {
+    public static void addWorldObject(WorldObject object) {
         int id;
         if (worldObjectsFree.size()>0) {
             int idF = worldObjectsFree.size()-1;
@@ -108,7 +108,7 @@ public class GOControl {
     }
 
 
-    private void addGameObject(GameObject object) {
+    private static void addGameObject(GameObject object) {
         int id;
         if (gameObjectsFree.size()>0) {
             int idF = gameObjectsFree.size()-1;
@@ -126,7 +126,7 @@ public class GOControl {
         gameObjects.get(id).updateId(id);
     }
 
-    public void removeGameObject(int id) {
+    public static void removeGameObject(int id) {
         gameObjects.get(id).destroyed = true;
         gameObjectsFree.add(id);
     }
