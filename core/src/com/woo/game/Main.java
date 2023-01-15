@@ -3,14 +3,13 @@ package com.woo.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import com.woo.game.objects.gameobjects.*;
 import com.woo.game.objects.gameobjects.creatures.Player;
@@ -24,19 +23,25 @@ public class Main extends ApplicationAdapter {
 	float fireX;
 	float fireY;
 
-	final int WORLD_WIDTH = 5000;
-	final int WORLD_HEIGHT = 5000;
+	final int WORLD_WIDTH = 4096;
+	final int WORLD_HEIGHT = 4096;
 	OrthographicCamera cam;
 	Sprite mapSprite;
 
 	float rotationSpeed = 0.5f;
+
+	public static Player player;
+
+	BitmapFont font;
+	ShapeDrawer shapeDrawer;
 	
 	@Override
 	public void create () {
+
 		GlobalVars.init();
 		GOControl.reset();
 
-		Player player = new Player("Player","",false,false,0,0,"",0);
+		player = new Player("Player","",false,false,250,250,"",0);
 		GOControl.addCreature(player);
 		//--Test
 		Creature testCreature = new Creature("test","test",false,false,50,40,"",1);
@@ -67,6 +72,8 @@ public class Main extends ApplicationAdapter {
 		//---------------------------------------------------------------------------
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
+		font = new BitmapFont();
+
 
 		test = new ParticleEffect();
 		test.load(Gdx.files.internal("particles/fire.particle"),Gdx.files.internal("textures"));
@@ -83,6 +90,8 @@ public class Main extends ApplicationAdapter {
 		cam = new OrthographicCamera(800, 800 * (h / w));
 		cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
 		cam.update();
+
+		shapeDrawer = new ShapeDrawer(batch, mapSprite);
 
 		ParticleEmitter emitter = test.getEmitters().first();
 
@@ -106,8 +115,17 @@ public class Main extends ApplicationAdapter {
 		GlobalVars.delta = delta;
 		GlobalVars.fps = 1/delta;
 
-		handleInput.handleInput();
+		//input
+		GameInput.handleInput();
 		handleInput();
+
+		//camera
+		cam.zoom = MathUtils.clamp(GlobalVars.camZoom, 0.1f, 4000/cam.viewportWidth);
+		float effectiveViewportWidth = cam.viewportWidth * cam.zoom;
+		float effectiveViewportHeight = cam.viewportHeight * cam.zoom;
+		cam.position.x = (float) MathUtils.clamp(player.x, effectiveViewportWidth / 2f, 4000 - effectiveViewportWidth / 2f);
+		cam.position.y = (float) MathUtils.clamp(player.y, effectiveViewportHeight / 2f, 4000 - effectiveViewportHeight / 2f);
+
 
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
@@ -120,6 +138,15 @@ public class Main extends ApplicationAdapter {
 		//batch.draw(img, 0, 0);
 		mapSprite.draw(batch);
 		test.draw(batch);
+		font.draw(batch, "x:"+Math.round(player.x)+" y:"+Math.round(player.y)+" dir:"+Math.round(player.direction)+"TEST:"+cam.zoom, 50, 50);
+
+		//player
+		shapeDrawer.setColor(Color.BLUE);
+		shapeDrawer.filledCircle(player.x, player.y, 14);
+		shapeDrawer.setColor(Color.RED);
+		//TODO:
+		shapeDrawer.line(player.x, player.y, (float) (player.x+(7*Math.cos(player.direction))), (float) (player.y+(7*Math.sin(player.direction))));
+
 		batch.end();
 
 		if (test.isComplete()) {
@@ -129,7 +156,7 @@ public class Main extends ApplicationAdapter {
 	}
 
 	private void handleInput() {
-		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+		/*if (Gdx.input.isKeyPressed(Input.Keys.A)) {
 			cam.zoom += 0.02;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
@@ -160,7 +187,7 @@ public class Main extends ApplicationAdapter {
 		float effectiveViewportHeight = cam.viewportHeight * cam.zoom;
 
 		cam.position.x = MathUtils.clamp(cam.position.x, effectiveViewportWidth / 2f, 4000 - effectiveViewportWidth / 2f);
-		cam.position.y = MathUtils.clamp(cam.position.y, effectiveViewportHeight / 2f, 4000 - effectiveViewportHeight / 2f);
+		cam.position.y = MathUtils.clamp(cam.position.y, effectiveViewportHeight / 2f, 4000 - effectiveViewportHeight / 2f);*/
 	}
 
 	@Override

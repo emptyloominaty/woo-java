@@ -20,15 +20,15 @@ public class GameObject {
 
     public double direction = 0;
 
-    public double x;
-    public double y;
+    public float x;
+    public float y;
 
 
     public int id = 0;
     public int typeId = 0;
     public String type;
 
-    GameObject(String name, String description, boolean solid, boolean interactable, double x, double y, String spritePath, String type) {
+    GameObject(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, String type) {
         this.name = name;
         this.description = description;
         this.solid = solid;
@@ -57,17 +57,6 @@ public class GameObject {
 
     public void updateTypeId(int id) {
         this.typeId = id;
-    }
-
-    public void move(double moveSpeed) {
-        double speed = (moveSpeed*GlobalVars.pxToMeter) * GlobalVars.delta;
-        double angleInRadian = (direction-180) / 180 * Math.PI;
-
-        double vx = Math.sin(angleInRadian) * speed;
-        double vy = Math.cos(angleInRadian) * speed;
-
-        x += vx;
-        y += vy;
     }
 
 }
