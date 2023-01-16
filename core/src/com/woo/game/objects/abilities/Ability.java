@@ -3,57 +3,58 @@ package com.woo.game.objects.abilities;
 import com.woo.game.objects.gameobjects.Creature;
 
 public class Ability {
-/*    String name;
-    double gcd;
-    double cd;
-    double maxCd;
-    boolean channeling;
-    boolean casting;
-    boolean canMove;
-    String type; //fire,frost,physical,nature
-    int charges = 1;
-    int maxCharges = 1;
+    public String name;
+    public double gcd;
+    public double cd;
+    public double maxCd;
+    public boolean channeling;
+    public boolean casting;
+    public boolean canMove;
+    public double castTime = 0;
+    public String type; //fire,frost,physical,nature
+    public int charges = 1;
+    public int maxCharges = 1;
     //TODO: effects arraylist? custom object?
-    boolean noGcd = false;
+    public boolean noGcd = false;
 
-    boolean poison = false;
-    boolean bleed = false;
+    public boolean poison = false;
+    public boolean bleed = false;
 
-    boolean hasteCd = false;
-    boolean hasteGcd = true;
-    int range = 5;
+    public boolean hasteCd = false;
+    public boolean hasteGcd = true;
+    public int range = 5;
 
-    double cost = 0;
-    int secCost = 0;
+    public double cost = 0;
+    public int secCost = 0;
 
-    double spellPower = 0;
-    double duration = 0;
+    public double spellPower = 0;
+    public double duration = 0;
 
     //prevents multiple uses in a row (nogcd) (nocd/2charges)
-    double abilityCd = 0.2;
-    double abilityMaxCd = 0.2;
+    public double abilityCd = 0.2;
+    public double abilityMaxCd = 0.2;
 
-    boolean canCastWhileRooted = true;
+    public boolean canCastWhileRooted = true;
 
 
-    boolean canUse = true;
-    boolean requiresStealth = false;
-    boolean dontBreakStealth = false;
-    boolean aoe = false;
-    boolean lessThanHealth = false;
+    public boolean canUse = true;
+    public boolean requiresStealth = false;
+    public boolean dontBreakStealth = false;
+    public boolean aoe = false;
+    public boolean lessThanHealth = false;
 
-    boolean dispellable = false;
-    boolean hiddenBuff = false;
-    boolean permanentBuff = false;
+    public boolean dispellable = false;
+    public boolean hiddenBuff = false;
+    public boolean permanentBuff = false;
 
-    boolean talent = false;
-    boolean talentSelected = true;
+    public boolean talent = false;
+    public boolean talentSelected = true;
 
 
     //tooltip
-    boolean mastery = false;
-    boolean hiddenFromSpellBook = false;
-    boolean passive = false;
+    public boolean mastery = false;
+    public boolean hiddenFromSpellBook = false;
+    public boolean passive = false;
 
     public Ability() {
 
@@ -71,9 +72,9 @@ public class Ability {
         return true;
     }
 
-    public void runBuff(Creature target, TODO Buff,int id) {
+    /*public void runBuff(Creature target, TODO Buff,int id) {
 
-    }
+    }*/
 
     public void endBuff(Creature target) {
 
@@ -95,7 +96,7 @@ public class Ability {
         return false;
     }
 
-    public boolean checkStart(Creature caster, double cost, int secCost) {
+    /*public boolean checkStart(Creature caster, double cost, int secCost) {
         if (talent != talentSelected) {
             return false;
         }
@@ -106,7 +107,7 @@ public class Ability {
             return true;
         }
         return false;
-    }
+    }*/
 
     public boolean checkRooted(Creature caster) {
         if (!canCastWhileRooted && caster.isRooted) {
@@ -159,7 +160,7 @@ public class Ability {
         return false;
     }
 
-    public boolean checkDistance(Creature caster, Creature target, int rangeP,boolean dontShow) { //range = 0, dontShow = false
+    /*public boolean checkDistance(Creature caster, Creature target, int rangeP,boolean dontShow) { //range = 0, dontShow = false
         if (rangeP===0) {
             rangeP = this.range;
         }
@@ -175,6 +176,6 @@ public class Ability {
 
     public boolean canSpellQueue(Creature caster) {
         return (caster==player && caster.gcd<spellQueueWindow && (caster.gcd>0 || caster.isCasting));
-    }
-*/
+    }*/
+
 }

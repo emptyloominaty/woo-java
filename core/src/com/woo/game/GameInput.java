@@ -8,10 +8,10 @@ import static com.woo.game.Main.player;
 public class GameInput {
     public static void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player.move(10);
+            player.move(10,false,0,0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player.move(-10);
+            player.move(-10,false,0,0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             player.rotate(player.direction-2);

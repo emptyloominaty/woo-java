@@ -1,14 +1,14 @@
 package com.woo.game.objects;
 
 public class Setting {
-    String category;
-    int[] values;
-    String[] names;
-    String name;
-    String type;
-    double sliderMax;
-    double sliderMin;
-    double sliderStep;
+    public String category;
+    public int[] values;
+    public String[] names;
+    public String name;
+    public String type; //slider/button
+    public double sliderMax;
+    public double sliderMin;
+    public double sliderStep;
 
     public Setting( String category, int[] values, String[] names, String name, String type, double sliderMax, double sliderMin, double sliderStep) {
         this.category = category;

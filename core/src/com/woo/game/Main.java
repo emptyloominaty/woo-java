@@ -41,12 +41,13 @@ public class Main extends ApplicationAdapter {
 		GlobalVars.init();
 		GOControl.reset();
 
-		player = new Player("Player","",false,false,250,250,"",0);
+		player = new Player("Player","",false,false,250,250,"",0,"FireMage");
 		GOControl.addCreature(player);
+
 		//--Test
-		Creature testCreature = new Creature("test","test",false,false,50,40,"",1);
+		Creature testCreature = new Creature("test","test",false,false,50,40,"",1,"test");
 		GOControl.addCreature(testCreature);
-		Creature testCreature2 = new Creature("test2","test",false,false,50,40,"",2);
+		Creature testCreature2 = new Creature("test2","test",false,false,50,40,"",2,"test");
 		GOControl.addCreature(testCreature2);
 		Spell testSpell = new Spell("test3","test",false,false,50,40,"");
 		GOControl.addSpell(testSpell);
@@ -54,7 +55,7 @@ public class Main extends ApplicationAdapter {
 		GOControl.addItem(testItem);
 		WorldObject testWorldObject = new WorldObject("test5","test",false,false,50,40,"");
 		GOControl.addWorldObject(testWorldObject);
-		Creature testCreature3 = new Creature("test6","test",false,false,50,40,"",1);
+		Creature testCreature3 = new Creature("test6","test",false,false,50,40,"",1,"test");
 		GOControl.addCreature(testCreature3);
 
 		GOControl.removeGameObject(1);
@@ -73,7 +74,6 @@ public class Main extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		font = new BitmapFont();
-
 
 		test = new ParticleEffect();
 		test.load(Gdx.files.internal("particles/fire.particle"),Gdx.files.internal("textures"));
@@ -110,7 +110,6 @@ public class Main extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(0, 0, 0, 1);
 		float delta = Gdx.graphics.getDeltaTime();
 		GlobalVars.delta = delta;
 		GlobalVars.fps = 1/delta;
@@ -118,6 +117,11 @@ public class Main extends ApplicationAdapter {
 		//input
 		GameInput.handleInput();
 		handleInput();
+
+		//TODO: Main?()
+
+
+		ScreenUtils.clear(0, 0, 0, 1);
 
 		//camera
 		cam.zoom = MathUtils.clamp(GlobalVars.camZoom, 0.1f, 4000/cam.viewportWidth);
@@ -138,14 +142,15 @@ public class Main extends ApplicationAdapter {
 		//batch.draw(img, 0, 0);
 		mapSprite.draw(batch);
 		test.draw(batch);
-		font.draw(batch, "x:"+Math.round(player.x)+" y:"+Math.round(player.y)+" dir:"+Math.round(player.direction)+"TEST:"+cam.zoom, 50, 50);
+		font.draw(batch, "x:"+Math.round(player.x)+" y:"+Math.round(player.y)+" dir:"+Math.round(player.direction)+"TEST:"+cam.zoom, player.x, player.y+30);
+		font.draw(batch, "fps:"+GlobalVars.fps, player.x, player.y+50);
 
 		//player
 		shapeDrawer.setColor(Color.BLUE);
 		shapeDrawer.filledCircle(player.x, player.y, 14);
-		shapeDrawer.setColor(Color.RED);
-		//TODO:
-		shapeDrawer.line(player.x, player.y, (float) (player.x+(7*Math.cos(player.direction))), (float) (player.y+(7*Math.sin(player.direction))));
+		shapeDrawer.setColor(Color.WHITE);
+		double playerDirectionRadian = (player.direction-180) / 180 * Math.PI;
+		shapeDrawer.line(player.x, player.y, (float) (player.x+(10*Math.sin(playerDirectionRadian))), (float) (player.y+(10*Math.cos(playerDirectionRadian))));
 
 		batch.end();
 
@@ -194,6 +199,7 @@ public class Main extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		mapSprite.getTexture().dispose();
+		//TODO:
 		//img.dispose();
 	}
 }
