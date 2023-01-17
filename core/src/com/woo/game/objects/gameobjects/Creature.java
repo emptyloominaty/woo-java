@@ -37,6 +37,9 @@ public class Creature extends GameObject {
     public boolean isChanneling = false;
     public boolean canMoveWhileCasting = false;
     public boolean isDead = false;
+    public boolean isInterrupted = false;
+
+
     public double gcd = 0;
 
     public Map<String, Object> channeling = new HashMap<>();
@@ -100,11 +103,6 @@ public class Creature extends GameObject {
 
         double vx = Math.sin(angleInRadian) * speed;
         double vy = Math.cos(angleInRadian) * speed;
-
-        //x += vx;
-        //y += vy;
-
-
 
         if (this.isCasting && this.abilities.get(this.casting.get("name")).castTime>0 && !this.canMoveWhileCasting) {
             this.isCasting = false;
