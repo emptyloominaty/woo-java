@@ -2,22 +2,61 @@ package com.woo.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.woo.game.objects.Keybinds;
+import com.woo.game.objects.Settings;
 
+import static com.woo.game.Main.mouseInWorld2D;
 import static com.woo.game.Main.player;
 
+
 public class GameInput {
+    static boolean strafing = false;
     public static void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+
+        //System.out.println("x: "+Gdx.input.getX()+" y:"+Gdx.input.getY()); //<-- mouse on screen
+
+
+
+        if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
+            strafing = true;
+        } else {
+            strafing = false;
+        }
+
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+        }
+
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)){
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Up")[0]))) {
             player.move(10,false,0,0);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player.move(-10,false,0,0);
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Down")[0]))) {
+            player.move(-7,false,0,0);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.rotate(player.direction-2);
+
+        //TODO:FIX SPEED ("strafe")
+        if (Settings.map.get("Character Movement").value==1 || strafing) {
+            player.rotate(GlobalFunctions.getDirection(player.x,player.y,mouseInWorld2D.x,mouseInWorld2D.y));
+            //WOO
+            if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Left")[0]))) {
+                player.move(10,false,2,0);
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Right")[0]))) {
+                player.move(10,false,1,0);
+            }
+        } else {
+            //WOW
+            if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Left")[0]))) {
+                player.rotate(player.direction-2);
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Right")[0]))) {
+                player.rotate(player.direction+2);
+            }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.rotate(player.direction+2);
-        }
+
+
+
     }
 }

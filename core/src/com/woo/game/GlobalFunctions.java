@@ -33,4 +33,8 @@ public class GlobalFunctions {
         double b = target1.y - target2.y;
         return (Math.sqrt( a*a + b*b))/GlobalVars.pxToMeter;
     }
+    //-----------
+    public static double getDirection(float x1, float y1, float x2, float y2) {
+        return 360-(Math.atan2(y2 - y1, x2 - x1)* (180 / Math.PI)+90);
+    }
 }

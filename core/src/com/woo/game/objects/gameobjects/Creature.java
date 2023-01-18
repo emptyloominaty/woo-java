@@ -12,16 +12,16 @@ public class Creature extends GameObject {
 
     public double health;
     public double healthMax;
+    public String resourceName;
     public double energy;
     public double energyMax;
+    public String secondaryResourceName;
     public double secondaryResource;
     public double secondaryResourceMax;
     public Creature target;
     public String creatureClass; // FireMage, FrostMage, Warrior, Ranger, // Rogue, Necromancer, Warlock, Paladin,
     //TODO:Inventory
     //TODO:Gear
-
-
 
     public int level;
     public long xp;
@@ -38,9 +38,12 @@ public class Creature extends GameObject {
     public boolean canMoveWhileCasting = false;
     public boolean isDead = false;
     public boolean isInterrupted = false;
-
+    public boolean cantDie = false;
 
     public double gcd = 0;
+
+    public float mousePosX = 0;
+    public float mousePosY = 0;
 
     public Map<String, Object> channeling = new HashMap<>();
     public Map<String, Object> casting = new HashMap<>();
@@ -74,10 +77,94 @@ public class Creature extends GameObject {
         casting.put("time2", 0.0);
     }
 
-
-
     public void updateStats() {
         health = stats.get("Stamina")*5;
+    }
+
+    public void main() {
+        //TODO:Floating Texts?
+        //TODO:AI
+        //TODO:PETS?
+        //TODO:Resource
+
+        if (energy>energyMax) {
+            energy = energyMax;
+        }
+
+        if (this.gcd>0) {
+            this.gcd -= GlobalVars.delta;
+        }
+
+        //TODO:Ability Cds
+
+        if (this.isStunned) {
+            isCasting = false;
+            //isCasting2 = false;
+            isChanneling = false;
+            gcd = 0;
+        }
+
+        //TODO:casting ability
+
+        //TODO:channeling ability
+
+        //TODO:aggro(Enemy)
+
+        //---------------------------
+        //TODO:Reset
+        //healthMax = stats.get("stamina")*5 * increaseHealth;
+
+
+        //---------------------------
+        //TODO:buffs
+        //TODO:debuffs
+
+        //death
+        if (health<0) {
+            die();
+        }
+
+    }
+
+    public boolean die() {
+        if (cantDie) {
+            return false;
+        }
+        //TODO:floatingTexts.removeAll()
+        isDead = true;
+
+        //TODO:remove pets
+        //TODO:buffs.ability.endBuff()
+        //TODO:buffs.ability.onDeath()
+        //TODO:debuffs.ability.endBuff()
+        //TODO:debuffs.ability.onDeath()
+
+        //TODO:debuffs = [];
+        //TODO:buffs = [];
+
+        return true;
+    }
+
+    public void setMousePos(float x, float y) {
+        mousePosX = x;
+        mousePosY = y;
+    }
+
+    //TODO: useResource
+    //TODO: useSecondaryResource
+    //TODO: updateHealth?
+    //TODO: changeTalent
+
+    public boolean interrupt() {
+        if (this.isChanneling) {
+            this.isChanneling = false;
+            return true;
+        } else if (this.isCasting) {
+            this.isCasting = false;
+            //TODO:this.abilities[this.casting.name].setCd();
+            return true;
+        }
+        return false;
     }
 
     public void move(double val, boolean noInc, int strafe, double forceVal) {

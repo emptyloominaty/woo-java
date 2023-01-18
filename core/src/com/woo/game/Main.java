@@ -8,7 +8,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.woo.game.objects.Keybinds;
+import com.woo.game.objects.Settings;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import com.woo.game.objects.gameobjects.*;
@@ -34,12 +38,17 @@ public class Main extends ApplicationAdapter {
 
 	BitmapFont font;
 	ShapeDrawer shapeDrawer;
-	
+
+	public static Vector2 mouseInWorld2D = new Vector2();
+	public static Vector3 mouseInWorld3D = new Vector3();
+
 	@Override
 	public void create () {
-
 		GlobalVars.init();
 		GOControl.reset();
+
+		Settings.init();
+		Keybinds.init();
 
 		player = new Player("Player","",false,false,250,250,"",0,"FireMage");
 		GOControl.addCreature(player);
@@ -120,7 +129,6 @@ public class Main extends ApplicationAdapter {
 
 		//TODO: Main?()
 
-
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		//camera
@@ -133,7 +141,15 @@ public class Main extends ApplicationAdapter {
 
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
-		
+
+		//Mouse position in Game
+		mouseInWorld3D.x = Gdx.input.getX();
+		mouseInWorld3D.y = Gdx.input.getY();
+		mouseInWorld3D.z = 0;
+		cam.unproject(mouseInWorld3D);
+		mouseInWorld2D.x = mouseInWorld3D.x;
+		mouseInWorld2D.y = mouseInWorld3D.y;
+
 		//fireX-=delta*300;
 		test.setPosition(fireX,fireY);
 		test.update(delta);

@@ -9,8 +9,10 @@ public class Setting {
     public double sliderMax;
     public double sliderMin;
     public double sliderStep;
+    public int value;
+    public double sliderValue = 0;
 
-    public Setting( String category, int[] values, String[] names, String name, String type, double sliderMax, double sliderMin, double sliderStep) {
+    public Setting( String category, int[] values, String[] names, String name, String type, double sliderMax, double sliderMin, double sliderStep, int defaultValue) {
         this.category = category;
         this.values = values;
         this.names = names;
@@ -19,5 +21,11 @@ public class Setting {
         this.sliderMax = sliderMax;
         this.sliderMin = sliderMin;
         this.sliderStep = sliderStep;
+        if (this.type=="slider") {
+            this.sliderValue = defaultValue/1000;
+        }
+        this.value = defaultValue;
+
+
     }
 }
