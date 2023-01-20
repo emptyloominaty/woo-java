@@ -1,6 +1,8 @@
 package com.woo.game.objects.gameobjects.creatures;
 
+import com.badlogic.gdx.graphics.Color;
 import com.woo.game.objects.gameobjects.Creature;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Player extends Creature {
 
@@ -10,6 +12,16 @@ public class Player extends Creature {
 
     public void testPlayer() {
         System.out.println("--123--");
+    }
+
+    public void draw(ShapeDrawer shapeDrawer) {
+        if (!destroyed) {
+            shapeDrawer.setColor(Color.BLUE);
+            shapeDrawer.filledCircle(x, y, 14);
+            shapeDrawer.setColor(Color.WHITE);
+            double playerDirectionRadian = (direction-180) / 180 * Math.PI;
+            shapeDrawer.line(x, y, (float) (x+(10*Math.sin(playerDirectionRadian))), (float) (y+(10*Math.cos(playerDirectionRadian))));
+        }
     }
 
 }

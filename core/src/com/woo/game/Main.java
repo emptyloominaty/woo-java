@@ -3,6 +3,7 @@ package com.woo.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,15 +13,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.woo.game.objects.Keybinds;
+import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.Settings;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import com.woo.game.objects.gameobjects.*;
 import com.woo.game.objects.gameobjects.creatures.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Main extends ApplicationAdapter {
-	SpriteBatch batch;
+	public static SpriteBatch batch;
 	//Texture img;
 	ParticleEffect test;
 
@@ -30,7 +35,7 @@ public class Main extends ApplicationAdapter {
 	final int WORLD_WIDTH = 4096;
 	final int WORLD_HEIGHT = 4096;
 	OrthographicCamera cam;
-	Sprite mapSprite;
+	public static Sprite mapSprite;
 
 	float rotationSpeed = 0.5f;
 
@@ -42,6 +47,9 @@ public class Main extends ApplicationAdapter {
 	public static Vector2 mouseInWorld2D = new Vector2();
 	public static Vector3 mouseInWorld3D = new Vector3();
 
+	public static double[] debugPerf = new double[64];
+	public static String[] debug = new String[64];
+
 	@Override
 	public void create () {
 		GlobalVars.init();
@@ -50,21 +58,23 @@ public class Main extends ApplicationAdapter {
 		Settings.init();
 		Keybinds.init();
 
+		ParticleSystem.init();
+
 		player = new Player("Player","",false,false,250,250,"",0,"FireMage");
 		GOControl.addCreature(player);
 
 		//--Test
 		Creature testCreature = new Creature("test","test",false,false,50,40,"",1,"test");
 		GOControl.addCreature(testCreature);
-		Creature testCreature2 = new Creature("test2","test",false,false,50,40,"",2,"test");
+		Creature testCreature2 = new Creature("test2","test",false,false,150,40,"",2,"test");
 		GOControl.addCreature(testCreature2);
-		Spell testSpell = new Spell("test3","test",false,false,50,40,"");
+		Spell testSpell = new Spell("test3","test",false,false,500,40,"");
 		GOControl.addSpell(testSpell);
-		Item testItem = new Item("test4","test",false,false,50,40,"");
+		Item testItem = new Item("test4","test",false,false,450,40,"");
 		GOControl.addItem(testItem);
-		WorldObject testWorldObject = new WorldObject("test5","test",false,false,50,40,"");
+		WorldObject testWorldObject = new WorldObject("test5","test",false,false,250,40,"");
 		GOControl.addWorldObject(testWorldObject);
-		Creature testCreature3 = new Creature("test6","test",false,false,50,40,"",1,"test");
+		Creature testCreature3 = new Creature("test6","test",false,false,80,250,"",1,"test");
 		GOControl.addCreature(testCreature3);
 
 		GOControl.removeGameObject(1);
@@ -96,7 +106,7 @@ public class Main extends ApplicationAdapter {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 
-		cam = new OrthographicCamera(800, 800 * (h / w));
+		cam = new OrthographicCamera(1200, 1200 * (h / w));
 		cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
 		cam.update();
 
@@ -115,10 +125,44 @@ public class Main extends ApplicationAdapter {
 
 		fireX = Gdx.graphics.getWidth()/2f;
 		fireY = Gdx.graphics.getHeight()/2f;
+
+		//TEST
+		/*FileHandle file = Gdx.files.internal("test.txt");
+		if (Gdx.files.internal("test.txt").exists()) {
+			String text = file.readString();
+			System.out.println(text);
+		}*/
+		//TODO: Class + functions
+		FileHandle file = Gdx.files.local("woo.ini");
+		if (!Gdx.files.local("woo.ini").exists()) { // or reset = true
+			file.writeString("test=true\ntest2=10\nzoom=1.0f", false);
+		}
+
+		String text = file.readString();
+		String[] text2 = text.split("\n");
+		Map<String,String> text3 = new HashMap<String, String>();
+		for (int i = 0; i<text2.length; i++) {
+			String[] a = text2[i].split("=");
+			System.out.println(a[0]+"|"+a[1]);
+			if (a.length>1) {
+				text3.put(a[0],a[1]);
+			}
+		}
+
+		System.out.println(text3.toString());
+		System.out.println(text3.get("zoom"));
+		text3.put("zoom","0.8f");
+		//TODO:append+for loop ?
+		file.writeString("test="+text3.get("test")+"\ntest2="+text3.get("test2")+"\nzoom="+text3.get("zoom")+"", false);
+
+
+		//TEST
+
 	}
 
 	@Override
 	public void render () {
+		debugPerf[0] = System.currentTimeMillis();
 		float delta = Gdx.graphics.getDeltaTime();
 		GlobalVars.delta = delta;
 		GlobalVars.fps = 1/delta;
@@ -129,16 +173,16 @@ public class Main extends ApplicationAdapter {
 
 		//TODO: Main?()
 
+		debugPerf[30] = System.currentTimeMillis();
+		//Render Start
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		//camera
 		cam.zoom = MathUtils.clamp(GlobalVars.camZoom, 0.1f, 4000/cam.viewportWidth);
 		float effectiveViewportWidth = cam.viewportWidth * cam.zoom;
 		float effectiveViewportHeight = cam.viewportHeight * cam.zoom;
-		cam.position.x = (float) MathUtils.clamp(player.x, effectiveViewportWidth / 2f, 4000 - effectiveViewportWidth / 2f);
-		cam.position.y = (float) MathUtils.clamp(player.y, effectiveViewportHeight / 2f, 4000 - effectiveViewportHeight / 2f);
-
-
+		cam.position.x = (float) MathUtils.clamp(player.x, effectiveViewportWidth / 2f, 1200 - effectiveViewportWidth / 2f);
+		cam.position.y = (float) MathUtils.clamp(player.y, effectiveViewportHeight / 2f, 1200 - effectiveViewportHeight / 2f);
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
 
@@ -157,23 +201,38 @@ public class Main extends ApplicationAdapter {
 		batch.begin();
 		//batch.draw(img, 0, 0);
 		mapSprite.draw(batch);
-		test.draw(batch);
-		font.draw(batch, "x:"+Math.round(player.x)+" y:"+Math.round(player.y)+" dir:"+Math.round(player.direction)+"TEST:"+cam.zoom, player.x, player.y+30);
-		font.draw(batch, "fps:"+GlobalVars.fps, player.x, player.y+50);
 
-		//player
-		shapeDrawer.setColor(Color.BLUE);
-		shapeDrawer.filledCircle(player.x, player.y, 14);
-		shapeDrawer.setColor(Color.WHITE);
-		double playerDirectionRadian = (player.direction-180) / 180 * Math.PI;
-		shapeDrawer.line(player.x, player.y, (float) (player.x+(10*Math.sin(playerDirectionRadian))), (float) (player.y+(10*Math.cos(playerDirectionRadian))));
+		font.draw(batch, "x:"+Math.round(player.x)+" y:"+Math.round(player.y)+" dir:"+Math.round(player.direction), player.x, player.y+30);
+		font.draw(batch, "fps:"+GlobalVars.fps, player.x, player.y+50);
+		font.draw(batch, "zoom:"+GlobalVars.camZoom, player.x, player.y+70);
+		font.draw(batch, "P:"+ParticleSystem.particleList.size(), player.x, player.y+90);
+
+		//objects draw
+		for (int i = 0; i<GOControl.gameObjects.size(); i++) {
+			GOControl.gameObjects.get(i).draw(shapeDrawer);
+		}
+
+		//spells/particles draw
+		for (int i = 0; i< ParticleSystem.particleList.size(); i++) {
+			if (ParticleSystem.particleList.get(i)!=null) {
+				ParticleSystem.particleList.get(i).update(delta);
+				ParticleSystem.particleList.get(i).draw(batch);
+				if (ParticleSystem.particleList.get(i).isComplete()) {
+					ParticleSystem.remove(i);
+				}
+			}
+		}
+
+		//fire test
+		test.draw(batch);
 
 		batch.end();
 
-		if (test.isComplete()) {
-			test.scaleEffect(0.5f);
-			test.reset();
-		}
+		//TODO:UI draw
+
+		debugPerf[63] = System.currentTimeMillis();
+		//System.out.println("Total:"+(debugPerf[63]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[63]-debugPerf[30]));
+		//TODO:UI FPS + (Total + Main + Draw) Time
 	}
 
 	private void handleInput() {

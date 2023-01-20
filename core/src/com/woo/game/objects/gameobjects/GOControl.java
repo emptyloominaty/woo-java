@@ -127,8 +127,18 @@ public class GOControl {
     }
 
     public static void removeGameObject(int id) {
+        Object object = gameObjects.get(id);
         gameObjects.get(id).destroyed = true;
         gameObjectsFree.add(id);
+        if (object instanceof Creature) {
+            creaturesFree.add(((Creature) object).typeId);
+        } else if (object instanceof Spell) {
+            spellsFree.add(((Spell) object).typeId);
+        } else if (object instanceof Item) {
+            itemsFree.add(((Item) object).typeId);
+        }  else if (object instanceof WorldObject) {
+            worldObjectsFree.add(((WorldObject) object).typeId);
+        }
     }
 
     //--------------------------------------------------------------------------------------------

@@ -1,7 +1,9 @@
 package com.woo.game.objects.gameobjects;
 
+import com.badlogic.gdx.graphics.Color;
 import com.woo.game.GlobalVars;
 import com.woo.game.objects.abilities.Ability;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -210,13 +212,20 @@ public class Creature extends GameObject {
         }
     }
 
-    public void rotate(double dir) { //0-360
+    public void rotate(float dir) { //0-360
         if (!isStunned && !isRooted && !isRolling) {
             direction = dir;
             direction = direction % 360;
             if (direction < 0) {
                 direction += 360;
             }
+        }
+    }
+
+    public void draw(ShapeDrawer shapeDrawer) {
+        if (!destroyed) {
+            shapeDrawer.setColor(Color.RED);
+            shapeDrawer.filledCircle(x, y, 10);
         }
     }
 

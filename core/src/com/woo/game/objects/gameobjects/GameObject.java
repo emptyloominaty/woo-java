@@ -1,6 +1,8 @@
 package com.woo.game.objects.gameobjects;
 
+import com.badlogic.gdx.graphics.Color;
 import com.woo.game.GlobalVars;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class GameObject {
     public String name;
@@ -18,7 +20,7 @@ public class GameObject {
     public int sizeX = 64;
     public int sizeY = 64;
 
-    public double direction = 0;
+    public float direction = 0;
 
     public float x;
     public float y;
@@ -57,6 +59,13 @@ public class GameObject {
 
     public void updateTypeId(int id) {
         this.typeId = id;
+    }
+
+    public void draw(ShapeDrawer shapeDrawer) {
+        if (!destroyed) {
+            shapeDrawer.setColor(Color.RED);
+            shapeDrawer.filledCircle(x, y, 4);
+        }
     }
 
 }

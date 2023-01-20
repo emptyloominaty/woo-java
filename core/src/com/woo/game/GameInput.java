@@ -2,7 +2,9 @@ package com.woo.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.woo.game.objects.Keybinds;
+import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.Settings;
 
 import static com.woo.game.Main.mouseInWorld2D;
@@ -14,9 +16,60 @@ public class GameInput {
     public static void handleInput() {
 
         //System.out.println("x: "+Gdx.input.getX()+" y:"+Gdx.input.getY()); //<-- mouse on screen
+        //Gdx.input.getInputProcessor();
+
+        Gdx.input.setInputProcessor(new InputProcessor() {
+            @Override
+            public boolean keyDown(int keycode) {
+                return false;
+            }
+
+            @Override
+            public boolean keyUp(int keycode) {
+                return false;
+            }
+
+            @Override
+            public boolean keyTyped(char character) {
+                return false;
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                return false;
+            }
+
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                return false;
+            }
+
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int pointer) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                return false;
+            }
+
+            @Override
+            public boolean scrolled(float amountX, float amountY) {
+                //zoom
+                GlobalVars.camZoom += amountY/60;
+                if (GlobalVars.camZoom<0.5) {
+                    GlobalVars.camZoom = 0.5f;
+                } else if (GlobalVars.camZoom>1.3) {
+                    GlobalVars.camZoom = 1.3f;
+                }
+                return false;
+            }
+        });
 
 
 
+        //-------------------------------
         if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
             strafing = true;
         } else {
@@ -27,6 +80,16 @@ public class GameInput {
         }
 
         if(Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)){
+        }
+        //TEST
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf("T"))) {
+            ParticleSystem.add("fire2",90, player.direction, player.x, player.y);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf("R"))) {
+            ParticleSystem.add("fire2",45, player.direction, player.x, player.y);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf("Z"))) {
+            ParticleSystem.add("fire2",18, player.direction, player.x, player.y);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Up")[0]))) {
