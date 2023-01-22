@@ -76,11 +76,6 @@ public class GameInput {
             strafing = false;
         }
 
-        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
-        }
-
-        if(Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)){
-        }
         //TEST
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf("T"))) {
             ParticleSystem.add("fire2",90, player.direction, player.x, player.y);

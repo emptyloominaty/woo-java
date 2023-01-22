@@ -11,19 +11,20 @@ import java.util.Map;
 public class ParticleSystem {
     public static ArrayList<ParticleEffect> particleList;
     public static ArrayList<Integer> particleListFree;
-    public static Map<String, String> particleTextures;
+    public static Map<String, String> particleFiles;
 
     public static void init() {
         particleList = new ArrayList<ParticleEffect>();
         particleListFree = new ArrayList<Integer>();
-        particleTextures = new HashMap<String, String>();
-        particleTextures.put("fire","particles/fire.particle");
-        particleTextures.put("fire2","particles/fire2.particle");
-        //TODO: particleTextures.put
+        particleFiles = new HashMap<String, String>();
+        particleFiles.put("fire","particles/fire.particle");
+        particleFiles.put("fire2","particles/fire2.particle");
+        particleFiles.put("fire64","particles/fire64.particle");
+        //TODO: particleFiles.put
 
     }
 
-    public static int add(String particleTexture,int angle, float direction,float x, float y) {
+    public static int add(String particleFile,int angle, float direction,float x, float y) {
         direction = 270 - direction;
         int id = 0;
 
@@ -37,10 +38,12 @@ public class ParticleSystem {
         if (particleList.size()<=id) {
             particleList.add(new ParticleEffect());
         } else {
+            //TODO:REMOVE this + dispose + null??????????????
+            //TODO:remove() particleList.get(id).reset();????
             particleList.set(id,new ParticleEffect());
         }
 
-        particleList.get(id).load(Gdx.files.internal(particleTextures.get(particleTexture)),Gdx.files.internal("textures"));
+        particleList.get(id).load(Gdx.files.internal(particleFiles.get(particleFile)),Gdx.files.internal("Textures"));
         particleList.get(id).getEmitters().first().setPosition(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f);
 
         ParticleEmitter emitter = particleList.get(id).getEmitters().first();
@@ -52,6 +55,7 @@ public class ParticleSystem {
     }
 
     public static void remove(int id) {
+        particleList.get(id).allowCompletion();
         particleList.get(id).dispose();
         particleList.set(id,null);
         particleListFree.add(id);

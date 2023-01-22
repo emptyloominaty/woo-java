@@ -50,6 +50,10 @@ public class Main extends ApplicationAdapter {
 	public static double[] debugPerf = new double[64];
 	public static String[] debug = new String[64];
 
+	float delta;
+	float effectiveViewportWidth;
+	float effectiveViewportHeight;
+
 	@Override
 	public void create () {
 		GlobalVars.init();
@@ -97,6 +101,9 @@ public class Main extends ApplicationAdapter {
 		test = new ParticleEffect();
 		test.load(Gdx.files.internal("particles/fire.particle"),Gdx.files.internal("textures"));
 		test.getEmitters().first().setPosition(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f);
+
+		//TODO:  low(100) - medium(200) - high(400) - ultra(500) ????
+		//test.getEmitters().first().getEmission().
 
 
 		mapSprite = new Sprite(new Texture(Gdx.files.internal("sc_map.png")));
@@ -154,16 +161,20 @@ public class Main extends ApplicationAdapter {
 		text3.put("zoom","0.8f");
 		//TODO:append+for loop ?
 		file.writeString("test="+text3.get("test")+"\ntest2="+text3.get("test2")+"\nzoom="+text3.get("zoom")+"", false);
-
-
 		//TEST
 
+
+		debugPerf[63] = 0;
+		debugPerf[0] = 0;
 	}
 
 	@Override
 	public void render () {
 		debugPerf[0] = System.currentTimeMillis();
-		float delta = Gdx.graphics.getDeltaTime();
+		if (debugPerf[0]-debugPerf[63]>80) {
+			System.out.println("Time Between Frames:"+(debugPerf[0]-debugPerf[63]));
+		}
+		delta = Gdx.graphics.getDeltaTime();
 		GlobalVars.delta = delta;
 		GlobalVars.fps = 1/delta;
 
@@ -179,8 +190,8 @@ public class Main extends ApplicationAdapter {
 
 		//camera
 		cam.zoom = MathUtils.clamp(GlobalVars.camZoom, 0.1f, 4000/cam.viewportWidth);
-		float effectiveViewportWidth = cam.viewportWidth * cam.zoom;
-		float effectiveViewportHeight = cam.viewportHeight * cam.zoom;
+		effectiveViewportWidth = cam.viewportWidth * cam.zoom;
+		effectiveViewportHeight = cam.viewportHeight * cam.zoom;
 		cam.position.x = (float) MathUtils.clamp(player.x, effectiveViewportWidth / 2f, 1200 - effectiveViewportWidth / 2f);
 		cam.position.y = (float) MathUtils.clamp(player.y, effectiveViewportHeight / 2f, 1200 - effectiveViewportHeight / 2f);
 		cam.update();
@@ -231,7 +242,9 @@ public class Main extends ApplicationAdapter {
 		//TODO:UI draw
 
 		debugPerf[63] = System.currentTimeMillis();
-		//System.out.println("Total:"+(debugPerf[63]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[63]-debugPerf[30]));
+		if (debugPerf[63]-debugPerf[0]>10) {
+			System.out.println("Total:"+(debugPerf[63]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[63]-debugPerf[30]));
+		}
 		//TODO:UI FPS + (Total + Main + Draw) Time
 	}
 
