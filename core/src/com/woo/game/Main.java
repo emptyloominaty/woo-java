@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.woo.game.objects.Keybinds;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.Settings;
+import com.woo.game.ui.UiMain;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import com.woo.game.objects.gameobjects.*;
@@ -53,6 +54,7 @@ public class Main extends ApplicationAdapter {
 	float delta;
 	float effectiveViewportWidth;
 	float effectiveViewportHeight;
+	UiMain uiMain = new UiMain();
 
 	@Override
 	public void create () {
@@ -82,11 +84,10 @@ public class Main extends ApplicationAdapter {
 		GOControl.addCreature(testCreature3);
 
 		GOControl.removeGameObject(1);
-		for (int i = 0; i<GOControl.gameObjects.size(); i++) {
+		/*for (int i = 0; i<GOControl.gameObjects.size(); i++) {
 			System.out.println(i+": ");
 			GOControl.gameObjects.get(i).test();
-
-		}
+		}*/
 		Player testxD = (Player) GOControl.creatures.get(0);//.testPlayer();
 		testxD.testPlayer();
 		GOControl.creatures.get(0).test();
@@ -163,6 +164,7 @@ public class Main extends ApplicationAdapter {
 		file.writeString("test="+text3.get("test")+"\ntest2="+text3.get("test2")+"\nzoom="+text3.get("zoom")+"", false);
 		//TEST
 
+		uiMain.create();
 
 		debugPerf[63] = 0;
 		debugPerf[0] = 0;
@@ -175,6 +177,9 @@ public class Main extends ApplicationAdapter {
 			System.out.println("Time Between Frames:"+(debugPerf[0]-debugPerf[63]));
 		}
 		delta = Gdx.graphics.getDeltaTime();
+		if (delta>0.07f) {
+			delta = 0.07f;
+		}
 		GlobalVars.delta = delta;
 		GlobalVars.fps = 1/delta;
 
@@ -239,7 +244,7 @@ public class Main extends ApplicationAdapter {
 
 		batch.end();
 
-		//TODO:UI draw
+		uiMain.render();
 
 		debugPerf[63] = System.currentTimeMillis();
 		if (debugPerf[63]-debugPerf[0]>10) {
@@ -287,6 +292,7 @@ public class Main extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		mapSprite.getTexture().dispose();
+		uiMain.dispose();
 		//TODO:
 		//img.dispose();
 	}

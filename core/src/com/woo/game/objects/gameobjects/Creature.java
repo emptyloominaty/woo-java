@@ -66,6 +66,14 @@ public class Creature extends GameObject {
         this.stats.put("dexterity", 10.0);
         this.stats.put("stamina", 10.0);
 
+        this.stats.put("block", 0.0); //chance to reduce damage by 70% (magic,melee,ranged)
+        this.stats.put("parry", 0.0); //chance to reduce damage by 100% (melee)
+        this.stats.put("dodge", 0.0); //chance to reduce damage by 100% (melee+ranged)
+
+        this.stats.put("magicResistance", 0.0); //-% magic damage taken
+        this.stats.put("DamageTaken", 0.0); //-% damage taken
+        this.stats.put("DamageDone", 0.0); //+% damage done
+
         this.faction = faction;
         //stats.get("haste)
 
