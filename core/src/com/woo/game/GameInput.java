@@ -2,7 +2,9 @@ package com.woo.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.woo.game.objects.Keybinds;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.Settings;
@@ -13,12 +15,9 @@ import static com.woo.game.Main.player;
 
 public class GameInput {
     static boolean strafing = false;
-    public static void handleInput() {
 
-        //System.out.println("x: "+Gdx.input.getX()+" y:"+Gdx.input.getY()); //<-- mouse on screen
-        //Gdx.input.getInputProcessor();
-
-        Gdx.input.setInputProcessor(new InputProcessor() {
+    public static void setInputProcessor(Stage stage) {
+        InputProcessor inputprocessor = new InputProcessor() {
             @Override
             public boolean keyDown(int keycode) {
                 return false;
@@ -65,9 +64,15 @@ public class GameInput {
                 }
                 return false;
             }
-        });
+        };
 
+        InputMultiplexer multiplexer = new InputMultiplexer(stage,inputprocessor);
+        Gdx.input.setInputProcessor(multiplexer);
+    }
 
+    public static void handleInput() {
+
+        //System.out.println("x: "+Gdx.input.getX()+" y:"+Gdx.input.getY()); //<-- mouse on screen
 
         //-------------------------------
         if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){

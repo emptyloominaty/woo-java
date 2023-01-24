@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.woo.game.objects.Keybinds;
 import com.woo.game.objects.ParticleSystem;
@@ -61,7 +62,7 @@ public class Main extends ApplicationAdapter {
 		GlobalVars.init();
 		GOControl.reset();
 
-		Settings.init();
+		//Settings.init();
 		Keybinds.init();
 
 		ParticleSystem.init();
@@ -134,37 +135,8 @@ public class Main extends ApplicationAdapter {
 		fireX = Gdx.graphics.getWidth()/2f;
 		fireY = Gdx.graphics.getHeight()/2f;
 
-		//TEST
-		/*FileHandle file = Gdx.files.internal("test.txt");
-		if (Gdx.files.internal("test.txt").exists()) {
-			String text = file.readString();
-			System.out.println(text);
-		}*/
-		//TODO: Class + functions
-		FileHandle file = Gdx.files.local("woo.ini");
-		if (!Gdx.files.local("woo.ini").exists()) { // or reset = true
-			file.writeString("test=true\ntest2=10\nzoom=1.0f", false);
-		}
-
-		String text = file.readString();
-		String[] text2 = text.split("\n");
-		Map<String,String> text3 = new HashMap<String, String>();
-		for (int i = 0; i<text2.length; i++) {
-			String[] a = text2[i].split("=");
-			System.out.println(a[0]+"|"+a[1]);
-			if (a.length>1) {
-				text3.put(a[0],a[1]);
-			}
-		}
-
-		System.out.println(text3.toString());
-		System.out.println(text3.get("zoom"));
-		text3.put("zoom","0.8f");
-		//TODO:append+for loop ?
-		file.writeString("test="+text3.get("test")+"\ntest2="+text3.get("test2")+"\nzoom="+text3.get("zoom")+"", false);
-		//TEST
-
 		uiMain.create();
+		GameInput.setInputProcessor(uiMain.stage);
 
 		debugPerf[63] = 0;
 		debugPerf[0] = 0;
@@ -251,6 +223,11 @@ public class Main extends ApplicationAdapter {
 			System.out.println("Total:"+(debugPerf[63]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[63]-debugPerf[30]));
 		}
 		//TODO:UI FPS + (Total + Main + Draw) Time
+	}
+
+	public void resize(int width, int height) {
+		System.out.println(width+" | "+height);
+		uiMain.resize(width, height);
 	}
 
 	private void handleInput() {
