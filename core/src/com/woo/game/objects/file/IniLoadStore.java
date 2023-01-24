@@ -3,6 +3,7 @@ package com.woo.game.objects.file;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,10 @@ public class IniLoadStore {
             }
         } else {
             file = new FileHandle("settings.ini");
+            File f = new File("settings.ini");
+            if(!f.isFile()) {
+                file.writeString(defaultData, false);
+            }
         }
 
         String text = file.readString();
