@@ -56,6 +56,15 @@ public class Creature extends GameObject {
     public Creature(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, int faction, String creatureClass) {
         super(name, description, solid, interactable, x, y, spritePath,"Creature");
 
+        //TEST
+        this.healthMax = 50;
+        this.health = 50;
+        this.energyMax = 100;
+        this.energy = 100;
+        this.secondaryResourceMax = 5;
+        this.secondaryResource = 0;
+        //-----------------------
+
         this.creatureClass = creatureClass;
         this.stats.put("haste", 10.0);
         this.stats.put("crit", 5.0);

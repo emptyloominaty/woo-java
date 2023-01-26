@@ -12,20 +12,35 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.woo.game.GlobalVars;
 
 public class UiMain implements ApplicationListener {
+    //Config
+    public int healthBarWidth = 120;
+    public int healthBarHeight = 40;
+    //
+
+
+
     public Stage stage;
     Table table;
     Skin skin;
     public Label fpsLabel;
 
+    //healthbar
+    public Table tableHpBar;
+    public Image healthBarA;
+    public Label healthBarText;
+    public Stack healthBarStack;
+    public Table healthBarATable;
+
     public void create () {
-        //TODO: FIX CLICK DOESNT WORK
 
         stage = new Stage();
         table = new Table();
         table.setFillParent(true);
+
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
 
@@ -57,8 +72,32 @@ public class UiMain implements ApplicationListener {
         table.add(fpsLabel).pad(5);
 
 
-        //TODO:
-        //ProgressBar healthBar = new ProgressBar(float min, float max, float stepSize, boolean vertical, ProgressBar.ProgressBarStyle style);
+        //Health Bar
+        tableHpBar = new Table();
+        table.addActor(tableHpBar);
+        healthBarATable = new Table();
+        healthBarStack = new Stack();
+        Image healthBarBackground = new Image(skin.newDrawable("white", Color.BLACK));
+        healthBarA = new Image(skin.newDrawable("white", Color.RED));
+        healthBarText = new Label("100/100",skin);
+
+        healthBarStack.addActor(healthBarBackground);
+        healthBarATable.add(healthBarA).size(healthBarWidth,healthBarHeight);
+        healthBarStack.addActor(healthBarATable);
+        healthBarStack.addActor(healthBarText);
+        healthBarText.setAlignment(Align.center);
+
+        tableHpBar.add(healthBarStack).size(healthBarWidth,healthBarHeight);
+        tableHpBar.setPosition(200,40);
+
+        //Resource Bar
+
+        //Secondary Resource Bar
+
+
+
+
+
 
         // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
         final TextButton button = new TextButton("Click me!", skin);
@@ -80,9 +119,9 @@ public class UiMain implements ApplicationListener {
 
         table.top().left();
 
-        //table.setDebug(true); // This is optional, but enables debug lines for tables.
-
-
+        //table.setDebug(true);
+        //tableHpBar.setDebug(true);
+        //healthBarATable.setDebug(true);
 
     }
 
@@ -109,5 +148,14 @@ public class UiMain implements ApplicationListener {
 
     public void dispose() {
         stage.dispose();
+    }
+
+    public void setPlayerHealthBar(double health,double healthMax) {
+        int width = (int) (health/healthMax*healthBarWidth);
+        if (width<0) {
+            width = 0;
+        }
+        healthBarText.setText(Math.round(health)+"/"+Math.round(healthMax));
+        healthBarA.setWidth(width);
     }
 }

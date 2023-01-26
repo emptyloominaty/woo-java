@@ -24,4 +24,11 @@ public class Player extends Creature {
         }
     }
 
+    public void main2() {
+        health -= 0.3;
+        if (health<0) {
+            health = 50;
+        }
+    }
+
 }

@@ -142,6 +142,18 @@ public class Main extends ApplicationAdapter {
 		debugPerf[0] = 0;
 	}
 
+	public void updateGame() {
+		player.main2();
+		uiMain.setPlayerHealthBar(player.health, player.healthMax);
+
+		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
+			if (!GOControl.creatures.get(i).destroyed) {
+				//TODO:
+				//GOControl.creatures.get(i).main();
+			}
+		}
+	}
+
 	@Override
 	public void render () {
 		debugPerf[0] = System.currentTimeMillis();
@@ -159,7 +171,7 @@ public class Main extends ApplicationAdapter {
 		GameInput.handleInput();
 		handleInput();
 
-		//TODO: Main?()
+		updateGame();
 
 		debugPerf[30] = System.currentTimeMillis();
 		//Render Start
