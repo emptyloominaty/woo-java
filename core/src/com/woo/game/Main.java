@@ -13,15 +13,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.sun.org.apache.bcel.internal.generic.ANEWARRAY;
 import com.woo.game.objects.Keybinds;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.Settings;
+import com.woo.game.ui.Action;
+import com.woo.game.ui.ActionBar;
 import com.woo.game.ui.UiMain;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import com.woo.game.objects.gameobjects.*;
 import com.woo.game.objects.gameobjects.creatures.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,8 +61,17 @@ public class Main extends ApplicationAdapter {
 	float effectiveViewportHeight;
 	UiMain uiMain = new UiMain();
 
+	public static ActionBar[] actionBars = new ActionBar[2];
+	public static Map<String,Action> actions = new HashMap<String,Action>();
+
 	@Override
 	public void create () {
+		actionBars[0] = new ActionBar(15,new String[15]);
+		actionBars[1] = new ActionBar(15,new String[15]);
+
+		//test
+		actions.put("Fire Blast",new Action("Fire Blast",0,0));
+
 		GlobalVars.init();
 		GOControl.reset();
 
@@ -145,6 +158,8 @@ public class Main extends ApplicationAdapter {
 	public void updateGame() {
 		player.main2();
 		uiMain.setPlayerHealthBar(player.health, player.healthMax);
+		uiMain.setPlayerManaBar(player.energy, player.energyMax);
+		uiMain.setPlayerSecBar(player.secondaryResource, player.secondaryResourceMax);
 
 		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
 			if (!GOControl.creatures.get(i).destroyed) {
@@ -161,8 +176,8 @@ public class Main extends ApplicationAdapter {
 			System.out.println("Time Between Frames:"+(debugPerf[0]-debugPerf[63]));
 		}
 		delta = Gdx.graphics.getDeltaTime();
-		if (delta>0.07f) {
-			delta = 0.07f;
+		if (delta>0.06f) {
+			delta = 0.06f;
 		}
 		GlobalVars.delta = delta;
 		GlobalVars.fps = 1/delta;
@@ -229,6 +244,7 @@ public class Main extends ApplicationAdapter {
 		batch.end();
 
 		uiMain.render();
+		//TODO: actions.get() .draw()
 
 		debugPerf[63] = System.currentTimeMillis();
 		if (debugPerf[63]-debugPerf[0]>10) {

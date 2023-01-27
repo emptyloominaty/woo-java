@@ -61,6 +61,10 @@ public class ParticleSystem {
         particleListFree.add(id);
     }
 
+    public static void stop(int id) {
+        particleList.get(id).allowCompletion();
+    }
+
     public static void setPosition(float x, float y, int id) {
         particleList.get(id).setPosition(x,y);
     }

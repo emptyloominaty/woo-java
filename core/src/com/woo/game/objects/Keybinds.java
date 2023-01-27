@@ -25,6 +25,7 @@ public class Keybinds {
         keys.put("ActionBar0_11", new String[]{"R", ""});
         keys.put("ActionBar0_12", new String[]{"T", ""});
         keys.put("ActionBar0_13", new String[]{"Y", ""});
+        keys.put("ActionBar0_14", new String[]{"Z", ""});
 
         keys.put("ActionBar1_0", new String[]{"NUM_1", "CONTROL_LEFT"});
         keys.put("ActionBar1_1", new String[]{"NUM_2", "CONTROL_LEFT"});
@@ -42,6 +43,7 @@ public class Keybinds {
         keys.put("ActionBar1_11", new String[]{"E", "SHIFT_LEFT"});
         keys.put("ActionBar1_12", new String[]{"R", "SHIFT_LEFT"});
         keys.put("ActionBar1_13", new String[]{"T", "SHIFT_LEFT"});
+        keys.put("ActionBar1_14", new String[]{"Y", "SHIFT_LEFT"});
 
         keys.put("Move_Up", new String[]{"W", ""});
         keys.put("Move_Down", new String[]{"S", ""});

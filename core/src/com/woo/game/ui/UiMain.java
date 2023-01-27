@@ -17,8 +17,12 @@ import com.woo.game.GlobalVars;
 
 public class UiMain implements ApplicationListener {
     //Config
-    public int healthBarWidth = 120;
-    public int healthBarHeight = 40;
+    public int healthBarWidth = 150;
+    public int healthBarHeight = 60;
+    public int manaBarWidth = 150;
+    public int manaBarHeight = 60;
+    public int secBarWidth = 120;
+    public int secBarHeight = 30;
     //
 
 
@@ -34,6 +38,21 @@ public class UiMain implements ApplicationListener {
     public Label healthBarText;
     public Stack healthBarStack;
     public Table healthBarATable;
+
+    //resource bar
+    public Table tableMpBar;
+    public Image manaBarA;
+    public Label manaBarText;
+    public Stack manaBarStack;
+    public Table manaBarATable;
+
+    //secondary resource bar
+    public Table tableSrBar;
+    public Image secBarA;
+    public Label secBarText;
+    public Stack secBarStack;
+    public Table secBarATable;
+
 
     public void create () {
 
@@ -88,11 +107,46 @@ public class UiMain implements ApplicationListener {
         healthBarText.setAlignment(Align.center);
 
         tableHpBar.add(healthBarStack).size(healthBarWidth,healthBarHeight);
-        tableHpBar.setPosition(200,40);
+        tableHpBar.align(Align.left);
+        tableHpBar.setPosition(80,40);
 
         //Resource Bar
+        tableMpBar = new Table();
+        table.addActor(tableMpBar);
+        manaBarATable = new Table();
+        manaBarStack = new Stack();
+        Image manaBarBackground = new Image(skin.newDrawable("white", Color.BLACK));
+        manaBarA = new Image(skin.newDrawable("white", Color.SKY));
+        manaBarText = new Label("100/100",skin);
+
+        manaBarStack.addActor(manaBarBackground);
+        manaBarATable.add(manaBarA).size(manaBarWidth,manaBarHeight);
+        manaBarStack.addActor(manaBarATable);
+        manaBarStack.addActor(manaBarText);
+        manaBarText.setAlignment(Align.center);
+
+        tableMpBar.add(manaBarStack).size(manaBarWidth,manaBarHeight);
+        tableMpBar.setPosition(1200,40); //TODO:
+        tableMpBar.align(Align.right);
+        //
 
         //Secondary Resource Bar
+        tableSrBar = new Table();
+        table.addActor(tableSrBar);
+        secBarATable = new Table();
+        secBarStack = new Stack();
+        Image secBarBackground = new Image(skin.newDrawable("white", Color.BLACK));
+        secBarA = new Image(skin.newDrawable("white", Color.LIGHT_GRAY));
+        secBarText = new Label("0/100",skin);
+
+        secBarStack.addActor(secBarBackground);
+        secBarATable.add(secBarA).size(secBarWidth,secBarHeight);
+        secBarStack.addActor(secBarATable);
+        secBarStack.addActor(secBarText);
+        secBarText.setAlignment(Align.center);
+
+        tableSrBar.add(secBarStack).size(secBarWidth,secBarHeight);
+        tableSrBar.setPosition(640,40); //TODO:
 
 
 
@@ -158,4 +212,21 @@ public class UiMain implements ApplicationListener {
         healthBarText.setText(Math.round(health)+"/"+Math.round(healthMax));
         healthBarA.setWidth(width);
     }
+    public void setPlayerManaBar(double mana,double manaMax) {
+        int width = (int) (mana/manaMax*manaBarWidth);
+        if (width<0) {
+            width = 0;
+        }
+        manaBarText.setText(Math.round(mana)+"/"+Math.round(manaMax));
+        manaBarA.setWidth(width);
+    }
+    public void setPlayerSecBar(double sec,double secMax) {
+        int width = (int) (sec/secMax*secBarWidth);
+        if (width<0) {
+            width = 0;
+        }
+        secBarText.setText(Math.round(sec)+"/"+Math.round(secMax));
+        secBarA.setWidth(width);
+    }
+
 }
