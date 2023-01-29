@@ -2,6 +2,7 @@ package com.woo.game.objects.gameobjects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.woo.game.GlobalVars;
+import com.woo.game.ai.AiMain;
 import com.woo.game.objects.abilities.Ability;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -52,9 +53,12 @@ public class Creature extends GameObject {
     public Map<String, Ability> abilities = new HashMap<>();
 
     public double moveSpeedIncrease = 1;
+    public AiMain ai;
 
     public Creature(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, int faction, String creatureClass) {
         super(name, description, solid, interactable, x, y, spritePath,"Creature");
+
+        ai = new AiMain(this);
 
         //TEST
         this.healthMax = 50;
@@ -102,7 +106,10 @@ public class Creature extends GameObject {
 
     public void main() {
         //TODO:Floating Texts?
-        //TODO:AI
+        //AI
+        if (this.faction!=0) {
+            ai.main();
+        }
         //TODO:PETS?
         //TODO:Resource
 
@@ -197,7 +204,7 @@ public class Creature extends GameObject {
         if (forceVal!=0) {
             moveSpeed = forceVal;
         }
-        double speed = (moveSpeed* GlobalVars.pxToMeter) * GlobalVars.delta;
+        double speed = (moveSpeed * GlobalVars.pxToMeter) * GlobalVars.delta;
         double angleInRadian = 0;
         if (strafe==0) {
             angleInRadian = (direction-180) / 180 * Math.PI;
@@ -224,8 +231,8 @@ public class Creature extends GameObject {
             this.isChanneling = false;
         }
         if (!this.isStunned && !this.isRooted && !this.isDead) {
-            this.x += vx * (GlobalVars.delta*60);
-            this.y += vy * (GlobalVars.delta*60);
+            this.x += vx;
+            this.y += vy;
         }
     }
 

@@ -28,6 +28,8 @@ public class Settings {
 
         map.put("Particle Quality",new Setting("Video", new int[]{0, 1, 2, 3},new String[]{"Off","Low","Medium","High"},"Particle Quality","button",0,0,0,2));
         map.put("GrassGFX",new Setting("Video", new int[]{0, 1, 2},new String[]{"Off","Low","High"},"GrassGFX","button",0,0,0,2));
+        map.put("NxtPhy",new Setting("Video", new int[]{0, 1, 2,3},new String[]{"Off","Low","Medium","High"},"NxtPhy","button",0,0,0,2));
+        map.put("Number of Corpses",new Setting("Video", new int[]{},new String[]{},"Number of Corpses","slider",1000,1,1,100));
 
         //Audio
 

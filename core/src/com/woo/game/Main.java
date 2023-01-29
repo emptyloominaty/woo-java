@@ -86,7 +86,7 @@ public class Main extends ApplicationAdapter {
 		//--Test
 		Creature testCreature = new Creature("test","test",false,false,50,40,"",1,"test");
 		GOControl.addCreature(testCreature);
-		Creature testCreature2 = new Creature("test2","test",false,false,150,40,"",2,"test");
+		Creature testCreature2 = new Creature("test2","test",false,false,150,40,"",3,"test");
 		GOControl.addCreature(testCreature2);
 		Spell testSpell = new Spell("test3","test",false,false,500,40,"");
 		GOControl.addSpell(testSpell);
@@ -163,8 +163,7 @@ public class Main extends ApplicationAdapter {
 
 		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
 			if (!GOControl.creatures.get(i).destroyed) {
-				//TODO:
-				//GOControl.creatures.get(i).main();
+				GOControl.creatures.get(i).main();
 			}
 		}
 	}
@@ -218,9 +217,8 @@ public class Main extends ApplicationAdapter {
 		mapSprite.draw(batch);
 
 		font.draw(batch, "x:"+Math.round(player.x)+" y:"+Math.round(player.y)+" dir:"+Math.round(player.direction), player.x, player.y+30);
-		font.draw(batch, "fps:"+GlobalVars.fps, player.x, player.y+50);
-		font.draw(batch, "zoom:"+GlobalVars.camZoom, player.x, player.y+70);
-		font.draw(batch, "P:"+ParticleSystem.particleList.size(), player.x, player.y+90);
+		font.draw(batch, "zoom:"+GlobalVars.camZoom, player.x, player.y+50);
+		font.draw(batch, "P:"+ParticleSystem.particleList.size(), player.x, player.y+70);
 
 		//objects draw
 		for (int i = 0; i<GOControl.gameObjects.size(); i++) {

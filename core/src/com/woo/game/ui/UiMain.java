@@ -2,18 +2,18 @@ package com.woo.game.ui;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.woo.game.GlobalVars;
+
+import java.util.ArrayList;
 
 public class UiMain implements ApplicationListener {
     //Config
@@ -24,8 +24,6 @@ public class UiMain implements ApplicationListener {
     public int secBarWidth = 120;
     public int secBarHeight = 30;
     //
-
-
 
     public Stage stage;
     Table table;
@@ -53,9 +51,54 @@ public class UiMain implements ApplicationListener {
     public Stack secBarStack;
     public Table secBarATable;
 
+    //TODO:player cast bar
+
+    //TODO:player buffs + debuffs 16+16
+    public ArrayList<Table> playerBuffsTables;
+    //Icon+Duration+Stacks
+
+    public ArrayList<Table> playerDebuffsTables;
+    //Icon+Duration+Stacks
+
+    //TODO:Buff tooltip
+    //TODO:Ability tooltip
+    //TODO:Windows (Inventory, Character, Spellbook, DPS/HPS(Details), Settings????)
+
+    //TODO:Creatures texts+bars
+    public ArrayList<Table> creatureTables;
+    public ArrayList<Table> creatureTablesHealth;
+    public ArrayList<Table> creatureTablesCast;
+    public ArrayList<Stack> creatureStackHealth;
+    public ArrayList<Stack> creatureStackCast;
+    public ArrayList<Label> creatureNames;
+    public ArrayList<Label> creatureCastName;
+    public ArrayList<Image> creatureHealthBar;
+    public ArrayList<Image> creatureCastBar;
+    //TODO:Creatures Buffs+Debuffs
+    //Table+Stack+Label+Image
+
+
+    //TODO:Floating Combat Text
+    public ArrayList<Table> floatingCombatTextTables;
+    public ArrayList<Label> floatingCombatTextLabels;
+
+    //TODO:Action Bar
+    public ArrayList<Table> actionTables;
+    public ArrayList<Table> actionTablesStack;
+    public ArrayList<Stack> actionStacks;
+    public ArrayList<Label> actionKeybinds;
+    public ArrayList<Label> actionCdTimes;
+    public ArrayList<Label> actionCharges;
+    public ArrayList<Image> actionIcons;
+    public ArrayList<Image> actionGcdTimer;
+    public ArrayList<Image> actionCdTimer;
+    public ArrayList<Image> actionBorders;
+
+    //TODO:UI (Menu)
+
+
 
     public void create () {
-
         stage = new Stage();
         table = new Table();
         table.setFillParent(true);
@@ -168,11 +211,10 @@ public class UiMain implements ApplicationListener {
 
         // Add an image actor. Have to set the size, else it would be the size of the drawable (which is the 1x1 texture).
         //table.add(new Image(skin.newDrawable("white", Color.BLACK))).size(64);
-
-
-
+        
         table.top().left();
 
+        //stage.setDebugAll(true);
         //table.setDebug(true);
         //tableHpBar.setDebug(true);
         //healthBarATable.setDebug(true);
