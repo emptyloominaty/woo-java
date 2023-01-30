@@ -12,8 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.woo.game.GlobalVars;
+import com.woo.game.objects.gameobjects.Creature;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.woo.game.Main.cam;
+import static com.woo.game.Main.player;
 
 public class UiMain implements ApplicationListener {
     //Config
@@ -26,6 +32,8 @@ public class UiMain implements ApplicationListener {
     //
 
     public Stage stage;
+    public Stage stageBottom;
+    public Stage stageTop;
     Table table;
     Skin skin;
     public Label fpsLabel;
@@ -65,40 +73,43 @@ public class UiMain implements ApplicationListener {
     //TODO:Windows (Inventory, Character, Spellbook, DPS/HPS(Details), Settings????)
 
     //TODO:Creatures texts+bars
-    public ArrayList<Table> creatureTables;
-    public ArrayList<Table> creatureTablesHealth;
-    public ArrayList<Table> creatureTablesCast;
-    public ArrayList<Stack> creatureStackHealth;
-    public ArrayList<Stack> creatureStackCast;
-    public ArrayList<Label> creatureNames;
-    public ArrayList<Label> creatureCastName;
-    public ArrayList<Image> creatureHealthBar;
-    public ArrayList<Image> creatureCastBar;
+    public Map<Integer,Table> creatureTables;
+    public Map<Integer,Table> creatureTablesHealth;
+    public Map<Integer,Table> creatureTablesCast;
+    public Map<Integer,Stack> creatureStackHealth;
+    public Map<Integer,Stack> creatureStackCast;
+    public Map<Integer,Label> creatureNames;
+    public Map<Integer,Label> creatureHealthText;
+    public Map<Integer,Label> creatureCastName;
+    public Map<Integer,Image> creatureHealthBar;
+    public Map<Integer,Image> creatureCastBar;
     //TODO:Creatures Buffs+Debuffs
     //Table+Stack+Label+Image
 
 
-    //TODO:Floating Combat Text
+    //TODO:Floating Combat Text TODO:HASHMAP?
     public ArrayList<Table> floatingCombatTextTables;
     public ArrayList<Label> floatingCombatTextLabels;
 
     //TODO:Action Bar
-    public ArrayList<Table> actionTables;
-    public ArrayList<Table> actionTablesStack;
-    public ArrayList<Stack> actionStacks;
-    public ArrayList<Label> actionKeybinds;
-    public ArrayList<Label> actionCdTimes;
-    public ArrayList<Label> actionCharges;
-    public ArrayList<Image> actionIcons;
-    public ArrayList<Image> actionGcdTimer;
-    public ArrayList<Image> actionCdTimer;
-    public ArrayList<Image> actionBorders;
+    public Map<Integer,Table> actionTables;
+    public Map<Integer,Table> actionTablesStack;
+    public Map<Integer,Stack> actionStacks;
+    public Map<Integer,Label> actionKeybinds;
+    public Map<Integer,Label> actionCdTimes;
+    public Map<Integer,Label> actionCharges;
+    public Map<Integer,Image> actionIcons;
+    public Map<Integer,Image> actionGcdTimer;
+    public Map<Integer,Image> actionCdTimer;
+    public Map<Integer,Image> actionBorders;
 
     //TODO:UI (Menu)
 
 
 
     public void create () {
+        stageBottom = new Stage();
+        stageTop = new Stage();
         stage = new Stage();
         table = new Table();
         table.setFillParent(true);
@@ -191,11 +202,6 @@ public class UiMain implements ApplicationListener {
         tableSrBar.add(secBarStack).size(secBarWidth,secBarHeight);
         tableSrBar.setPosition(640,40); //TODO:
 
-
-
-
-
-
         // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
         final TextButton button = new TextButton("Click me!", skin);
         table.add(button);
@@ -208,28 +214,84 @@ public class UiMain implements ApplicationListener {
             }
         });
 
-
         // Add an image actor. Have to set the size, else it would be the size of the drawable (which is the 1x1 texture).
         //table.add(new Image(skin.newDrawable("white", Color.BLACK))).size(64);
         
         table.top().left();
 
-        //stage.setDebugAll(true);
-        //table.setDebug(true);
-        //tableHpBar.setDebug(true);
-        //healthBarATable.setDebug(true);
+        //creature bars
+        creatureTables = new HashMap<Integer, Table>();
+        creatureTablesHealth = new HashMap<Integer, Table>();
+        creatureTablesCast = new HashMap<Integer, Table>();
+        creatureStackHealth = new HashMap<Integer, Stack>();
+        creatureStackCast = new HashMap<Integer, Stack>();
+        creatureNames = new HashMap<Integer, Label>();
+        creatureHealthText = new HashMap<Integer, Label>();
+        creatureCastName = new HashMap<Integer, Label>();
+        creatureHealthBar = new HashMap<Integer, Image>();
+        creatureCastBar = new HashMap<Integer, Image>();
 
+        stage.setDebugAll(true);
+        stageBottom.setDebugAll(true);
+        stageTop.setDebugAll(true);
+    }
+    //StageTop
+    //TODO: Character screen
+    //TODO: Spellbook
+    //TODO: Talents
+    //TODO: Inventory
+
+
+    public void addCreatureBar(Creature creature) {
+        if (creature.faction!=0) {
+            Table tableC = new Table();
+            this.stageBottom.addActor(tableC);
+            Label label = new Label(creature.name,skin); //TODO:
+            Label labelHealth = new Label ("10/10",skin);
+            tableC.add(label).size(160,18);
+            tableC.row();
+            tableC.add(labelHealth).size(160,18);
+            label.setAlignment(Align.center);
+            labelHealth.setAlignment(Align.center);
+            tableC.align(Align.center);
+            tableC.
+            tableC.setPosition(creature.x, creature.y);
+
+            creatureTables.put(creature.typeId,tableC);
+            creatureNames.put(creature.typeId,label);
+            creatureHealthText.put(creature.typeId,label);
+        }
+    }
+    public void updateCreatureBar(Creature creature) {
+        if (creature.faction!=0) {
+            float x = (Gdx.graphics.getWidth()/2) + ((creature.x - cam.position.x))/GlobalVars.camZoom;
+            float y = (Gdx.graphics.getHeight()/2) + ((creature.y - cam.position.y))/GlobalVars.camZoom;
+            creatureHealthText.get(creature.typeId).setText(Math.round(creature.health)+"/"+Math.round(creature.healthMax));
+            creatureTables.get(creature.typeId).setPosition(x, y + 30);
+        }
+    }
+    public void removeCreatureBar(Creature creature) {
+        if (creature.faction!=0) {
+
+        }
+        //creatureTables.remove(creature.typeId);
     }
 
     public void resize (int width, int height) {
         //??????????????????
         stage.getViewport().update(width, height, true);
+        stageTop.getViewport().update(width, height, true);
+        stageBottom.getViewport().update(width, height, true);
     }
 
     public void render() {
         fpsLabel.setText("Fps: "+Math.round(GlobalVars.fps));
+        stageBottom.act(GlobalVars.delta);
+        stageBottom.draw();
         stage.act(GlobalVars.delta);
         stage.draw();
+        stageTop.act(GlobalVars.delta);
+        stageTop.draw();
     }
 
     @Override
@@ -244,6 +306,8 @@ public class UiMain implements ApplicationListener {
 
     public void dispose() {
         stage.dispose();
+        stageBottom.dispose();
+        stageTop.dispose();
     }
 
     public void setPlayerHealthBar(double health,double healthMax) {

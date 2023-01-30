@@ -40,7 +40,7 @@ public class Main extends ApplicationAdapter {
 
 	final int WORLD_WIDTH = 4096;
 	final int WORLD_HEIGHT = 4096;
-	OrthographicCamera cam;
+	public static OrthographicCamera cam;
 	public static Sprite mapSprite;
 
 	float rotationSpeed = 0.5f;
@@ -84,9 +84,9 @@ public class Main extends ApplicationAdapter {
 		GOControl.addCreature(player);
 
 		//--Test
-		Creature testCreature = new Creature("test","test",false,false,50,40,"",1,"test");
+		Creature testCreature = new Creature("test","test",false,false,50,50,"",1,"test");
 		GOControl.addCreature(testCreature);
-		Creature testCreature2 = new Creature("test2","test",false,false,150,40,"",3,"test");
+		Creature testCreature2 = new Creature("test2","test",false,false,800,250,"",3,"test");
 		GOControl.addCreature(testCreature2);
 		Spell testSpell = new Spell("test3","test",false,false,500,40,"");
 		GOControl.addSpell(testSpell);
@@ -96,6 +96,8 @@ public class Main extends ApplicationAdapter {
 		GOControl.addWorldObject(testWorldObject);
 		Creature testCreature3 = new Creature("test6","test",false,false,80,250,"",1,"test");
 		GOControl.addCreature(testCreature3);
+		Creature testCreature4 = new Creature("test7","test",false,false,450,350,"",1,"test");
+		GOControl.addCreature(testCreature4);
 
 		GOControl.removeGameObject(1);
 		/*for (int i = 0; i<GOControl.gameObjects.size(); i++) {
@@ -151,6 +153,11 @@ public class Main extends ApplicationAdapter {
 		uiMain.create();
 		GameInput.setInputProcessor(uiMain.stage);
 
+		//TEST
+		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
+			uiMain.addCreatureBar(GOControl.creatures.get(i));
+		}
+
 		debugPerf[63] = 0;
 		debugPerf[0] = 0;
 	}
@@ -164,7 +171,13 @@ public class Main extends ApplicationAdapter {
 		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
 			if (!GOControl.creatures.get(i).destroyed) {
 				GOControl.creatures.get(i).main();
+				uiMain.updateCreatureBar(GOControl.creatures.get(i));
+			} else {
+				GOControl.creatures.get(i).x = -500;
+				GOControl.creatures.get(i).y = -500;
+				uiMain.updateCreatureBar(GOControl.creatures.get(i));
 			}
+
 		}
 	}
 

@@ -105,6 +105,14 @@ public class Creature extends GameObject {
     }
 
     public void main() {
+        //TEST
+        if (Math.random()>0.8) {
+            this.health-= 1;
+            if (this.health<10) {
+                this.health = this.healthMax;
+            }
+        }
+
         //TODO:Floating Texts?
         //AI
         if (this.faction!=0) {
