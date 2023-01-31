@@ -254,18 +254,19 @@ public class UiMain implements ApplicationListener {
             label.setAlignment(Align.center);
             labelHealth.setAlignment(Align.center);
             tableC.align(Align.center);
-            tableC.
+            //tableC.
             tableC.setPosition(creature.x, creature.y);
 
             creatureTables.put(creature.typeId,tableC);
             creatureNames.put(creature.typeId,label);
-            creatureHealthText.put(creature.typeId,label);
+            creatureHealthText.put(creature.typeId,labelHealth);
         }
     }
     public void updateCreatureBar(Creature creature) {
         if (creature.faction!=0) {
             float x = (Gdx.graphics.getWidth()/2) + ((creature.x - cam.position.x))/GlobalVars.camZoom;
             float y = (Gdx.graphics.getHeight()/2) + ((creature.y - cam.position.y))/GlobalVars.camZoom;
+            creatureNames.get(creature.typeId).setText(creature.name);
             creatureHealthText.get(creature.typeId).setText(Math.round(creature.health)+"/"+Math.round(creature.healthMax));
             creatureTables.get(creature.typeId).setPosition(x, y + 30);
         }
