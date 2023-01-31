@@ -31,6 +31,8 @@ import java.util.Map;
 
 
 public class Main extends ApplicationAdapter {
+	public static String areaName = "Test"; // TODO:
+
 	public static SpriteBatch batch;
 	//Texture img;
 	ParticleEffect test;
@@ -43,7 +45,6 @@ public class Main extends ApplicationAdapter {
 	public static OrthographicCamera cam;
 	public static Sprite mapSprite;
 
-	float rotationSpeed = 0.5f;
 
 	public static Player player;
 
@@ -130,7 +131,7 @@ public class Main extends ApplicationAdapter {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 
-		cam = new OrthographicCamera(1200, 1200 * (h / w));
+		cam = new OrthographicCamera(1280, 1280 * (h / w)); //1200 , 1200
 		cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
 		cam.update();
 
@@ -205,11 +206,12 @@ public class Main extends ApplicationAdapter {
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		//camera
-		cam.zoom = MathUtils.clamp(GlobalVars.camZoom, 0.1f, 4000/cam.viewportWidth);
+		cam.zoom = MathUtils.clamp(GlobalVars.camZoom, 0.1f, 8000/cam.viewportWidth);
 		effectiveViewportWidth = cam.viewportWidth * cam.zoom;
 		effectiveViewportHeight = cam.viewportHeight * cam.zoom;
-		cam.position.x = (float) MathUtils.clamp(player.x, effectiveViewportWidth / 2f, 1200 - effectiveViewportWidth / 2f);
-		cam.position.y = (float) MathUtils.clamp(player.y, effectiveViewportHeight / 2f, 1200 - effectiveViewportHeight / 2f);
+
+		cam.position.x = (float) MathUtils.clamp(player.x, effectiveViewportWidth / 2f , 4096 - effectiveViewportWidth / 2f);
+		cam.position.y = (float) MathUtils.clamp(player.y, effectiveViewportHeight / 2f, 4096 - effectiveViewportHeight / 2f);
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
 
@@ -229,9 +231,8 @@ public class Main extends ApplicationAdapter {
 		//batch.draw(img, 0, 0);
 		mapSprite.draw(batch);
 
-		font.draw(batch, "x:"+Math.round(player.x)+" y:"+Math.round(player.y)+" dir:"+Math.round(player.direction), player.x, player.y+30);
-		font.draw(batch, "zoom:"+GlobalVars.camZoom, player.x, player.y+50);
-		font.draw(batch, "P:"+ParticleSystem.particleList.size(), player.x, player.y+70);
+		font.draw(batch, "zoom:"+GlobalVars.camZoom, player.x, player.y+30);
+		font.draw(batch, "P:"+ParticleSystem.particleList.size(), player.x, player.y+50);
 
 		//objects draw
 		for (int i = 0; i<GOControl.gameObjects.size(); i++) {
@@ -254,6 +255,7 @@ public class Main extends ApplicationAdapter {
 
 		batch.end();
 
+		debugPerf[62] = System.currentTimeMillis();
 		uiMain.render();
 		//TODO: actions.get() .draw()
 

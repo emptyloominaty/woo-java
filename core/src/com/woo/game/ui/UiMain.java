@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.woo.game.Main.cam;
-import static com.woo.game.Main.player;
+import static com.woo.game.Main.*;
 
 public class UiMain implements ApplicationListener {
     //Config
@@ -35,8 +34,12 @@ public class UiMain implements ApplicationListener {
     public Stage stageBottom;
     public Stage stageTop;
     Table table;
+    Table tableTopRight;
     Skin skin;
     public Label fpsLabel;
+    public Label frameTimeLabel;
+    public Label positionLabel;
+    public Label areaNameLabel;
 
     //healthbar
     public Table tableHpBar;
@@ -113,8 +116,11 @@ public class UiMain implements ApplicationListener {
         stage = new Stage();
         table = new Table();
         table.setFillParent(true);
+        tableTopRight = new Table();
+        tableTopRight.setFillParent(true);
 
         stage.addActor(table);
+        stage.addActor(tableTopRight);
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin();
@@ -142,7 +148,19 @@ public class UiMain implements ApplicationListener {
         skin.add("default",defaultLabelStyle);
 
         fpsLabel = new Label("Fps: ",skin);
-        table.add(fpsLabel).pad(5);
+        frameTimeLabel = new Label("",skin);
+        positionLabel = new Label("",skin);
+
+        table.add(fpsLabel).pad(5).left();
+        table.row();
+
+        table.add(frameTimeLabel).pad(5).left();
+        table.row();
+
+        areaNameLabel = new Label("",skin);
+        tableTopRight.add(areaNameLabel).pad(5).right();
+        tableTopRight.row();
+        tableTopRight.add(positionLabel).pad(5).right();
 
 
         //Health Bar
@@ -204,7 +222,7 @@ public class UiMain implements ApplicationListener {
 
         // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
         final TextButton button = new TextButton("Click me!", skin);
-        table.add(button);
+        table.add(button).left();
 
         button.addListener(new ChangeListener() {
             @Override
@@ -216,8 +234,9 @@ public class UiMain implements ApplicationListener {
 
         // Add an image actor. Have to set the size, else it would be the size of the drawable (which is the 1x1 texture).
         //table.add(new Image(skin.newDrawable("white", Color.BLACK))).size(64);
-        
         table.top().left();
+        tableTopRight.top().right();
+
 
         //creature bars
         creatureTables = new HashMap<Integer, Table>();
@@ -231,9 +250,12 @@ public class UiMain implements ApplicationListener {
         creatureHealthBar = new HashMap<Integer, Image>();
         creatureCastBar = new HashMap<Integer, Image>();
 
-        stage.setDebugAll(true);
+        /*stage.setDebugAll(true);
         stageBottom.setDebugAll(true);
-        stageTop.setDebugAll(true);
+        stageTop.setDebugAll(true);*/
+
+        //TODO UPDATE
+        areaNameLabel.setText(areaName);
     }
     //StageTop
     //TODO: Character screen
@@ -264,16 +286,16 @@ public class UiMain implements ApplicationListener {
     }
     public void updateCreatureBar(Creature creature) {
         if (creature.faction!=0) {
-            float x = (Gdx.graphics.getWidth()/2) + ((creature.x - cam.position.x))/GlobalVars.camZoom;
-            float y = (Gdx.graphics.getHeight()/2) + ((creature.y - cam.position.y))/GlobalVars.camZoom;
+            float x = (Gdx.graphics.getWidth()/2f) + ((creature.x - cam.position.x)) /GlobalVars.camZoom;
+            float y = (Gdx.graphics.getHeight()/2f) + ((creature.y - cam.position.y)) /GlobalVars.camZoom;
             creatureNames.get(creature.typeId).setText(creature.name);
             creatureHealthText.get(creature.typeId).setText(Math.round(creature.health)+"/"+Math.round(creature.healthMax));
-            creatureTables.get(creature.typeId).setPosition(x, y + 30);
+            creatureTables.get(creature.typeId).setPosition(x, y + 36);
         }
     }
     public void removeCreatureBar(Creature creature) {
         if (creature.faction!=0) {
-
+            //TODO
         }
         //creatureTables.remove(creature.typeId);
     }
@@ -287,6 +309,9 @@ public class UiMain implements ApplicationListener {
 
     public void render() {
         fpsLabel.setText("Fps: "+Math.round(GlobalVars.fps));
+        positionLabel.setText("x:"+Math.round(player.x)+" y:"+Math.round(player.y));
+        frameTimeLabel.setText("Total:"+(debugPerf[62]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[62]-debugPerf[30]));
+
         stageBottom.act(GlobalVars.delta);
         stageBottom.draw();
         stage.act(GlobalVars.delta);
