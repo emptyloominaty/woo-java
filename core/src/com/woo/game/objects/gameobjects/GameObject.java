@@ -30,7 +30,7 @@ public class GameObject {
     public int typeId = 0;
     public String type;
 
-    GameObject(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, String type) {
+    GameObject(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, String type, float direction) {
         this.name = name;
         this.description = description;
         this.solid = solid;
@@ -39,6 +39,7 @@ public class GameObject {
         this.y = y;
         this.spritePath = spritePath;
         this.type = type;
+        this.direction = direction;
 
         //this.id = getGameObjectIdx();
     }
@@ -47,6 +48,20 @@ public class GameObject {
         lightEmitting = true;
         lightColors = color;
         lightIntensity = intensity;
+    }
+
+    public void move(double val) {
+        double speed = (val * GlobalVars.pxToMeter) * GlobalVars.delta;
+        double angleInRadian = 0;
+        angleInRadian = (direction-180) / 180 * Math.PI;
+        double vx = Math.sin(angleInRadian) * speed;
+        double vy = Math.cos(angleInRadian) * speed;
+        this.x += vx;
+        this.y += vy;
+    }
+
+    public void destroy() {
+        GOControl.removeGameObject(this.id);
     }
 
     public void test() {

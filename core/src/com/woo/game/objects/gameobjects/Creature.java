@@ -55,8 +55,8 @@ public class Creature extends GameObject {
     public double moveSpeedIncrease = 1;
     public AiMain ai;
 
-    public Creature(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, int faction, String creatureClass) {
-        super(name, description, solid, interactable, x, y, spritePath,"Creature");
+    public Creature(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, int faction, String creatureClass, float direction) {
+        super(name, description, solid, interactable, x, y, spritePath,"Creature",direction);
 
         ai = new AiMain(this);
 

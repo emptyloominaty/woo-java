@@ -81,23 +81,21 @@ public class Main extends ApplicationAdapter {
 
 		ParticleSystem.init();
 
-		player = new Player("Player","",false,false,250,250,"",0,"FireMage");
+		player = new Player("Player","",false,false,250,250,"",0,"FireMage",0);
 		GOControl.addCreature(player);
 
 		//--Test
-		Creature testCreature = new Creature("test","test",false,false,50,50,"",1,"test");
+		Creature testCreature = new Creature("test","test",false,false,50,50,"",3,"test",0);
 		GOControl.addCreature(testCreature);
-		Creature testCreature2 = new Creature("test2","test",false,false,800,250,"",3,"test");
+		Creature testCreature2 = new Creature("test2","test",false,false,800,250,"",3,"test",0);
 		GOControl.addCreature(testCreature2);
-		Spell testSpell = new Spell("test3","test",false,false,500,40,"");
-		GOControl.addSpell(testSpell);
-		Item testItem = new Item("test4","test",false,false,450,40,"");
+		Item testItem = new Item("test4","test",false,false,450,40,"",0);
 		GOControl.addItem(testItem);
-		WorldObject testWorldObject = new WorldObject("test5","test",false,false,250,40,"");
+		WorldObject testWorldObject = new WorldObject("test5","test",false,false,250,40,"",0);
 		GOControl.addWorldObject(testWorldObject);
-		Creature testCreature3 = new Creature("test6","test",false,false,80,250,"",1,"test");
+		Creature testCreature3 = new Creature("test6","test",false,false,80,250,"",3,"test",0);
 		GOControl.addCreature(testCreature3);
-		Creature testCreature4 = new Creature("test7","test",false,false,450,350,"",1,"test");
+		Creature testCreature4 = new Creature("test7","test",false,false,450,350,"",3,"test",0);
 		GOControl.addCreature(testCreature4);
 
 		GOControl.removeGameObject(1);
@@ -177,6 +175,11 @@ public class Main extends ApplicationAdapter {
 				GOControl.creatures.get(i).x = -500;
 				GOControl.creatures.get(i).y = -500;
 				uiMain.updateCreatureBar(GOControl.creatures.get(i));
+			}
+		}
+		for (int i = GOControl.spells.size()-1; i>-1; i--) {
+			if (!GOControl.spells.get(i).destroyed) {
+				GOControl.spells.get(i).main();
 			}
 
 		}

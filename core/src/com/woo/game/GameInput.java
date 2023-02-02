@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.woo.game.objects.Keybinds;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.Settings;
+import com.woo.game.objects.gameobjects.GOControl;
+import com.woo.game.objects.gameobjects.Spell;
 
 import static com.woo.game.Main.mouseInWorld2D;
 import static com.woo.game.Main.player;
@@ -82,6 +84,13 @@ public class GameInput {
         }
 
         //TEST
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf("NUM_1"))) { //TEST
+            //TODO: CAST ABILITY
+            Spell newSpell = new Spell("test Spell","test",false,false,player.x,player.y,"",player.direction);
+            newSpell.faction = player.faction;
+            GOControl.addSpell(newSpell);
+
+        }
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf("T"))) {
             ParticleSystem.add("fire2",90, player.direction, player.x, player.y);
         }
