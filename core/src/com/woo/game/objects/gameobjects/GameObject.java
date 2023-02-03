@@ -17,8 +17,9 @@ public class GameObject {
     public int[] lightColors = new int[3];
     public int lightIntensity;
 
-    public int sizeX = 64;
-    public int sizeY = 64;
+    //collision box
+    public float sizeX = 30;
+    public float sizeY = 30;
 
     public float direction = 0;
 
@@ -29,6 +30,15 @@ public class GameObject {
     public int id = 0;
     public int typeId = 0;
     public String type;
+
+    public void setCollisionBox(float x, float y) {
+        sizeX = x;
+        sizeY = y;
+    }
+    public void setCollisionBox(float size) {
+        sizeX = size;
+        sizeY = size;
+    }
 
     GameObject(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, String type, float direction) {
         this.name = name;

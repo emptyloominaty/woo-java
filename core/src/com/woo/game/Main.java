@@ -25,6 +25,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import com.woo.game.objects.gameobjects.*;
 import com.woo.game.objects.gameobjects.creatures.Player;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +64,8 @@ public class Main extends ApplicationAdapter {
 
 	public static ActionBar[] actionBars = new ActionBar[2];
 	public static Map<String,Action> actions = new HashMap<String,Action>();
+
+	Rectangle viewportRect = new Rectangle();
 
 	@Override
 	public void create () {
@@ -105,6 +108,11 @@ public class Main extends ApplicationAdapter {
 		Player testxD = (Player) GOControl.creatures.get(0);//.testPlayer();
 		testxD.testPlayer();
 		GOControl.creatures.get(0).test();
+		/*for (int i = 0; i<5000 ;i++) {
+			WorldObject worldObj = new WorldObject("testForLoop"+i,"loop",false,false,700,700,"",3);
+			worldObj.canStopSpells = true;
+			GOControl.addWorldObject(worldObj);
+		}*/
 		//--End Test
 
 
@@ -197,6 +205,17 @@ public class Main extends ApplicationAdapter {
 
 		debugPerf[30] = System.currentTimeMillis();
 		//Render Start
+
+		viewportRect.setBounds((int)(cam.position.x - cam.viewportWidth / 2),
+				(int)(cam.position.y - cam.viewportHeight / 2),
+				(int)cam.viewportWidth,
+				(int)cam.viewportHeight);
+		/*TODO:
+		if (viewportRect.contains(enemy.x, enemy.y)) {
+    // Draw the enemy only if its in the viewPort
+		}
+		 */
+
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		//camera

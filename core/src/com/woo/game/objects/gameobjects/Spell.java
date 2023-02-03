@@ -10,6 +10,9 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class Spell extends GameObject{
     public double life = 1.8;
     public double moveSpeed = 18;
+    public float spellSizeX = 20f;
+    public float spellSizeY = 20f;
+
     public Creature caster;
     public int particleId;
     public boolean particle;
@@ -33,19 +36,30 @@ public class Spell extends GameObject{
         if (life<0) {
             if (particle) {
                 ParticleSystem.stop(particleId);
-                ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed); // TODO:
+                ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed);
             }
             destroy();
             return;
         }
 
-        //TODO: WorldObject Loop
+
+        //TODO: FIX OPTIMIZE???
+        for (WorldObject worldObject : GOControl.worldObjects) {
+            if (!worldObject.canStopSpells && !worldObject.destroyed) {
+                if (GlobalFunctions.checkCollision(this.x,this.y,spellSizeX,spellSizeY,worldObject.x,worldObject.y,worldObject.sizeX,worldObject.sizeY)) {
+                    collision(worldObject);
+                    break;
+                }
+            }
+        }
+
+        float spellSizeXR = spellSizeX/2;
         for (Creature creature : GOControl.creatures) {
             float distance = 999f;
             if (!creature.destroyed && creature!=caster && GlobalFunctions.checkEnemy(caster,creature)) {
                 distance = GlobalFunctions.getDistance(this.x,this.y,creature.x,creature.y);
             }
-            if (distance<3) {
+            if (distance<(((creature.sizeX/2)+spellSizeXR)/GlobalVars.pxToMeter)) {
                 collision(creature);
                 break;
             }
@@ -58,7 +72,15 @@ public class Spell extends GameObject{
         ability.execute(caster,target);
         if (particle) {
             ParticleSystem.stop(particleId);
-            ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed); // TODO:
+            ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed);
+        }
+        destroy();
+    }
+    public void collision(WorldObject target) {
+        //TODO:
+        if (particle) {
+            ParticleSystem.stop(particleId);
+            ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed);
         }
         destroy();
     }

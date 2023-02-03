@@ -52,6 +52,13 @@ public class GlobalFunctions {
         return (float) ((Math.sqrt( a*a + b*b))/GlobalVars.pxToMeter);
     }
     //-----------
+    public static boolean checkCollision(float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2) {
+        return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
+    }
+    public static boolean checkCollision(float x1, float y1, float size1, float x2, float y2, float size2) {
+        return x1 < x2 + size2 && x1 + size1 > x2 && y1 < y2 + size2 && y1 + size1 > y2;
+    }
+    //-----------
     public static float getDirection(float x1, float y1, float x2, float y2) {
         return (float)(360-(Math.atan2(y2 - y1, x2 - x1)* (180 / Math.PI)+90));
     }
