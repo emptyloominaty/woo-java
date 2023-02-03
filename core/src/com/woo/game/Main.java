@@ -35,7 +35,6 @@ public class Main extends ApplicationAdapter {
 
 	public static SpriteBatch batch;
 	//Texture img;
-	ParticleEffect test;
 
 	float fireX;
 	float fireY;
@@ -114,9 +113,6 @@ public class Main extends ApplicationAdapter {
 		//img = new Texture("badlogic.jpg");
 		font = new BitmapFont();
 
-		test = new ParticleEffect();
-		test.load(Gdx.files.internal("particles/fire.particle"),Gdx.files.internal("textures"));
-		test.getEmitters().first().setPosition(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f);
 
 		//TODO:  low(100) - medium(200) - high(400) - ultra(500) ????
 		//test.getEmitters().first().getEmission().
@@ -135,19 +131,14 @@ public class Main extends ApplicationAdapter {
 
 		shapeDrawer = new ShapeDrawer(batch, mapSprite);
 
-		ParticleEmitter emitter = test.getEmitters().first();
-
+		//ParticleEmitter emitter = test.getEmitters().first();
 		/*Array<Sprite> fireSprite = new Array<Sprite>();
 		fireSprite.add(new Sprite(new Texture(Gdx.files.internal( "textures/fire.png"))));
 		emitter.setSprites(fireSprite);*/
-
-		int fireAngle = 0;
+		/*int fireAngle = 0;
 		emitter.getAngle().setHigh(fireAngle-45,fireAngle+45);
 		emitter.getAngle().setLow(fireAngle);
-		test.start();
-
-		fireX = Gdx.graphics.getWidth()/2f;
-		fireY = Gdx.graphics.getHeight()/2f;
+		test.start();*/
 
 		uiMain.create();
 		GameInput.setInputProcessor(uiMain.stage);
@@ -168,12 +159,12 @@ public class Main extends ApplicationAdapter {
 		uiMain.setPlayerSecBar(player.secondaryResource, player.secondaryResourceMax);
 
 		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
-			if (!GOControl.creatures.get(i).destroyed) {
+			if (!GOControl.creatures.get(i).destroyed && !GOControl.creatures.get(i).isDead) {
 				GOControl.creatures.get(i).main();
 				uiMain.updateCreatureBar(GOControl.creatures.get(i));
 			} else {
-				GOControl.creatures.get(i).x = -500;
-				GOControl.creatures.get(i).y = -500;
+				GOControl.creatures.get(i).x = -999;
+				GOControl.creatures.get(i).y = -999;
 				uiMain.updateCreatureBar(GOControl.creatures.get(i));
 			}
 		}
@@ -226,10 +217,6 @@ public class Main extends ApplicationAdapter {
 		mouseInWorld2D.x = mouseInWorld3D.x;
 		mouseInWorld2D.y = mouseInWorld3D.y;
 
-		//fireX-=delta*300;
-		test.setPosition(fireX,fireY);
-		test.update(delta);
-
 		batch.begin();
 		//batch.draw(img, 0, 0);
 		mapSprite.draw(batch);
@@ -243,6 +230,7 @@ public class Main extends ApplicationAdapter {
 		}
 
 		//spells/particles draw
+		ParticleSystem.run();
 		for (int i = 0; i< ParticleSystem.particleList.size(); i++) {
 			if (ParticleSystem.particleList.get(i)!=null) {
 				ParticleSystem.particleList.get(i).update(delta);
@@ -252,9 +240,6 @@ public class Main extends ApplicationAdapter {
 				}
 			}
 		}
-
-		//fire test
-		test.draw(batch);
 
 		batch.end();
 

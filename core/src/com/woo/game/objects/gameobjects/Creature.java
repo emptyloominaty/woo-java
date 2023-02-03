@@ -4,23 +4,25 @@ import com.badlogic.gdx.graphics.Color;
 import com.woo.game.GlobalVars;
 import com.woo.game.ai.AiMain;
 import com.woo.game.objects.abilities.Ability;
+import com.woo.game.objects.abilities.fireMage.FireBlast;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Creature extends GameObject {
     public String type;
 
     public double health;
     public double healthMax;
-    public String resourceName;
+    public String resourceName = "Mana";
     public double energy;
     public double energyMax;
     public String secondaryResourceName;
-    public double secondaryResource;
-    public double secondaryResourceMax;
+    public int secondaryResource;
+    public int secondaryResourceMax;
     public Creature target;
     public String creatureClass; // FireMage, FrostMage, Warrior, Ranger, // Rogue, Necromancer, Warlock, Paladin,
     //TODO:Inventory
@@ -35,6 +37,7 @@ public class Creature extends GameObject {
     public boolean isStunned = false;
     public boolean isRooted = false;
     public boolean isRolling = false;
+    public boolean isStealthed = false;
 
     public boolean isCasting = false;
     public boolean isChanneling = false;
@@ -53,10 +56,18 @@ public class Creature extends GameObject {
     public Map<String, Ability> abilities = new HashMap<>();
 
     public double moveSpeedIncrease = 1;
+    public double reduceEnergyCost = 1;
+
+
+
     public AiMain ai;
 
     public Creature(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, int faction, String creatureClass, float direction) {
         super(name, description, solid, interactable, x, y, spritePath,"Creature",direction);
+
+        if (faction==0) {
+            abilities.put("Fire Blast",new FireBlast());
+        }
 
         ai = new AiMain(this);
 
@@ -120,7 +131,9 @@ public class Creature extends GameObject {
         }
         //TODO:PETS?
         //TODO:Resource
-
+        if (Objects.equals(resourceName, "Mana")) {
+            this.energy += GlobalVars.delta*(this.energyMax/100)*2;
+        }
         if (energy>energyMax) {
             energy = energyMax;
         }
@@ -129,7 +142,11 @@ public class Creature extends GameObject {
             this.gcd -= GlobalVars.delta;
         }
 
-        //TODO:Ability Cds
+        //Ability Cds
+        for (Map.Entry<String, Ability> ability : abilities.entrySet()) {
+            abilities.get(ability.getKey()).incCd(this,GlobalVars.delta,true);
+            abilities.get(ability.getKey()).run(this);
+        }
 
         if (this.isStunned) {
             isCasting = false;
@@ -139,6 +156,16 @@ public class Creature extends GameObject {
         }
 
         //TODO:casting ability
+        if (this.isCasting) {
+            if ((double)this.casting.get("time")<(double)this.casting.get("time2")) {
+                double time = (double) this.casting.get("time");
+                time += GlobalVars.delta;
+                this.casting.put("time",time);
+            } else {
+                this.abilities.get(this.casting.get("name")).endCast(this);
+                this.isCasting = false;
+            }
+        }
 
         //TODO:channeling ability
 
@@ -199,6 +226,26 @@ public class Creature extends GameObject {
             return true;
         }
         return false;
+    }
+
+    public void useEnergy(double val,int val2) {
+        int val2Used = this.secondaryResource;
+        if (this.reduceEnergyCost<0) {this.reduceEnergyCost=0;}
+        this.energy -= val * this.reduceEnergyCost;
+        if (val2!=0 && this.secondaryResourceMax>0) {
+            this.useSec(val2);
+        }
+    }
+
+    public void useSec(int val) {
+        if (val==9999) {
+            this.secondaryResource = 0;
+        } else {
+            this.secondaryResource -= val;
+            if (this.secondaryResource>this.secondaryResourceMax) {
+                this.secondaryResource = this.secondaryResourceMax;
+            }
+        }
     }
 
     public void move(double val, boolean noInc, int strafe, double forceVal) {

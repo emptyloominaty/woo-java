@@ -84,13 +84,14 @@ public class GameInput {
         }
 
         //TEST
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf("NUM_1"))) { //TEST
-            //TODO: CAST ABILITY
-            Spell newSpell = new Spell("test Spell","test",false,false,player.x,player.y,"",player.direction);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf("1"))) { //TEST
+            player.abilities.get("Fire Blast").startCast(player);
+            /*Spell newSpell = new Spell("test Spell","test",false,false,player.x,player.y,"",player.direction);
             newSpell.faction = player.faction;
-            GOControl.addSpell(newSpell);
-
+            GOControl.addSpell(newSpell);*/
         }
+
+
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf("T"))) {
             ParticleSystem.add("fire2",90, player.direction, player.x, player.y);
         }

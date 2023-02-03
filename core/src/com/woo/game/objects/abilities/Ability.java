@@ -25,6 +25,10 @@ public class Ability {
     public ArrayList<Map> effects;
     public boolean noGcd = false;
 
+    //Particle
+    public double moveSpeed = 22;
+    public double life = 1.5;
+
     public boolean poison = false;
     public boolean bleed = false;
 
@@ -56,7 +60,7 @@ public class Ability {
     public boolean permanentBuff = false;
 
     public boolean talent = false;
-    public boolean talentSelected = true;
+    public boolean talentSelected = false;
 
 
     //tooltip
@@ -120,7 +124,7 @@ public class Ability {
     }
 
     public boolean checkStart(Creature caster, double cost, int secCost) {
-        if (talent != talentSelected) {
+        if (talent != talentSelected && talent) {
             return false;
         }
         if (caster.isStunned || caster.isDead || (caster.isInterrupted && school.equals("Physical"))) {
@@ -175,7 +179,50 @@ public class Ability {
     }
 
     public void setGcd(Creature caster,double gcd) { //gcd = 0
+        if (caster.isStealthed && !this.dontBreakStealth) {
+            /*TODO: for (int i = 0; i<caster.buffs.length; i++) {
+                if (caster.buffs[i].type=="stealth") {
+                    caster.buffs[i].duration = -1;
+                }
+            }*/
+        }
+        abilityCd = 0;
+        //TODO: spellHistory Arraylist .add, .remove(0) if >3
         //TODO:
+        if (caster==player) {
+            //TODO:   if (actions[this.name]) {
+            //                let bar = actions[this.name].bar
+            //                let ability = actions[this.name].slot
+            //                keyPressed[keybinds["Bar"+bar+" Ability"+ability+""].key] = false
+            //            }
+        }
+        if (this.gcd>0 || gcd>0) {
+            if (this.hasteGcd) {
+                if (gcd==0) {
+                    caster.gcd = this.gcd / (1 + (caster.stats.get("haste") / 100));
+                } else {
+                    caster.gcd = gcd / (1 + (caster.stats.get("haste") / 100));
+                }
+            } else {
+                if (gcd==0) {
+                    caster.gcd = this.gcd;
+                } else {
+                    caster.gcd = gcd;
+                }
+            }
+            if (caster==player) {
+                //TODO:bars.playerCast.setMaxVal(caster.gcd);
+            }
+            if (this.gcd>=0.5) {
+                if (caster.gcd<0.5) {
+                    caster.gcd = 0.5;
+                    if (caster==player) {
+                        //TODO:bars.playerCast.setMaxVal(0.55);
+                    }
+                }
+            }
+        }
+
     }
 
     public boolean isEnemy(Creature caster, Creature target) {
@@ -202,6 +249,15 @@ public class Ability {
     /*public boolean canSpellQueue(Creature caster) {
         return (caster==player && caster.gcd<spellQueueWindow && (caster.gcd>0 || caster.isCasting));
     }*/
+    public void casterStartCasting(Creature caster) {
+        caster.isCasting = true;
+        caster.casting.put("name",this.name);
+        caster.casting.put("time",0.0);
+        caster.casting.put("time2",(double)this.castTime/(1 + (caster.stats.get("haste") / 100)));
+        if (caster.isChanneling) {
+            caster.isChanneling = false;
+        }
+    }
 
     public boolean checkCost(Creature caster,double cost,boolean showMessage,int secCost) {
         if (cost==-9999) {
@@ -254,6 +310,9 @@ public class Ability {
                 return false;
             }
         }
+    }
+
+    public void execute(Creature caster,Creature target) {
     }
 
     public void incCd(Creature caster, double inc,boolean hasteCd) {

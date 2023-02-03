@@ -40,6 +40,12 @@ public class UiMain implements ApplicationListener {
     public Label frameTimeLabel;
     public Label positionLabel;
     public Label areaNameLabel;
+    public Label debug1;
+    public Label debug2;
+    public Label debug3;
+    public Label debug4;
+    public Label debug5;
+
 
     //healthbar
     public Table tableHpBar;
@@ -162,6 +168,22 @@ public class UiMain implements ApplicationListener {
         tableTopRight.row();
         tableTopRight.add(positionLabel).pad(5).right();
 
+        debug1 = new Label(" ",skin);
+        debug2 = new Label(" ",skin);
+        debug3 = new Label(" ",skin);
+        debug4 = new Label(" ",skin);
+        debug5 = new Label(" ",skin);
+
+        table.add(debug1).padLeft(5).left();
+        table.row();
+        table.add(debug2).padLeft(5).left();
+        table.row();
+        table.add(debug3).padLeft(5).left();
+        table.row();
+        table.add(debug4).padLeft(5).left();
+        table.row();
+        table.add(debug5).padLeft(5).left();
+        table.row();
 
         //Health Bar
         tableHpBar = new Table();
@@ -311,6 +333,15 @@ public class UiMain implements ApplicationListener {
         fpsLabel.setText("Fps: "+Math.round(GlobalVars.fps));
         positionLabel.setText("x:"+Math.round(player.x)+" y:"+Math.round(player.y));
         frameTimeLabel.setText("Total:"+(debugPerf[62]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[62]-debugPerf[30]));
+
+        debug1.setText("GCD: "+(Math.round(player.gcd*10.0)/10.0));
+        if (player.isCasting) {
+            debug2.setText("Casting: "+(Math.round((double)player.casting.get("time")*10.0)/10.0)+" / "+(Math.round((double)player.casting.get("time2")*10.0)/10.0));
+        } else {
+            debug2.setText("");
+        }
+
+
 
         stageBottom.act(GlobalVars.delta);
         stageBottom.draw();
