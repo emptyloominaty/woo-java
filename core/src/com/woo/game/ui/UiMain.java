@@ -23,11 +23,13 @@ import static com.woo.game.Main.*;
 public class UiMain implements ApplicationListener {
     //Config
     public int healthBarWidth = 150;
-    public int healthBarHeight = 60;
+    public int healthBarHeight = 90;
     public int manaBarWidth = 150;
     public int manaBarHeight = 60;
-    public int secBarWidth = 120;
+    public int secBarWidth = 150;
     public int secBarHeight = 30;
+    public int castBarWidth = 150;
+    public int castBarHeight = 20;
     //
 
     public Stage stage;
@@ -47,7 +49,7 @@ public class UiMain implements ApplicationListener {
     public Label debug5;
 
 
-    //healthbar
+    //health bar
     public Table tableHpBar;
     public Image healthBarA;
     public Label healthBarText;
@@ -67,6 +69,14 @@ public class UiMain implements ApplicationListener {
     public Label secBarText;
     public Stack secBarStack;
     public Table secBarATable;
+
+    //cast bar
+    public Table tableCastBar;
+    public Image castBarA;
+    public Label castBarText;
+    public Stack castBarStack;
+    public Table castBarATable;
+
 
     //TODO:player cast bar
 
@@ -202,7 +212,8 @@ public class UiMain implements ApplicationListener {
 
         tableHpBar.add(healthBarStack).size(healthBarWidth,healthBarHeight);
         tableHpBar.align(Align.left);
-        tableHpBar.setPosition(80,40);
+        tableHpBar.setPosition(80,55);
+
 
         //Resource Bar
         tableMpBar = new Table();
@@ -220,7 +231,7 @@ public class UiMain implements ApplicationListener {
         manaBarText.setAlignment(Align.center);
 
         tableMpBar.add(manaBarStack).size(manaBarWidth,manaBarHeight);
-        tableMpBar.setPosition(1200,40); //TODO:
+        tableMpBar.setPosition(cam.viewportWidth-80,40); //TODO:
         tableMpBar.align(Align.right);
         //
 
@@ -240,7 +251,29 @@ public class UiMain implements ApplicationListener {
         secBarText.setAlignment(Align.center);
 
         tableSrBar.add(secBarStack).size(secBarWidth,secBarHeight);
-        tableSrBar.setPosition(640,40); //TODO:
+        tableSrBar.setPosition(cam.viewportWidth-80,90); //TODO:
+        tableSrBar.align(Align.right);
+
+        //cast bar
+        tableCastBar = new Table();
+        table.addActor(tableCastBar);
+        castBarATable = new Table();
+        castBarStack = new Stack();
+        Image castBarBackground = new Image(skin.newDrawable("white", Color.BLACK));
+        castBarA = new Image(skin.newDrawable("white", Color.LIGHT_GRAY));
+        castBarText = new Label("",skin);
+
+        castBarStack.addActor(castBarBackground);
+        castBarATable.add(castBarA).size(castBarWidth,castBarHeight);
+        castBarStack.addActor(castBarATable);
+        castBarStack.addActor(castBarText);
+        castBarText.setAlignment(Align.center);
+
+        tableCastBar.add(castBarStack).size(castBarWidth,castBarHeight);
+        tableCastBar.setPosition(cam.viewportWidth/2,100); //TODO:
+        tableCastBar.setVisible(false);
+
+
 
         // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
         final TextButton button = new TextButton("Click me!", skin);
@@ -330,18 +363,20 @@ public class UiMain implements ApplicationListener {
     }
 
     public void render() {
+        if (player.isCasting) {
+            double time1 = (double) player.casting.get("time");
+            double time2 = (double) player.casting.get("time2");
+            double time = time2 - time1;
+            tableCastBar.setVisible(true);
+            castBarText.setText(player.casting.get("name")+" - "+(Math.round(time*10.0)/10.0)+"s");
+            castBarA.setWidth((float) (castBarWidth*(time1/time2)));
+        } else {
+            tableCastBar.setVisible(false);
+        }
+
         fpsLabel.setText("Fps: "+Math.round(GlobalVars.fps));
         positionLabel.setText("x:"+Math.round(player.x)+" y:"+Math.round(player.y));
         frameTimeLabel.setText("Total:"+(debugPerf[62]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[62]-debugPerf[30]));
-
-        debug1.setText("GCD: "+(Math.round(player.gcd*10.0)/10.0));
-        if (player.isCasting) {
-            debug2.setText("Casting: "+(Math.round((double)player.casting.get("time")*10.0)/10.0)+" / "+(Math.round((double)player.casting.get("time2")*10.0)/10.0));
-        } else {
-            debug2.setText("");
-        }
-
-
 
         stageBottom.act(GlobalVars.delta);
         stageBottom.draw();

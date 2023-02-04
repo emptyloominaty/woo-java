@@ -37,9 +37,6 @@ public class Main extends ApplicationAdapter {
 	public static SpriteBatch batch;
 	//Texture img;
 
-	float fireX;
-	float fireY;
-
 	final int WORLD_WIDTH = 4096;
 	final int WORLD_HEIGHT = 4096;
 	public static OrthographicCamera cam;
@@ -113,6 +110,10 @@ public class Main extends ApplicationAdapter {
 			worldObj.canStopSpells = true;
 			GOControl.addWorldObject(worldObj);
 		}*/
+		for (int x = 0; x<1000 ;x++) {
+			GOControl.addCreature(new Creature("testx"+x,"test",false,false,(float)Math.random()*10000,(float)Math.random()*10000,"",3,"test",0));
+		}
+
 		//--End Test
 
 
@@ -133,7 +134,7 @@ public class Main extends ApplicationAdapter {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 
-		cam = new OrthographicCamera(1280, 1280 * (h / w)); //1200 , 1200
+		cam = new OrthographicCamera(1600, 1600 * (h / w)); //1200 , 1200
 		cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
 		cam.update();
 
@@ -169,11 +170,9 @@ public class Main extends ApplicationAdapter {
 		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
 			if (!GOControl.creatures.get(i).destroyed && !GOControl.creatures.get(i).isDead) {
 				GOControl.creatures.get(i).main();
-				uiMain.updateCreatureBar(GOControl.creatures.get(i));
 			} else {
 				GOControl.creatures.get(i).x = -999;
 				GOControl.creatures.get(i).y = -999;
-				uiMain.updateCreatureBar(GOControl.creatures.get(i));
 			}
 		}
 		for (int i = GOControl.spells.size()-1; i>-1; i--) {
@@ -206,16 +205,6 @@ public class Main extends ApplicationAdapter {
 		debugPerf[30] = System.currentTimeMillis();
 		//Render Start
 
-		viewportRect.setBounds((int)(cam.position.x - cam.viewportWidth / 2),
-				(int)(cam.position.y - cam.viewportHeight / 2),
-				(int)cam.viewportWidth,
-				(int)cam.viewportHeight);
-		/*TODO:
-		if (viewportRect.contains(enemy.x, enemy.y)) {
-    // Draw the enemy only if its in the viewPort
-		}
-		 */
-
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		//camera
@@ -227,6 +216,12 @@ public class Main extends ApplicationAdapter {
 		cam.position.y = (float) MathUtils.clamp(player.y, effectiveViewportHeight / 2f, 4096 - effectiveViewportHeight / 2f);
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
+
+		int viewPortOffset = 100;
+		viewportRect.setBounds((int)(cam.position.x - (cam.viewportWidth*GlobalVars.camZoom+viewPortOffset) / 2),
+				(int)(cam.position.y - (cam.viewportHeight*GlobalVars.camZoom+viewPortOffset) / 2),
+				(int) (cam.viewportWidth*GlobalVars.camZoom+viewPortOffset),
+				(int) (cam.viewportHeight*GlobalVars.camZoom+viewPortOffset));
 
 		//Mouse position in Game
 		mouseInWorld3D.x = Gdx.input.getX();
@@ -245,7 +240,12 @@ public class Main extends ApplicationAdapter {
 
 		//objects draw
 		for (int i = 0; i<GOControl.gameObjects.size(); i++) {
-			GOControl.gameObjects.get(i).draw(shapeDrawer);
+			if (viewportRect.contains(GOControl.gameObjects.get(i).x, GOControl.gameObjects.get(i).y)) {
+				GOControl.gameObjects.get(i).draw(shapeDrawer);
+			}
+		}
+		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
+			uiMain.updateCreatureBar(GOControl.creatures.get(i));
 		}
 
 		//spells/particles draw
@@ -267,10 +267,9 @@ public class Main extends ApplicationAdapter {
 		//TODO: actions.get() .draw()
 
 		debugPerf[63] = System.currentTimeMillis();
-		if (debugPerf[63]-debugPerf[0]>10) {
+		if (debugPerf[63]-debugPerf[0]>17) {
 			System.out.println("Total:"+(debugPerf[63]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[63]-debugPerf[30]));
 		}
-		//TODO:UI FPS + (Total + Main + Draw) Time
 	}
 
 	public void resize(int width, int height) {

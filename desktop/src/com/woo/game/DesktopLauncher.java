@@ -19,7 +19,7 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.useVsync(false);
 		config.setResizable(false);
-		config.setWindowedMode(1280,720);
+		config.setWindowedMode(1600,900);
 		config.setTitle("Woo");
 		//TODO:config.setBackBufferConfig(8,8,8,8,16,0,0);
 		//config.setIdleFPS(30);
