@@ -10,9 +10,10 @@ import static com.woo.game.Main.player;
 
 public class FireBlast extends Ability {
     public FireBlast() {
-        super("Fire Blast", 10,0,0.65, 0.65, false, true, false, "fire", 40, 1, 0);
+        super("Fire Blast", 5,0,0.65, 0.65, false, true, false, "fire", 40, 1, 0,1);
         this.moveSpeed = 30;
         this.life = 1.5;
+        this.spellPower = 0.85;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class FireBlast extends Ability {
         //TODO:doDamage(target,spellPower....);
 
         //Test
-        target.health -= 7+(Math.random()*8);
+        target.health -= 15+(Math.random()*15);
     }
 
 }

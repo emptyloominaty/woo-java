@@ -1,6 +1,7 @@
 package com.woo.game.objects.gameobjects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.ai.AiMain;
 import com.woo.game.objects.abilities.Ability;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static com.woo.game.Main.player;
 
 public class Creature extends GameObject {
     public String type;
@@ -28,7 +31,7 @@ public class Creature extends GameObject {
     //TODO:Inventory
     //TODO:Gear
 
-    public int level;
+    public int level = 1;
     public long xp;
     public int faction; //0-player 1-friendly 2-neutral 3>=enemy
 
@@ -202,8 +205,23 @@ public class Creature extends GameObject {
 
         //TODO:debuffs = [];
         //TODO:buffs = [];
+        if (this.faction>1/*???// && (100>GlobalFunctions.getDistance(player,this))*/) {
+            player.gainXp(10+(this.level*2)); //TODO: xp table
+            //TODO:loot
+        }
 
         return true;
+    }
+
+    public void gainXp(float xp) {
+        this.xp += xp;
+        System.out.println("XP Gained: "+xp);
+        if (this.xp>(500 * (Math.pow(1.2, this.level)-1)/(1.5-1))) {
+            this.level++;
+            System.out.println("LEVEL UP "+this.level);
+            //TODO: stats
+        }
+
     }
 
     public void setMousePos(float x, float y) {
@@ -211,8 +229,6 @@ public class Creature extends GameObject {
         mousePosY = y;
     }
 
-    //TODO: useResource
-    //TODO: useSecondaryResource
     //TODO: updateHealth?
     //TODO: changeTalent
 

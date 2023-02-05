@@ -184,15 +184,15 @@ public class UiMain implements ApplicationListener {
         debug4 = new Label(" ",skin);
         debug5 = new Label(" ",skin);
 
-        table.add(debug1).padLeft(5).left();
+        table.add(debug1).pad(5).left();
         table.row();
-        table.add(debug2).padLeft(5).left();
+        table.add(debug2).pad(5).left();
         table.row();
-        table.add(debug3).padLeft(5).left();
+        table.add(debug3).pad(5).left();
         table.row();
-        table.add(debug4).padLeft(5).left();
+        table.add(debug4).pad(5).left();
         table.row();
-        table.add(debug5).padLeft(5).left();
+        table.add(debug5).pad(5).left();
         table.row();
 
         //Health Bar
@@ -304,6 +304,7 @@ public class UiMain implements ApplicationListener {
         creatureCastName = new HashMap<Integer, Label>();
         creatureHealthBar = new HashMap<Integer, Image>();
         creatureCastBar = new HashMap<Integer, Image>();
+        //TODO: creatureLevel
 
         /*stage.setDebugAll(true);
         stageBottom.setDebugAll(true);
@@ -350,7 +351,7 @@ public class UiMain implements ApplicationListener {
     }
     public void removeCreatureBar(Creature creature) {
         if (creature.faction!=0) {
-            //TODO
+            //TODO ???????????
         }
         //creatureTables.remove(creature.typeId);
     }
@@ -377,6 +378,8 @@ public class UiMain implements ApplicationListener {
         fpsLabel.setText("Fps: "+Math.round(GlobalVars.fps));
         positionLabel.setText("x:"+Math.round(player.x)+" y:"+Math.round(player.y));
         frameTimeLabel.setText("Total:"+(debugPerf[62]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[62]-debugPerf[30]));
+        debug1.setText("Level: "+player.level);
+        debug2.setText("XP: "+player.xp+"/"+Math.round(500 * (Math.pow(1.2, player.level)-1)/(1.5-1)));
 
         stageBottom.act(GlobalVars.delta);
         stageBottom.draw();

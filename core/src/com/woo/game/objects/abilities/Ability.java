@@ -24,6 +24,7 @@ public class Ability {
     public int maxCharges = 1;
     public ArrayList<Map> effects;
     public boolean noGcd = false;
+    public int levelMin = 1;
 
     //Particle
     public double moveSpeed = 22;
@@ -69,7 +70,7 @@ public class Ability {
     public boolean passive = false;
 
     public Ability(String name, double cost, int secCost, double gcd, double castTime, boolean channeling, boolean casting, boolean canMove,
-                   String school, float range, int charges, double cd) {
+                   String school, float range, int charges, double cd, int levelMin) {
         this.name = name;
         this.cost = cost;
         this.secCost = secCost;
@@ -84,6 +85,7 @@ public class Ability {
         this.maxCharges = charges;
         this.cd = cd;
         this.maxCd = cd;
+        this.levelMin = levelMin;
 
     }
 
@@ -124,6 +126,9 @@ public class Ability {
     }
 
     public boolean checkStart(Creature caster, double cost, int secCost) {
+        /*TODO: if (caster.level<this.levelMin) {
+            return false;
+        }*/
         if (talent != talentSelected && talent) {
             return false;
         }
