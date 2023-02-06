@@ -325,19 +325,35 @@ public class UiMain implements ApplicationListener {
             Table tableC = new Table();
             this.stageBottom.addActor(tableC);
             Label label = new Label(creature.name,skin); //TODO:
-            Label labelHealth = new Label ("10/10",skin);
+            Label labelHealth = new Label ("10/10",skin); //TODO: freetype font (lsans-15.fnt)
             tableC.add(label).size(160,18);
             tableC.row();
-            tableC.add(labelHealth).size(160,18);
+
+            Table tableH = new Table();
+            Stack stackH = new Stack();
+
+            Image healthbarBackground = new Image(skin.newDrawable("white", Color.BLACK));
+            Image healthBarC = new Image(skin.newDrawable("white", new Color(0.8f,0.2f,0.2f,1f)));
+
+            stackH.add(healthbarBackground);
+            tableH.add(healthBarC).size(50,20);
+            stackH.addActor(tableH);
+            stackH.add(labelHealth);
+            tableC.add(stackH);
+
             label.setAlignment(Align.center);
             labelHealth.setAlignment(Align.center);
             tableC.align(Align.center);
-            //tableC.
             tableC.setPosition(creature.x, creature.y);
+
+
+
 
             creatureTables.put(creature.typeId,tableC);
             creatureNames.put(creature.typeId,label);
             creatureHealthText.put(creature.typeId,labelHealth);
+            creatureHealthBar.put(creature.typeId,healthBarC);
+
         }
     }
     public void updateCreatureBar(Creature creature) {
@@ -345,8 +361,18 @@ public class UiMain implements ApplicationListener {
             float x = (Gdx.graphics.getWidth()/2f) + ((creature.x - cam.position.x)) /GlobalVars.camZoom;
             float y = (Gdx.graphics.getHeight()/2f) + ((creature.y - cam.position.y)) /GlobalVars.camZoom;
             creatureNames.get(creature.typeId).setText(creature.name);
-            creatureHealthText.get(creature.typeId).setText(Math.round(creature.health)+"/"+Math.round(creature.healthMax));
+            double health = creature.health;
+            if (health<0) {
+                health = 0;
+            }
+            creatureHealthText.get(creature.typeId).setText(Math.round(health)+"/"+Math.round(creature.healthMax));
             creatureTables.get(creature.typeId).setPosition(x, y + 36);
+
+            int width = (int) (creature.health/creature.healthMax*50);
+            if (width<0) {
+                width = 0;
+            }
+            creatureHealthBar.get(creature.typeId).setWidth(width);
         }
     }
     public void removeCreatureBar(Creature creature) {
