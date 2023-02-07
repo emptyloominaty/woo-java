@@ -112,6 +112,8 @@ public class Main extends ApplicationAdapter {
 		}*/
 		for (int x = 0; x<1000 ;x++) {
 			GOControl.addCreature(new Creature("testx"+x,"test",false,false,(float)Math.random()*10000,(float)Math.random()*10000,"",3,"test",0));
+			/*GOControl.creatures.get(x+4).healthMax = 9000;
+			GOControl.creatures.get(x+4).health = 9000;*/
 		}
 
 		//--End Test

@@ -16,6 +16,7 @@ public class ParticleSystem {
     public static ArrayList<Integer> particleListFree;
     public static Map<Integer, MovingParticle> movingParticles;
     public static Map<String, String> particleFiles;
+    public static ArrayList<Integer> removeMovingParticles;
 
     public static void init() {
         particleList = new ArrayList<ParticleEffect>();
@@ -26,6 +27,7 @@ public class ParticleSystem {
         particleFiles.put("fire64","particles/fire64.particle");
         //TODO: particleFiles.put
         movingParticles = new HashMap<Integer, MovingParticle>();
+        removeMovingParticles = new ArrayList<Integer>();
     }
 
     public static int add(String particleFile,int angle, float direction,float x, float y) {
@@ -80,15 +82,15 @@ public class ParticleSystem {
         movingParticles.put(id, new MovingParticle(id,x,y,direction,velocity));
 
     }
-    public static void stopMoving(int id) {
-        movingParticles.remove(id);
-    }
-
 
     public static void run() {
         for (Map.Entry<Integer, MovingParticle> mp : movingParticles.entrySet()) {
             movingParticles.get(mp.getKey()).move();
         }
+        for (int i = 0; i<removeMovingParticles.size();i++) {
+            movingParticles.remove(movingParticles.remove(removeMovingParticles.get(i)));
+        }
+        removeMovingParticles = new ArrayList<Integer>();
     }
 }
 
@@ -109,7 +111,8 @@ class MovingParticle {
     void move() {
         this.life -= GlobalVars.delta;
         if (this.life<0) {
-            ParticleSystem.stopMoving(this.id);
+            ParticleSystem.removeMovingParticles.add(this.id);
+            return;
         }
         double speed = (this.velocity * GlobalVars.pxToMeter) * GlobalVars.delta;
         double angleInRadian = 0;

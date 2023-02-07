@@ -20,13 +20,18 @@ public class AbilityFunctions {
             school = school2;
         }
         if (spellPower == 0) {
-            //damage = (caster.stats.primary * ability.spellPower) * (1 + (caster.stats.vers / 100)) * crit;
+            damage = (caster.stats.get(caster.primaryStat) * ability.spellPower) * crit;
         } else {
-            //damage = (caster.stats.primary * spellPower) * (1 + (caster.stats.vers / 100)) * crit;
+            damage = (caster.stats.get(caster.primaryStat) * spellPower) * crit;
         }
         if (val!=0) {
             damage =  val;
         }
+
+        //TODO:DR, DI, idk
+
+        target.health -= damage;
+
     }
 
 }

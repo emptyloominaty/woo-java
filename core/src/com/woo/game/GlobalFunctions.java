@@ -62,4 +62,14 @@ public class GlobalFunctions {
     public static float getDirection(float x1, float y1, float x2, float y2) {
         return (float)(360-(Math.atan2(y2 - y1, x2 - x1)* (180 / Math.PI)+90));
     }
+    //-----------
+    public static String getHealthString(double health) {
+        if (health>999999) {
+            return Math.round(health/1000000)+"M";
+        } else if (health>999) {
+            return Math.round(health/1000)+"K";
+        } else {
+            return Math.round(health)+"";
+        }
+    }
 }

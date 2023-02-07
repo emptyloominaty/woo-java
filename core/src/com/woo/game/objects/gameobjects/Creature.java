@@ -6,6 +6,7 @@ import com.woo.game.GlobalVars;
 import com.woo.game.ai.AiMain;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.abilities.fireMage.FireBlast;
+import com.woo.game.objects.abilities.fireMage.Wildfire;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import static com.woo.game.Main.player;
 
 public class Creature extends GameObject {
     public String type;
+    public String primaryStat = "strength";
 
     public double health;
     public double healthMax;
@@ -69,7 +71,10 @@ public class Creature extends GameObject {
         super(name, description, solid, interactable, x, y, spritePath,"Creature",direction);
 
         if (faction==0) {
+            primaryStat = "intellect";
+
             abilities.put("Fire Blast",new FireBlast());
+            abilities.put("Wildfire",new Wildfire());
         }
 
         ai = new AiMain(this);

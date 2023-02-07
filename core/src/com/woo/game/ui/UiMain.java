@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.objects.gameobjects.Creature;
 
@@ -30,6 +33,8 @@ public class UiMain implements ApplicationListener {
     public int secBarHeight = 30;
     public int castBarWidth = 150;
     public int castBarHeight = 20;
+
+    public int creatureHealthBarWidth = 55;
     //
 
     public Stage stage;
@@ -124,9 +129,16 @@ public class UiMain implements ApplicationListener {
 
     //TODO:UI (Menu)
 
+    //font
+    public FreeTypeFontGenerator generator;
+    public FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 
+    Label.LabelStyle labelStyle10 = new Label.LabelStyle();
+    Label.LabelStyle labelStyle12 = new Label.LabelStyle();
 
     public void create () {
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/lsans.ttf"));
+
         stageBottom = new Stage();
         stageTop = new Stage();
         stage = new Stage();
@@ -141,6 +153,14 @@ public class UiMain implements ApplicationListener {
 
         skin = new Skin();
 
+        //font
+        parameter.size = 10;
+        parameter.borderColor = Color.BLACK;
+        BitmapFont font10 = generator.generateFont(parameter);
+        parameter.borderWidth = 0.5f;
+        parameter.size = 12;
+        BitmapFont font12 = generator.generateFont(parameter);
+
         // Generate a 1x1 white texture and store it in the skin named "white".
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -149,6 +169,8 @@ public class UiMain implements ApplicationListener {
 
         // Store the default libGDX font under the name "default".
         skin.add("default", new BitmapFont());
+        skin.add("font10", font10);
+        skin.add("font12", font12);
 
         // Configure a TextButtonStyle and name it "default". Skin resources are stored by type, so this doesn't overwrite the font.
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -162,6 +184,13 @@ public class UiMain implements ApplicationListener {
         Label.LabelStyle defaultLabelStyle = new Label.LabelStyle();
         defaultLabelStyle.font = skin.getFont("default");
         skin.add("default",defaultLabelStyle);
+
+        labelStyle10.font = skin.getFont("font10");
+        skin.add("label10",labelStyle10);
+
+        labelStyle12.font = skin.getFont("font12");
+        skin.add("label12",labelStyle12);
+
 
         fpsLabel = new Label("Fps: ",skin);
         frameTimeLabel = new Label("",skin);
@@ -304,7 +333,6 @@ public class UiMain implements ApplicationListener {
         creatureCastName = new HashMap<Integer, Label>();
         creatureHealthBar = new HashMap<Integer, Image>();
         creatureCastBar = new HashMap<Integer, Image>();
-        //TODO: creatureLevel
 
         /*stage.setDebugAll(true);
         stageBottom.setDebugAll(true);
@@ -324,19 +352,21 @@ public class UiMain implements ApplicationListener {
         if (creature.faction!=0) {
             Table tableC = new Table();
             this.stageBottom.addActor(tableC);
-            Label label = new Label(creature.name,skin); //TODO:
-            Label labelHealth = new Label ("10/10",skin); //TODO: freetype font (lsans-15.fnt)
+            Label label = new Label(creature.name+" ("+creature.level+")",skin); //TODO:
+            label.setStyle(labelStyle12);
+            Label labelHealth = new Label ("10/10",skin);
+            labelHealth.setStyle(labelStyle10);
             tableC.add(label).size(160,18);
             tableC.row();
 
             Table tableH = new Table();
             Stack stackH = new Stack();
 
-            Image healthbarBackground = new Image(skin.newDrawable("white", Color.BLACK));
-            Image healthBarC = new Image(skin.newDrawable("white", new Color(0.8f,0.2f,0.2f,1f)));
+            Image healthbarBackground = new Image(skin.newDrawable("white", new Color(0,0,0,0.6f)));
+            Image healthBarC = new Image(skin.newDrawable("white", new Color(1f,0.2f,0.2f,0.6f)));
 
             stackH.add(healthbarBackground);
-            tableH.add(healthBarC).size(50,20);
+            tableH.add(healthBarC).size(creatureHealthBarWidth,14);
             stackH.addActor(tableH);
             stackH.add(labelHealth);
             tableC.add(stackH);
@@ -345,9 +375,6 @@ public class UiMain implements ApplicationListener {
             labelHealth.setAlignment(Align.center);
             tableC.align(Align.center);
             tableC.setPosition(creature.x, creature.y);
-
-
-
 
             creatureTables.put(creature.typeId,tableC);
             creatureNames.put(creature.typeId,label);
@@ -360,15 +387,16 @@ public class UiMain implements ApplicationListener {
         if (creature.faction!=0) {
             float x = (Gdx.graphics.getWidth()/2f) + ((creature.x - cam.position.x)) /GlobalVars.camZoom;
             float y = (Gdx.graphics.getHeight()/2f) + ((creature.y - cam.position.y)) /GlobalVars.camZoom;
-            creatureNames.get(creature.typeId).setText(creature.name);
+            creatureNames.get(creature.typeId).setText(creature.name+" ("+creature.level+")");
             double health = creature.health;
             if (health<0) {
                 health = 0;
             }
-            creatureHealthText.get(creature.typeId).setText(Math.round(health)+"/"+Math.round(creature.healthMax));
+            creatureHealthText.get(creature.typeId).setText(GlobalFunctions.getHealthString(health)+"/"+GlobalFunctions.getHealthString(creature.healthMax));
+            //creatureHealthText.get(creature.typeId).setText(Math.round(health)+"/"+Math.round(creature.healthMax));
             creatureTables.get(creature.typeId).setPosition(x, y + 36);
 
-            int width = (int) (creature.health/creature.healthMax*50);
+            int width = (int) (creature.health/creature.healthMax*creatureHealthBarWidth);
             if (width<0) {
                 width = 0;
             }
@@ -429,6 +457,7 @@ public class UiMain implements ApplicationListener {
         stage.dispose();
         stageBottom.dispose();
         stageTop.dispose();
+        generator.dispose();
     }
 
     public void setPlayerHealthBar(double health,double healthMax) {

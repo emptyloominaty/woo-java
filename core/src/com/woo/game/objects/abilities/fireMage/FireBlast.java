@@ -1,18 +1,18 @@
 package com.woo.game.objects.abilities.fireMage;
 
+import com.woo.game.AbilityFunctions;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.Creature;
 import com.woo.game.objects.gameobjects.GOControl;
 import com.woo.game.objects.gameobjects.Spell;
 
-import static com.woo.game.Main.player;
 
 public class FireBlast extends Ability {
     public FireBlast() {
         super("Fire Blast", 5,0,0.65, 0.65, false, true, false, "fire", 40, 1, 0,1);
         this.moveSpeed = 30;
-        this.life = 1.5;
+        this.life = 1.5; //TODO:1.33 ?
         this.spellPower = 0.85;
     }
 
@@ -36,7 +36,7 @@ public class FireBlast extends Ability {
 
         //TODO: Fireblast particlefile?
         int particleId = ParticleSystem.add("fire",25, caster.direction-180, caster.x, caster.y);
-        Spell newSpell = new Spell("test Spell","test",false,false,player.x,player.y,"",player.direction, particleId,true, this.moveSpeed, this.life,this);
+        Spell newSpell = new Spell("test Spell","test",false,false,caster.x,caster.y,"",caster.direction, particleId,true, this.moveSpeed, this.life,this);
         newSpell.caster = caster;
         GOControl.addSpell(newSpell);
 
@@ -47,10 +47,7 @@ public class FireBlast extends Ability {
     }
 
     public void execute(Creature caster,Creature target) {
-        //TODO:doDamage(target,spellPower....);
-
-        //Test
-        target.health -= 15+(Math.random()*15);
+        AbilityFunctions.doDamage(caster,target,this,0,true,false,"",0);
     }
 
 }
