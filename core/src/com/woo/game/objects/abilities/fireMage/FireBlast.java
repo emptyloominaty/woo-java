@@ -14,6 +14,7 @@ public class FireBlast extends Ability {
         this.moveSpeed = 30;
         this.life = 1.5; //TODO:1.33 ?
         this.spellPower = 0.85;
+        this.iconPath = "icons/mage/fire4.png";
     }
 
     @Override

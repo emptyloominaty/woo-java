@@ -152,7 +152,7 @@ public class Creature extends GameObject {
 
         //Ability Cds
         for (Map.Entry<String, Ability> ability : abilities.entrySet()) {
-            abilities.get(ability.getKey()).incCd(this,GlobalVars.delta,true);
+            abilities.get(ability.getKey()).incCd(this,GlobalVars.delta,-1);
             abilities.get(ability.getKey()).run(this);
         }
 

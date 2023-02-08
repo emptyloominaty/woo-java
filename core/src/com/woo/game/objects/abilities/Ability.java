@@ -62,6 +62,7 @@ public class Ability {
 
     public boolean talent = false;
     public boolean talentSelected = false;
+    public String iconPath = "icons/default.png";
 
 
     //tooltip
@@ -320,13 +321,15 @@ public class Ability {
     public void execute(Creature caster,Creature target) {
     }
 
-    public void incCd(Creature caster, double inc,boolean hasteCd) {
-        //TODO: hasteCd????
+    public void incCd(Creature caster, double inc,int hasteCd) {
+        if (hasteCd==-1) {
+            hasteCd = this.hasteCd ? 1 : 0;
+        }
 
         if (this.abilityCd<this.abilityMaxCd) {
             this.abilityCd += GlobalVars.delta;
         }
-        if (hasteCd) {
+        if (hasteCd==1) {
             if (this.maxCharges>1) {
                 //charges haste
                 if (this.cd<this.maxCd) {
@@ -341,7 +344,7 @@ public class Ability {
             } else {
                 //cd haste
                 if (this.cd<this.maxCd) {
-                    TODO:this.cd += inc * (1 + (caster.stats.get("haste") / 100));
+                    this.cd += inc * (1 + (caster.stats.get("haste") / 100));
                 }
             }
         } else {

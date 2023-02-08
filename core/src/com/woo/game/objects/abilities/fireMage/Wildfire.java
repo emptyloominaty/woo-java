@@ -15,6 +15,7 @@ public class Wildfire extends Ability {
         this.moveSpeed = 20;
         this.life = 1;
         this.spellPower = 1.35;
+        this.iconPath = "icons/mage/fire2.png";
     }
 
     @Override
