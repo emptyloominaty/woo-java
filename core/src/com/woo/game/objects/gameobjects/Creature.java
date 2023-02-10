@@ -52,6 +52,7 @@ public class Creature extends GameObject {
     public boolean cantDie = false;
 
     public double gcd = 0;
+    public double gcdMax = 0.65;
 
     public float mousePosX = 0;
     public float mousePosY = 0;

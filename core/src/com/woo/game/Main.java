@@ -33,6 +33,7 @@ import java.util.Map;
 
 public class Main extends ApplicationAdapter {
 	public static String areaName = "Test"; // TODO:
+	int resetDone = 0;
 
 	public static SpriteBatch batch;
 	//Texture img;
@@ -57,7 +58,7 @@ public class Main extends ApplicationAdapter {
 	float delta;
 	float effectiveViewportWidth;
 	float effectiveViewportHeight;
-	UiMain uiMain = new UiMain();
+	public static UiMain uiMain = new UiMain();
 
 	public static ActionBar[] actionBars = new ActionBar[2];
 	public static Map<String,Action> actions = new HashMap<String,Action>();
@@ -66,11 +67,12 @@ public class Main extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		actionBars[0] = new ActionBar(15,new String[15]);
-		actionBars[1] = new ActionBar(15,new String[15]);
+		actionBars[0] = new ActionBar(15,new String[15],0);
+		actionBars[1] = new ActionBar(15,new String[15],1);
 
 		//test
 		actions.put("Fire Blast",new Action("Fire Blast",0,0));
+		actions.put("Wildfire",new Action("Wildfire",0,1));
 
 		GlobalVars.init();
 		GOControl.reset();
@@ -135,8 +137,7 @@ public class Main extends ApplicationAdapter {
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-
-		cam = new OrthographicCamera(1600, 1600 * (h / w)); //1200 , 1200
+		cam = new OrthographicCamera(w, w * (h / w)); //1200 , 1200
 		cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
 		cam.update();
 
@@ -153,17 +154,29 @@ public class Main extends ApplicationAdapter {
 
 		uiMain.create();
 		GameInput.setInputProcessor(uiMain.stage);
+		uiMain.createActionBars(true,15);
+		uiMain.createActionBars(false,15);
 
 		//TEST
 		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
 			uiMain.addCreatureBar(GOControl.creatures.get(i));
 		}
 
+
+
 		debugPerf[63] = 0;
 		debugPerf[0] = 0;
 	}
 
 	public void updateGame() {
+		if (resetDone<250) {
+			uiMain.gcdTimerReset(15,0);
+			uiMain.gcdTimerReset(15,1);
+			resetDone ++;
+		}
+		uiMain.gcdTimerSet(15,0);
+		uiMain.gcdTimerSet(15,1);
+
 		player.main2();
 		uiMain.setPlayerHealthBar(player.health, player.healthMax);
 		uiMain.setPlayerManaBar(player.energy, player.energyMax);
@@ -197,6 +210,10 @@ public class Main extends ApplicationAdapter {
 		}
 		GlobalVars.delta = delta;
 		GlobalVars.fps = 1/delta;
+
+		for (int i = 0; i<actionBars.length; i++) {
+			actionBars[i].main();
+		}
 
 		//input
 		GameInput.handleInput();

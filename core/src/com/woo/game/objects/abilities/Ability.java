@@ -228,7 +228,7 @@ public class Ability {
                 }
             }
         }
-
+        caster.gcdMax = caster.gcd;
     }
 
     public boolean isEnemy(Creature caster, Creature target) {

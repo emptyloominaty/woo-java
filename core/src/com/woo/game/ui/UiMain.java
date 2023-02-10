@@ -13,8 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
+import com.woo.game.objects.Keybinds;
+import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.Creature;
 
 import java.util.ArrayList;
@@ -35,6 +38,8 @@ public class UiMain implements ApplicationListener {
     public int castBarHeight = 20;
 
     public int creatureHealthBarWidth = 55;
+
+    int actionSize = 48;
     //
 
     public Stage stage;
@@ -82,7 +87,6 @@ public class UiMain implements ApplicationListener {
     public Stack castBarStack;
     public Table castBarATable;
 
-
     //TODO:player cast bar
 
     //TODO:player buffs + debuffs 16+16
@@ -110,7 +114,6 @@ public class UiMain implements ApplicationListener {
     //TODO:Creatures Buffs+Debuffs
     //Table+Stack+Label+Image
 
-
     //TODO:Floating Combat Text TODO:HASHMAP?
     public ArrayList<Table> floatingCombatTextTables;
     public ArrayList<Label> floatingCombatTextLabels;
@@ -123,9 +126,12 @@ public class UiMain implements ApplicationListener {
     public Map<Integer,Label> actionCdTimes;
     public Map<Integer,Label> actionCharges;
     public Map<Integer,Image> actionIcons;
-    public Map<Integer,Image> actionGcdTimer;
-    public Map<Integer,Image> actionCdTimer;
-    public Map<Integer,Image> actionBorders;
+    public Map<Integer,Table> actionGcdTimer;
+    public Map<Integer,Table> actionCdTimer;
+    public Map<Integer,Image> actionPress;
+    Table actionBarMainTop;
+    Table actionBarMainBottom;
+
 
     //TODO:UI (Menu)
 
@@ -299,10 +305,8 @@ public class UiMain implements ApplicationListener {
         castBarText.setAlignment(Align.center);
 
         tableCastBar.add(castBarStack).size(castBarWidth,castBarHeight);
-        tableCastBar.setPosition(cam.viewportWidth/2,100); //TODO:
+        tableCastBar.setPosition(cam.viewportWidth/2,125); //TODO:
         tableCastBar.setVisible(false);
-
-
 
         // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
         final TextButton button = new TextButton("Click me!", skin);
@@ -334,6 +338,29 @@ public class UiMain implements ApplicationListener {
         creatureHealthBar = new HashMap<Integer, Image>();
         creatureCastBar = new HashMap<Integer, Image>();
 
+        //actionbars
+        actionBarMainTop = new Table();
+        actionBarMainBottom = new Table();
+        actionTables = new HashMap<Integer, Table>();
+        actionTablesStack = new HashMap<Integer, Table>();
+        actionStacks = new HashMap<Integer, Stack>();
+        actionKeybinds = new HashMap<Integer, Label>();
+        actionCdTimes = new HashMap<Integer, Label>();
+        actionCharges = new HashMap<Integer, Label>();
+        actionIcons = new HashMap<Integer, Image>();
+        actionGcdTimer = new HashMap<Integer, Table>();
+        actionCdTimer = new HashMap<Integer, Table>();
+        actionPress = new HashMap<Integer, Image>();
+
+        actionBarMainTop.setPosition(cam.viewportWidth/2,actionSize+15);
+        actionBarMainBottom.setPosition(cam.viewportWidth/2,10);
+
+        actionBarMainTop.setHeight(actionSize);
+        actionBarMainBottom.setHeight(actionSize);
+
+        stage.addActor(actionBarMainTop);
+        stage.addActor(actionBarMainBottom);
+
         /*stage.setDebugAll(true);
         stageBottom.setDebugAll(true);
         stageTop.setDebugAll(true);*/
@@ -341,6 +368,84 @@ public class UiMain implements ApplicationListener {
         //TODO UPDATE
         areaNameLabel.setText(areaName);
     }
+
+    public void createActionBars(boolean top, int size) {
+        //TODO:ManaCheck, Charges, Cd, ...
+
+
+        int j = 1;
+        if (top) {
+            j = 0;
+        }
+        for (int i = 0; i<size; i++) {
+            Table tableAB = new Table();
+            if (top) {
+                actionBarMainTop.add(tableAB);
+            } else {
+                actionBarMainBottom.add(tableAB);
+            }
+            Stack stack = new Stack();
+            Table stackTable = new Table();
+            Table pressImgTable = new Table();
+
+
+            Image backgroundImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.3f)));
+            stackTable.add(backgroundImg).size(actionSize).pad(1);
+
+            Image pressImg = new Image(skin.newDrawable("white", new Color(1,1,1,0.3f)));
+            pressImg.setVisible(false);
+            pressImgTable.add(pressImg).size(actionSize).pad(1);
+
+            stack.addActor(stackTable);
+
+            Table gcdTable = new Table();
+            //Table cdTable = new Table();
+
+            if (actionBars[j].abilities[i]!=null) {
+                String abilityName = actionBars[j].abilities[i];
+                Ability ability = player.abilities.get(abilityName);
+                //TODO:ImageButton
+                Image iconImg = new Image(new Texture (Gdx.files.internal(ability.iconPath)));
+                stack.add(iconImg);
+                Label keybind = new Label(" "+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0],skin);
+                keybind.setAlignment(Align.top, Align.left);
+                stack.add(keybind);
+
+                Image gcdImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.4f)));
+                gcdTable.add(gcdImg).size(actionSize,actionSize);
+            }
+            gcdTable.setClip(true);
+            stack.addActor(gcdTable);
+            stack.addActor(pressImgTable);
+            tableAB.add(stack);
+
+            actionPress.put(i+(j*size),pressImg);
+            //actionStacks.put(i+(j*size),stack);
+            actionGcdTimer.put(i+(j*size),gcdTable);
+            //actionCdTimer.put(i+(j*size),cdTable);
+        }
+    }
+
+    public void gcdTimerReset(int slots, int bar) {
+        for (int i = 0; i<slots; i++) {
+            actionGcdTimer.get(i + (bar * 15)).setHeight(0);
+        }
+    }
+
+    public void setActionPress(int slot, int bar, boolean visible) {
+        actionPress.get(slot+(bar*15)).setVisible(visible);
+    }
+
+    public void gcdTimerSet(int slots, int bar) {
+        if (player.gcd>0 && player.gcdMax>0) {
+            float height = (float) ((player.gcd/player.gcdMax)*actionSize);
+            for (int i = 0; i<slots; i++) {
+                actionGcdTimer.get(i+(bar*15)).setHeight(height);
+            }
+        }
+
+    }
+
     //StageTop
     //TODO: Character screen
     //TODO: Spellbook

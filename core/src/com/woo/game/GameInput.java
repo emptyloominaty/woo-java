@@ -11,8 +11,7 @@ import com.woo.game.objects.Settings;
 import com.woo.game.objects.gameobjects.GOControl;
 import com.woo.game.objects.gameobjects.Spell;
 
-import static com.woo.game.Main.mouseInWorld2D;
-import static com.woo.game.Main.player;
+import static com.woo.game.Main.*;
 
 
 public class GameInput {
@@ -84,12 +83,13 @@ public class GameInput {
         }
 
         //TEST
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf("1"))) {
-            player.abilities.get("Fire Blast").startCast(player);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_0")[0]))) {
+            actionBars[0].press(0);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf("2"))) {
-            player.abilities.get("Wildfire").startCast(player);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_1")[0]))) {
+            actionBars[0].press(1);
         }
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf("T"))) {
             ParticleSystem.add("fire2",90, player.direction, player.x, player.y);
