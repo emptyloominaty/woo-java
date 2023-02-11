@@ -118,7 +118,7 @@ public class UiMain implements ApplicationListener {
     public ArrayList<Table> floatingCombatTextTables;
     public ArrayList<Label> floatingCombatTextLabels;
 
-    //TODO:Action Bar
+    //Action Bars
     public Map<Integer,Table> actionTables;
     public Map<Integer,Table> actionTablesStack;
     public Map<Integer,Stack> actionStacks;
@@ -128,6 +128,7 @@ public class UiMain implements ApplicationListener {
     public Map<Integer,Image> actionIcons;
     public Map<Integer,Table> actionGcdTimer;
     public Map<Integer,Table> actionCdTimer;
+    public Map<Integer,Table> actionCost;
     public Map<Integer,Image> actionPress;
     Table actionBarMainTop;
     Table actionBarMainBottom;
@@ -141,6 +142,10 @@ public class UiMain implements ApplicationListener {
 
     Label.LabelStyle labelStyle10 = new Label.LabelStyle();
     Label.LabelStyle labelStyle12 = new Label.LabelStyle();
+    Label.LabelStyle labelStyle14 = new Label.LabelStyle();
+    Label.LabelStyle labelStyle16 = new Label.LabelStyle();
+    Label.LabelStyle labelStyle18 = new Label.LabelStyle();
+    Label.LabelStyle labelStyle20 = new Label.LabelStyle();
 
     public void create () {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/lsans.ttf"));
@@ -166,6 +171,15 @@ public class UiMain implements ApplicationListener {
         parameter.borderWidth = 0.5f;
         parameter.size = 12;
         BitmapFont font12 = generator.generateFont(parameter);
+        parameter.size = 14;
+        BitmapFont font14 = generator.generateFont(parameter);
+        parameter.size = 16;
+        BitmapFont font16 = generator.generateFont(parameter);
+        parameter.borderWidth = 1.5f;
+        parameter.size = 18;
+        BitmapFont font18 = generator.generateFont(parameter);
+        parameter.size = 20;
+        BitmapFont font20 = generator.generateFont(parameter);
 
         // Generate a 1x1 white texture and store it in the skin named "white".
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -177,6 +191,10 @@ public class UiMain implements ApplicationListener {
         skin.add("default", new BitmapFont());
         skin.add("font10", font10);
         skin.add("font12", font12);
+        skin.add("font14", font14);
+        skin.add("font16", font16);
+        skin.add("font18", font18);
+        skin.add("font20", font20);
 
         // Configure a TextButtonStyle and name it "default". Skin resources are stored by type, so this doesn't overwrite the font.
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -197,6 +215,14 @@ public class UiMain implements ApplicationListener {
         labelStyle12.font = skin.getFont("font12");
         skin.add("label12",labelStyle12);
 
+        labelStyle14.font = skin.getFont("font14");
+        skin.add("label14",labelStyle14);
+        labelStyle16.font = skin.getFont("font16");
+        skin.add("label16",labelStyle16);
+        labelStyle18.font = skin.getFont("font18");
+        skin.add("label18",labelStyle18);
+        labelStyle20.font = skin.getFont("font20");
+        skin.add("label20",labelStyle20);
 
         fpsLabel = new Label("Fps: ",skin);
         frameTimeLabel = new Label("",skin);
@@ -350,6 +376,7 @@ public class UiMain implements ApplicationListener {
         actionIcons = new HashMap<Integer, Image>();
         actionGcdTimer = new HashMap<Integer, Table>();
         actionCdTimer = new HashMap<Integer, Table>();
+        actionCost = new HashMap<Integer, Table>();
         actionPress = new HashMap<Integer, Image>();
 
         actionBarMainTop.setPosition(cam.viewportWidth/2,actionSize+15);
@@ -370,7 +397,7 @@ public class UiMain implements ApplicationListener {
     }
 
     public void createActionBars(boolean top, int size) {
-        //TODO:ManaCheck, Charges, Cd, ...
+        //TODO:Charges, Cd, ...
 
 
         int j = 1;
@@ -392,7 +419,7 @@ public class UiMain implements ApplicationListener {
             Image backgroundImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.3f)));
             stackTable.add(backgroundImg).size(actionSize).pad(1);
 
-            Image pressImg = new Image(skin.newDrawable("white", new Color(1,1,1,0.3f)));
+            Image pressImg = new Image(skin.newDrawable("white", new Color(1,1,1,0.4f)));
             pressImg.setVisible(false);
             pressImgTable.add(pressImg).size(actionSize).pad(1);
 
@@ -400,21 +427,29 @@ public class UiMain implements ApplicationListener {
 
             Table gcdTable = new Table();
             //Table cdTable = new Table();
+            Table costTable = new Table();
 
             if (actionBars[j].abilities[i]!=null) {
                 String abilityName = actionBars[j].abilities[i];
                 Ability ability = player.abilities.get(abilityName);
-                //TODO:ImageButton
+                //TODO:ImageButton + tooltip
                 Image iconImg = new Image(new Texture (Gdx.files.internal(ability.iconPath)));
                 stack.add(iconImg);
-                Label keybind = new Label(" "+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0],skin);
-                keybind.setAlignment(Align.top, Align.left);
+                Label keybind = new Label(" "+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0]+" ",skin);
+                keybind.setAlignment(Align.top, Align.right);
+                keybind.setStyle(labelStyle18);
                 stack.add(keybind);
 
-                Image gcdImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.4f)));
+                Image gcdImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.6f)));
                 gcdTable.add(gcdImg).size(actionSize,actionSize);
+
+                Image costImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.7f)));
+                costTable.add(costImg).size(actionSize,actionSize);
+
             }
+            costTable.setClip(true);
             gcdTable.setClip(true);
+            stack.addActor(costTable);
             stack.addActor(gcdTable);
             stack.addActor(pressImgTable);
             tableAB.add(stack);
@@ -422,13 +457,8 @@ public class UiMain implements ApplicationListener {
             actionPress.put(i+(j*size),pressImg);
             //actionStacks.put(i+(j*size),stack);
             actionGcdTimer.put(i+(j*size),gcdTable);
+            actionCost.put(i+(j*size),costTable);
             //actionCdTimer.put(i+(j*size),cdTable);
-        }
-    }
-
-    public void gcdTimerReset(int slots, int bar) {
-        for (int i = 0; i<slots; i++) {
-            actionGcdTimer.get(i + (bar * 15)).setHeight(0);
         }
     }
 
@@ -442,9 +472,25 @@ public class UiMain implements ApplicationListener {
             for (int i = 0; i<slots; i++) {
                 actionGcdTimer.get(i+(bar*15)).setHeight(height);
             }
+        } else {
+            for (int i = 0; i<slots; i++) {
+                actionGcdTimer.get(i + (bar * 15)).setHeight(0);
+            }
         }
-
+        //cost
+        for (int i = 0; i<slots; i++) {
+            if (actionBars[bar].abilities[i]!=null) {
+                if (player.abilities.get(actionBars[bar].abilities[i]).checkCost(player, -9999, false, -9999)) {
+                    actionCost.get(i + (bar * 15)).setHeight(0);
+                } else {
+                    actionCost.get(i + (bar * 15)).setHeight(actionSize);
+                }
+            } else {
+                actionCost.get(i + (bar * 15)).setHeight(0);
+            }
+        }
     }
+
 
     //StageTop
     //TODO: Character screen
@@ -511,8 +557,8 @@ public class UiMain implements ApplicationListener {
     public void removeCreatureBar(Creature creature) {
         if (creature.faction!=0) {
             //TODO ???????????
+            creatureTables.remove(creature.typeId);
         }
-        //creatureTables.remove(creature.typeId);
     }
 
     public void resize (int width, int height) {

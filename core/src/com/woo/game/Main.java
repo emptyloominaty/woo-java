@@ -33,7 +33,6 @@ import java.util.Map;
 
 public class Main extends ApplicationAdapter {
 	public static String areaName = "Test"; // TODO:
-	int resetDone = 0;
 
 	public static SpriteBatch batch;
 	//Texture img;
@@ -169,11 +168,6 @@ public class Main extends ApplicationAdapter {
 	}
 
 	public void updateGame() {
-		if (resetDone<250) {
-			uiMain.gcdTimerReset(15,0);
-			uiMain.gcdTimerReset(15,1);
-			resetDone ++;
-		}
 		uiMain.gcdTimerSet(15,0);
 		uiMain.gcdTimerSet(15,1);
 
