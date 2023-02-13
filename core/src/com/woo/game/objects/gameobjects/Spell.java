@@ -10,8 +10,8 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class Spell extends GameObject{
     public double life = 1.8;
     public double moveSpeed = 18;
-    public float spellSizeX = 20f;
-    public float spellSizeY = 20f;
+    public float spellSizeX = 35f;
+    public float spellSizeY = 35f;
 
     public Creature caster;
     public int particleId;

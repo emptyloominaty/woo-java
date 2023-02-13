@@ -20,6 +20,10 @@ public class Creature extends GameObject {
     public String type;
     public String primaryStat = "strength";
 
+    public float moveToX = 0;
+    public float moveToY = 0;
+    public boolean moveToPoint = false;
+
     public double health;
     public double healthMax;
     public String resourceName = "Mana";
@@ -132,6 +136,14 @@ public class Creature extends GameObject {
                 this.health = this.healthMax;
             }
         }*/
+
+        if (moveToPoint) {
+            this.direction = GlobalFunctions.getDirection(this.x,this.y,this.moveToX,this.moveToY);
+            this.move(10,false,0,0);
+            if (GlobalFunctions.getDistance(this.x,this.y,this.moveToX,this.moveToY)<0.4) {
+                this.moveToPoint = false;
+            }
+        }
 
         //TODO:Floating Texts?
         //AI

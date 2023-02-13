@@ -161,8 +161,6 @@ public class Main extends ApplicationAdapter {
 			uiMain.addCreatureBar(GOControl.creatures.get(i));
 		}
 
-
-
 		debugPerf[63] = 0;
 		debugPerf[0] = 0;
 	}

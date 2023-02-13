@@ -17,7 +17,7 @@ public class Settings {
         //TODO:??? Difficulty slider 50-200
         map.put("Difficulty",new Setting("Game", new int[]{50, 100, 150, 200},new String[]{"Easy","Normal","Hard","Mythic"},"Difficulty","button",0,0,0,1));
         map.put("Floating Combat Text",new Setting("Game", new int[]{0, 1, 2},new String[]{"Off","Static","On"},"Floating Combat Text","button",0,0,0,2));
-        map.put("Character Movement",new Setting("Game", new int[]{0, 1},new String[]{"Wow","Woo"},"Character Movement","button",0,0,0,1));
+        map.put("Character Movement",new Setting("Game", new int[]{0, 1, 2},new String[]{"Wow","Woo","Mouse"},"Character Movement","button",0,0,0,1));
         map.put("Show Realtime Clock",new Setting("Game", new int[]{0, 1},new String[]{"No","Yes"},"Show Realtime Clock","button",0,0,0,1));
 
         //Video

@@ -36,6 +36,11 @@ public class GameInput {
 
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                if (Settings.map.get("Character Movement").value==2) {
+                    player.moveToPoint = true;
+                    player.moveToX = mouseInWorld2D.x;
+                    player.moveToY = mouseInWorld2D.y;
+                }
                 return false;
             }
 
@@ -109,7 +114,7 @@ public class GameInput {
         }
 
         //TODO:FIX SPEED ("strafe")
-        if (Settings.map.get("Character Movement").value==1 || strafing) {
+        if (Settings.map.get("Character Movement").value>0 || strafing) {
             player.rotate(GlobalFunctions.getDirection(player.x,player.y,mouseInWorld2D.x,mouseInWorld2D.y));
             //WOO
             if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Left")[0]))) {

@@ -11,7 +11,7 @@ import com.woo.game.objects.gameobjects.Spell;
 
 public class Wildfire extends Ability {
     public Wildfire() {
-        super("Wildfire", 40,0,0.65, 0, false, false, false, "fire", 20, 1, 0,1);
+        super("Wildfire", 20,0,0.65, 0, false, false, false, "fire", 20, 1, 0,1);
         this.moveSpeed = 20;
         this.life = 1;
         this.spellPower = 1.35;

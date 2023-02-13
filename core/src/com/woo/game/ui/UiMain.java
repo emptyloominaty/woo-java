@@ -8,10 +8,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.woo.game.GlobalFunctions;
@@ -146,6 +147,17 @@ public class UiMain implements ApplicationListener {
     Label.LabelStyle labelStyle16 = new Label.LabelStyle();
     Label.LabelStyle labelStyle18 = new Label.LabelStyle();
     Label.LabelStyle labelStyle20 = new Label.LabelStyle();
+
+
+    Table abilityTooltip;
+    Label abilityTName;
+    Label abilityType;
+    Label abilityCost;
+    Label abilityCd;
+    Label abilityRange;
+    Label abilityDesc;
+    Label abilityCastTime;
+
 
     public void create () {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/lsans.ttf"));
@@ -388,6 +400,46 @@ public class UiMain implements ApplicationListener {
         stage.addActor(actionBarMainTop);
         stage.addActor(actionBarMainBottom);
 
+        //ability tooltip
+        /*Window.WindowStyle windowStyle = new Window.WindowStyle();
+        windowStyle.titleFont = font16;
+        windowStyle.background = skin.newDrawable("white", new Color (0.3f,0.3f,0.3f,0.75f));
+        skin.add("default",windowStyle);*/
+
+        abilityTooltip = new Table(skin);
+        abilityTName = new Label("",skin);
+        abilityType = new Label("",skin);
+        abilityType.setStyle(labelStyle12);
+        abilityCost = new Label("",skin);
+        abilityCd = new Label("",skin);
+        abilityRange = new Label("",skin);
+        abilityDesc = new Label("",skin);
+        abilityDesc.setWrap(true);
+        abilityCastTime = new Label("CastTime",skin);
+
+        abilityTooltip.setBackground(skin.newDrawable("white", new Color (0.3f,0.3f,0.3f,0.75f)));
+        abilityTooltip.add(abilityTName).colspan(2).left().padLeft(5).expandX().fillX();
+        abilityTooltip.row();
+        abilityTooltip.add(abilityType).left().padLeft(5).expandX().fillX();
+        abilityTooltip.row();
+        abilityTooltip.add(abilityCost).left().padLeft(5).expandX().fillX();
+        abilityTooltip.add(abilityRange).right().padRight(5).expandX().fillX();
+        abilityTooltip.row();
+        abilityTooltip.add(abilityCastTime).left().padLeft(5).expandX().fillX();
+        abilityTooltip.add(abilityCd).right().padRight(5).expandX().fillX();
+        abilityTooltip.row();
+        abilityTooltip.add(abilityDesc).colspan(2).padLeft(5).expandX().fillX();
+
+        abilityRange.setAlignment(Align.right);
+        abilityCd.setAlignment(Align.right);
+
+        abilityTooltip.setPosition(400,400);
+        abilityTooltip.align(Align.top);
+        abilityTooltip.setSize(250,150);
+        stage.addActor(abilityTooltip);
+
+        abilityTooltip.setVisible(false);
+
         /*stage.setDebugAll(true);
         stageBottom.setDebugAll(true);
         stageTop.setDebugAll(true);*/
@@ -430,8 +482,8 @@ public class UiMain implements ApplicationListener {
             Table costTable = new Table();
 
             if (actionBars[j].abilities[i]!=null) {
-                String abilityName = actionBars[j].abilities[i];
-                Ability ability = player.abilities.get(abilityName);
+                final String abilityName = actionBars[j].abilities[i];
+                final Ability ability = player.abilities.get(abilityName);
                 //TODO:ImageButton + tooltip
                 Image iconImg = new Image(new Texture (Gdx.files.internal(ability.iconPath)));
                 stack.add(iconImg);
@@ -446,6 +498,83 @@ public class UiMain implements ApplicationListener {
                 Image costImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.7f)));
                 costTable.add(costImg).size(actionSize,actionSize);
 
+                tableAB.addListener(
+                        new InputListener() {
+                            @Override
+                            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                                abilityTName.setText(abilityName);
+
+                                String cost = Math.round(ability.cost)+" "+player.resourceName;
+                                if (ability.cost==0 && ability.secCost==0) {
+                                    cost = "";
+                                } else if (ability.cost==0 && ability.secCost!=0) {
+                                    cost = ability.secCost+" "+player.secondaryResourceName;
+                                }
+                                abilityCost.setText(cost);
+
+                                String cd = ability.maxCd+" s";
+                                if (ability.charges>1) {
+                                    cd += " ("+ability.charges+" Charges)";
+                                }
+                                cd += " cd";
+                                if (ability.maxCd==0) {
+                                    cd = "";
+                                }
+                                abilityCd.setText(cd);
+
+                                String range = "Range: "+Math.round(ability.range)+"m";
+                                if (ability.range==0) {
+                                    range = "";
+                                }
+                                if (ability.range==5) {
+                                    range = "Range: Melee";
+                                }
+                                abilityRange.setText(range);
+
+                                String castTime = ability.castTime+"s cast";
+                                if (ability.channeling) {
+                                    castTime = ability.castTime+"s channel";
+                                }
+                                if (ability.castTime==0) {
+                                    castTime = "";
+                                }
+                                abilityCastTime.setText(castTime);
+
+                                abilityDesc.setText(ability.getTooltip(player));
+
+                                String aType = "";
+                                if (ability.passive) {
+                                    aType = "Passive";
+                                }
+                                if (ability.talent) {
+                                    aType = "Talent";
+                                }
+                                if (ability.mastery) {
+                                    aType = "Mastery";
+                                }
+                                abilityType.setText(aType);
+                                abilityTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                                //TODO MOVE?
+                                abilityTooltip.setVisible(true);
+                            }
+                            @Override
+                            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                                abilityTooltip.setVisible(false);
+                            }
+                            @Override
+                            public boolean mouseMoved(InputEvent event, float x, float y) {
+                                abilityTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                               return false;
+                            }
+                        }
+                );
+                /*iconImg.addListener(new FocusListener() {
+                    @Override
+                    public boolean handle(Event event) {
+                        System.out.println("HELLO?");
+                        return true;
+                    }
+                });*/
             }
             costTable.setClip(true);
             gcdTable.setClip(true);
@@ -585,6 +714,7 @@ public class UiMain implements ApplicationListener {
         frameTimeLabel.setText("Total:"+(debugPerf[62]-debugPerf[0])+", Main:"+(debugPerf[30]-debugPerf[0])+", Draw:"+(debugPerf[62]-debugPerf[30]));
         debug1.setText("Level: "+player.level);
         debug2.setText("XP: "+player.xp+"/"+Math.round(500 * (Math.pow(1.2, player.level)-1)/(1.5-1)));
+        debug3.setText(player.moveToX+" | "+player.moveToY);
 
         stageBottom.act(GlobalVars.delta);
         stageBottom.draw();
