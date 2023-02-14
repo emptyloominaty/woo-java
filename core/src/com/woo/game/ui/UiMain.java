@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.TouchableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -134,6 +135,8 @@ public class UiMain implements ApplicationListener {
     Table actionBarMainTop;
     Table actionBarMainBottom;
 
+    public Window characterStats;
+    Table characterStatsTable;
 
     //TODO:UI (Menu)
 
@@ -147,7 +150,7 @@ public class UiMain implements ApplicationListener {
     Label.LabelStyle labelStyle16 = new Label.LabelStyle();
     Label.LabelStyle labelStyle18 = new Label.LabelStyle();
     Label.LabelStyle labelStyle20 = new Label.LabelStyle();
-
+    Label.LabelStyle labelStyleTooltip = new Label.LabelStyle();
 
     Table abilityTooltip;
     Label abilityTName;
@@ -193,6 +196,11 @@ public class UiMain implements ApplicationListener {
         parameter.size = 20;
         BitmapFont font20 = generator.generateFont(parameter);
 
+        parameter.size = 15;
+        parameter.color = new Color(0.85f,0.85f,0.6f,1.0f);
+        parameter.borderWidth = 0;
+        BitmapFont fontTt = generator.generateFont(parameter);
+
         // Generate a 1x1 white texture and store it in the skin named "white".
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -207,6 +215,7 @@ public class UiMain implements ApplicationListener {
         skin.add("font16", font16);
         skin.add("font18", font18);
         skin.add("font20", font20);
+        skin.add("fontTt",fontTt);
 
         // Configure a TextButtonStyle and name it "default". Skin resources are stored by type, so this doesn't overwrite the font.
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -235,6 +244,10 @@ public class UiMain implements ApplicationListener {
         skin.add("label18",labelStyle18);
         labelStyle20.font = skin.getFont("font20");
         skin.add("label20",labelStyle20);
+
+        labelStyleTooltip.font = skin.getFont("fontTt");
+        skin.add("labelTt",labelStyleTooltip);
+
 
         fpsLabel = new Label("Fps: ",skin);
         frameTimeLabel = new Label("",skin);
@@ -401,19 +414,16 @@ public class UiMain implements ApplicationListener {
         stage.addActor(actionBarMainBottom);
 
         //ability tooltip
-        /*Window.WindowStyle windowStyle = new Window.WindowStyle();
-        windowStyle.titleFont = font16;
-        windowStyle.background = skin.newDrawable("white", new Color (0.3f,0.3f,0.3f,0.75f));
-        skin.add("default",windowStyle);*/
-
         abilityTooltip = new Table(skin);
         abilityTName = new Label("",skin);
+        abilityTName.setStyle(labelStyle18);
         abilityType = new Label("",skin);
         abilityType.setStyle(labelStyle12);
         abilityCost = new Label("",skin);
         abilityCd = new Label("",skin);
         abilityRange = new Label("",skin);
         abilityDesc = new Label("",skin);
+        abilityDesc.setStyle(labelStyleTooltip);
         abilityDesc.setWrap(true);
         abilityCastTime = new Label("CastTime",skin);
 
@@ -437,8 +447,29 @@ public class UiMain implements ApplicationListener {
         abilityTooltip.align(Align.top);
         abilityTooltip.setSize(250,150);
         stage.addActor(abilityTooltip);
-
         abilityTooltip.setVisible(false);
+
+        //StageTop
+        Window.WindowStyle windowStyle = new Window.WindowStyle();
+        windowStyle.titleFont = font14;
+        windowStyle.background = skin.newDrawable("white", new Color (0.3f,0.3f,0.3f,0.75f));
+        skin.add("default",windowStyle);
+
+        //Character stats
+        characterStats = new Window("Character Stats",skin);
+        characterStatsTable = new Table();
+        characterStats.setSize(600,500);
+        characterStats.padTop(25);
+        characterStats.setPosition(40,Gdx.graphics.getHeight()-540);
+        characterStats.add(characterStatsTable).expand().fill();
+        characterStats.setMovable(true);
+        characterStats.setVisible(false);
+
+        stageTop.addActor(characterStats);
+
+        //TODO: Spellbook
+        //TODO: Talents
+        //TODO: Inventory
 
         /*stage.setDebugAll(true);
         stageBottom.setDebugAll(true);
@@ -448,10 +479,120 @@ public class UiMain implements ApplicationListener {
         areaNameLabel.setText(areaName);
     }
 
+    public void updateCharacterStats() {
+        characterStatsTable.clear();
+        Label playerName = new Label(player.name,skin);
+        Label playerClass = new Label(player.creatureClass,skin);
+
+        Label playerLevel = new Label(""+player.level,skin);
+        Label playerXp = new Label(""+player.xp,skin);
+        Label playerXpNext = new Label(""+Math.round(500 * (Math.pow(1.2, player.level)-1)/(1.5-1)),skin);
+
+        Label levelLabel = new Label("Level",skin);
+        Label xpLabel = new Label("Experience",skin);
+        Label xpNextLabel = new Label("XP to next level",skin);
+
+        //----------------------------
+        Label playerIntellect = new Label(""+Math.round(player.stats.get("intellect")),skin);
+        Label playerStrength = new Label(""+Math.round(player.stats.get("strength")),skin);
+        Label playerDexterity = new Label(""+Math.round(player.stats.get("dexterity")),skin);
+        Label playerStamina = new Label(""+Math.round(player.stats.get("stamina")),skin);
+
+        Label playerHaste = new Label(player.stats.get("haste")+" %",skin);
+        Label playerCrit = new Label(player.stats.get("crit")+" %",skin);
+        Label playerMastery = new Label(player.stats.get("mastery")+" %",skin);
+
+        Label playerBlock = new Label(player.stats.get("block")+" %",skin);
+        Label playerParry = new Label(player.stats.get("parry")+" %",skin);
+        Label playerDodge = new Label(player.stats.get("dodge")+" %",skin);
+
+        Label playerMagicResistance = new Label(player.stats.get("magicResistance")+" %",skin);
+        Label playerDamageTaken = new Label(player.stats.get("DamageTaken")+" %",skin);
+        Label playerDamageDone = new Label(player.stats.get("DamageDone")+" %",skin);
+        //----------------------------
+
+        Label intellect = new Label("Intellect",skin);
+        Label strength = new Label("Strength",skin);
+        Label dexterity = new Label("Dexterity",skin);
+        Label stamina = new Label("Stamina",skin);
+
+        Label haste = new Label("Haste",skin);
+        Label crit = new Label("Critical Strike",skin);
+        Label mastery = new Label("Mastery",skin);
+
+        Label block = new Label("Block",skin);
+        Label parry = new Label("Parry",skin);
+        Label dodge = new Label("Dodge",skin);
+
+        Label magicResistance = new Label("Magic Resistance",skin);
+        Label damageTaken = new Label("Damage Taken",skin);
+        Label damageDone = new Label("Damage Done",skin);
+        //----------------------------
+
+        characterStatsTable.top().left();
+        characterStatsTable.setPosition(50,0);
+
+        characterStatsTable.add(new Label("",skin)).colspan(6).expandX().expandX().fillX();
+        characterStatsTable.row();
+        characterStatsTable.add(playerName).colspan(3);
+        characterStatsTable.add(playerClass).colspan(3);
+        characterStatsTable.row().height(18);
+        characterStatsTable.add(new Label("",skin));
+        characterStatsTable.row().height(18);
+
+        characterStatsTable.add(levelLabel).colspan(2);
+        characterStatsTable.add(xpLabel).colspan(2);
+        characterStatsTable.add(xpNextLabel).colspan(2);
+        characterStatsTable.row();
+        characterStatsTable.add(playerLevel).colspan(2);
+        characterStatsTable.add(playerXp).colspan(2);
+        characterStatsTable.add(playerXpNext).colspan(2);
+        characterStatsTable.row().height(18);
+        characterStatsTable.add(new Label("",skin));
+        characterStatsTable.row().height(18);
+
+        characterStatsTable.add(intellect).colspan(1);
+        characterStatsTable.add(playerIntellect).colspan(1);
+        //TODO:BUTTON +
+        characterStatsTable.row();
+        characterStatsTable.add(strength).colspan(1);
+        characterStatsTable.add(playerStrength).colspan(1);
+        //TODO:BUTTON +
+        characterStatsTable.row();
+        characterStatsTable.add(dexterity).colspan(1);
+        characterStatsTable.add(playerDexterity).colspan(1);
+        //TODO:BUTTON +
+        characterStatsTable.row();
+        characterStatsTable.add(stamina).colspan(1);
+        characterStatsTable.add(playerStamina).colspan(1);
+        //TODO:BUTTON +
+        characterStatsTable.row();
+        characterStatsTable.add(new Label("",skin));
+        characterStatsTable.row();
+        characterStatsTable.add(haste).colspan(1);
+        characterStatsTable.add(playerHaste).colspan(1);
+        characterStatsTable.add(block).colspan(1);
+        characterStatsTable.add(playerBlock).colspan(1);
+        characterStatsTable.add(magicResistance).colspan(1);
+        characterStatsTable.add(playerMagicResistance).colspan(1);
+        characterStatsTable.row();
+        characterStatsTable.add(crit).colspan(1);
+        characterStatsTable.add(playerCrit).colspan(1);
+        characterStatsTable.add(parry).colspan(1);
+        characterStatsTable.add(playerParry).colspan(1);
+        characterStatsTable.add(damageTaken).colspan(1);
+        characterStatsTable.add(playerDamageTaken).colspan(1);
+        characterStatsTable.row();
+        characterStatsTable.add(mastery).colspan(1);
+        characterStatsTable.add(playerMastery).colspan(1);
+        characterStatsTable.add(dodge).colspan(1);
+        characterStatsTable.add(playerDodge).colspan(1);
+        characterStatsTable.add(damageDone).colspan(1);
+        characterStatsTable.add(playerDamageDone).colspan(1);
+    }
+
+
     public void createActionBars(boolean top, int size) {
-        //TODO:Charges, Cd, ...
-
-
         int j = 1;
         if (top) {
             j = 0;
@@ -484,9 +625,10 @@ public class UiMain implements ApplicationListener {
             if (actionBars[j].abilities[i]!=null) {
                 final String abilityName = actionBars[j].abilities[i];
                 final Ability ability = player.abilities.get(abilityName);
-                //TODO:ImageButton + tooltip
                 Image iconImg = new Image(new Texture (Gdx.files.internal(ability.iconPath)));
-                stack.add(iconImg);
+                Table iconTable = new Table();
+                iconTable.add(iconImg).pad(1).padTop(2);
+                stack.add(iconTable);
                 Label keybind = new Label(" "+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0]+" ",skin);
                 keybind.setAlignment(Align.top, Align.right);
                 keybind.setStyle(labelStyle18);
@@ -505,8 +647,10 @@ public class UiMain implements ApplicationListener {
                                 abilityTName.setText(abilityName);
 
                                 String cost = Math.round(ability.cost)+" "+player.resourceName;
+                                abilityCost.setFontScale(1f);
                                 if (ability.cost==0 && ability.secCost==0) {
                                     cost = "";
+                                    abilityCost.setFontScale(0.01f);
                                 } else if (ability.cost==0 && ability.secCost!=0) {
                                     cost = ability.secCost+" "+player.secondaryResourceName;
                                 }
@@ -517,14 +661,18 @@ public class UiMain implements ApplicationListener {
                                     cd += " ("+ability.charges+" Charges)";
                                 }
                                 cd += " cd";
+                                abilityCd.setFontScale(1f);
                                 if (ability.maxCd==0) {
                                     cd = "";
+                                    abilityCd.setFontScale(0.01f);
                                 }
                                 abilityCd.setText(cd);
 
                                 String range = "Range: "+Math.round(ability.range)+"m";
+                                abilityRange.setFontScale(1f);
                                 if (ability.range==0) {
                                     range = "";
+                                    abilityRange.setFontScale(0.01f);
                                 }
                                 if (ability.range==5) {
                                     range = "Range: Melee";
@@ -532,17 +680,20 @@ public class UiMain implements ApplicationListener {
                                 abilityRange.setText(range);
 
                                 String castTime = ability.castTime+"s cast";
+                                abilityCastTime.setFontScale(1f);
                                 if (ability.channeling) {
                                     castTime = ability.castTime+"s channel";
                                 }
                                 if (ability.castTime==0) {
                                     castTime = "";
+                                    abilityCastTime.setFontScale(0.01f);
                                 }
                                 abilityCastTime.setText(castTime);
 
                                 abilityDesc.setText(ability.getTooltip(player));
 
                                 String aType = "";
+                                abilityType.setFontScale(1);
                                 if (ability.passive) {
                                     aType = "Passive";
                                 }
@@ -552,9 +703,11 @@ public class UiMain implements ApplicationListener {
                                 if (ability.mastery) {
                                     aType = "Mastery";
                                 }
+                                if (aType.equals("")) {
+                                    abilityType.setFontScale(0.01f);
+                                }
                                 abilityType.setText(aType);
                                 abilityTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
-                                //TODO MOVE?
                                 abilityTooltip.setVisible(true);
                             }
                             @Override
@@ -619,14 +772,6 @@ public class UiMain implements ApplicationListener {
             }
         }
     }
-
-
-    //StageTop
-    //TODO: Character screen
-    //TODO: Spellbook
-    //TODO: Talents
-    //TODO: Inventory
-
 
     public void addCreatureBar(Creature creature) {
         if (creature.faction!=0) {

@@ -50,7 +50,7 @@ public class Keybinds {
         keys.put("Move_Left", new String[]{"A", ""});
         keys.put("Move_Right", new String[]{"D", ""});
 
-        keys.put("Character Info", new String[]{"C", ""});
+        keys.put("Character Stats", new String[]{"C", ""});
         keys.put("SpellBook", new String[]{"P", ""});
         keys.put("Talents", new String[]{"N", ""});
         keys.put("Map", new String[]{"M", ""});

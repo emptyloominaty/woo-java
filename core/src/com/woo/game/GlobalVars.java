@@ -9,6 +9,8 @@ public class GlobalVars {
     public static int pxToMeter = 11;
     public static float spellQueueWindow = 0.3f;
 
+    public static boolean characterStats = false;
+
     public static HashMap<String, Integer> settings = new HashMap<>(); //TODO:MOVE TO Settings + Setting Class (Category,values,names,name,type:buttons/slider,sliderMax,sliderMin,sliderStep)
 
     public static void init() {

@@ -95,6 +95,19 @@ public class GameInput {
             actionBars[0].press(1);
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("Character Stats")[0]))) {
+            if (!GlobalVars.characterStats) {
+                GlobalVars.characterStats = true;
+                uiMain.characterStats.setVisible(true);
+                uiMain.updateCharacterStats();
+            } else {
+                GlobalVars.characterStats = false;
+                uiMain.characterStats.setVisible(false);
+            }
+
+        }
+
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf("T"))) {
             ParticleSystem.add("fire2",90, player.direction, player.x, player.y);
