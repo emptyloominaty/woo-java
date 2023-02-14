@@ -165,7 +165,25 @@ public class Main extends ApplicationAdapter {
 		debugPerf[0] = 0;
 	}
 
+	public void updateEverySec() {
+		uiMain.areaNameLabel.setText(areaName);
+		if (GlobalVars.characterStats) {
+			uiMain.updateCharacterStats();
+		}
+
+	}
+
+	float timer1 = 0;
+	float timer2 = 1;
+
 	public void updateGame() {
+		if (timer2>timer1) {
+			timer1+=GlobalVars.delta;
+		} else {
+			timer1 = 0;
+			updateEverySec();
+		}
+
 		uiMain.gcdTimerSet(15,0);
 		uiMain.gcdTimerSet(15,1);
 

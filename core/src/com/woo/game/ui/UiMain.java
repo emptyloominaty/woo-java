@@ -6,14 +6,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.TouchableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.woo.game.GlobalFunctions;
@@ -143,6 +143,13 @@ public class UiMain implements ApplicationListener {
     //font
     public FreeTypeFontGenerator generator;
     public FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+    BitmapFont font10;
+    BitmapFont font12;
+    BitmapFont font14;
+    BitmapFont font16;
+    BitmapFont font18;
+    BitmapFont font20;
+    BitmapFont fontTt;
 
     Label.LabelStyle labelStyle10 = new Label.LabelStyle();
     Label.LabelStyle labelStyle12 = new Label.LabelStyle();
@@ -160,6 +167,9 @@ public class UiMain implements ApplicationListener {
     Label abilityRange;
     Label abilityDesc;
     Label abilityCastTime;
+
+    //Borders
+    Texture borderCharacterStats1;
 
 
     public void create () {
@@ -182,24 +192,24 @@ public class UiMain implements ApplicationListener {
         //font
         parameter.size = 10;
         parameter.borderColor = Color.BLACK;
-        BitmapFont font10 = generator.generateFont(parameter);
+        font10 = generator.generateFont(parameter);
         parameter.borderWidth = 0.5f;
         parameter.size = 12;
-        BitmapFont font12 = generator.generateFont(parameter);
+        font12 = generator.generateFont(parameter);
         parameter.size = 14;
-        BitmapFont font14 = generator.generateFont(parameter);
+        font14 = generator.generateFont(parameter);
         parameter.size = 16;
-        BitmapFont font16 = generator.generateFont(parameter);
+        font16 = generator.generateFont(parameter);
         parameter.borderWidth = 1.5f;
         parameter.size = 18;
-        BitmapFont font18 = generator.generateFont(parameter);
+        font18 = generator.generateFont(parameter);
         parameter.size = 20;
-        BitmapFont font20 = generator.generateFont(parameter);
+        font20 = generator.generateFont(parameter);
 
         parameter.size = 15;
         parameter.color = new Color(0.85f,0.85f,0.6f,1.0f);
         parameter.borderWidth = 0;
-        BitmapFont fontTt = generator.generateFont(parameter);
+        fontTt = generator.generateFont(parameter);
 
         // Generate a 1x1 white texture and store it in the skin named "white".
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -451,8 +461,9 @@ public class UiMain implements ApplicationListener {
 
         //StageTop
         Window.WindowStyle windowStyle = new Window.WindowStyle();
-        windowStyle.titleFont = font14;
-        windowStyle.background = skin.newDrawable("white", new Color (0.3f,0.3f,0.3f,0.75f));
+        windowStyle.titleFont = font14;//#a47012
+        //windowStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/ui/paper.jpg")));
+        windowStyle.background = skin.newDrawable("white", new Color (0.25f,0.20f,0.15f,0.99f));
         skin.add("default",windowStyle);
 
         //Character stats
@@ -467,6 +478,18 @@ public class UiMain implements ApplicationListener {
 
         stageTop.addActor(characterStats);
 
+        //Border
+        Pixmap pixmapCS1  = new Pixmap(80, 24, Pixmap.Format.RGBA8888);
+        // Set the border color and thickness
+        pixmapCS1.setColor(Color.WHITE);
+        pixmapCS1.drawRectangle(0, 0, 80, 24);
+
+        pixmapCS1.setColor(Color.BLACK);
+        pixmapCS1.drawRectangle(1, 1, 78, 22);
+        // Create the Texture
+        borderCharacterStats1 = new Texture(pixmapCS1);
+
+
         //TODO: Spellbook
         //TODO: Talents
         //TODO: Inventory
@@ -475,22 +498,29 @@ public class UiMain implements ApplicationListener {
         stageBottom.setDebugAll(true);
         stageTop.setDebugAll(true);*/
 
-        //TODO UPDATE
         areaNameLabel.setText(areaName);
     }
 
     public void updateCharacterStats() {
+        //TODO:optimize?
         characterStatsTable.clear();
+
+        Label.LabelStyle borderLabelStyle = new Label.LabelStyle();
+        borderLabelStyle.background = new NinePatchDrawable(new NinePatch(borderCharacterStats1,4,4,4,4));
+        borderLabelStyle.font = font16;
+
         Label playerName = new Label(player.name,skin);
         Label playerClass = new Label(player.creatureClass,skin);
 
-        Label playerLevel = new Label(""+player.level,skin);
+        Label playerLevel = new Label(""+player.level, borderLabelStyle);
         Label playerXp = new Label(""+player.xp,skin);
         Label playerXpNext = new Label(""+Math.round(500 * (Math.pow(1.2, player.level)-1)/(1.5-1)),skin);
 
         Label levelLabel = new Label("Level",skin);
         Label xpLabel = new Label("Experience",skin);
         Label xpNextLabel = new Label("XP to next level",skin);
+
+        playerLevel.setAlignment(Align.center);
 
         //----------------------------
         Label playerIntellect = new Label(""+Math.round(player.stats.get("intellect")),skin);
@@ -884,6 +914,13 @@ public class UiMain implements ApplicationListener {
         stageBottom.dispose();
         stageTop.dispose();
         generator.dispose();
+        font10.dispose();
+        font12.dispose();
+        font14.dispose();
+        font16.dispose();
+        font18.dispose();
+        font20.dispose();
+        fontTt.dispose();
     }
 
     public void setPlayerHealthBar(double health,double healthMax) {
