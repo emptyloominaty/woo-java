@@ -17,6 +17,7 @@ import com.sun.org.apache.bcel.internal.generic.ANEWARRAY;
 import com.woo.game.objects.Keybinds;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.Settings;
+import com.woo.game.objects.abilities.SpellQueue;
 import com.woo.game.ui.Action;
 import com.woo.game.ui.ActionBar;
 import com.woo.game.ui.UiMain;
@@ -206,6 +207,7 @@ public class Main extends ApplicationAdapter {
 			}
 
 		}
+		SpellQueue.main();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import com.woo.game.AbilityFunctions;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.abilities.Ability;
+import com.woo.game.objects.abilities.SpellQueue;
 import com.woo.game.objects.gameobjects.Creature;
 import com.woo.game.objects.gameobjects.GOControl;
 import com.woo.game.objects.gameobjects.Spell;
@@ -28,8 +29,9 @@ public class Wildfire extends Ability {
             casterStartCasting(caster);
             setGcd(caster,0);
             return true;
+        } else if (this.canSpellQueue(caster)) {
+            SpellQueue.add(this,(float)caster.gcd);
         }
-        //TODO:SpellQueue
         return false;
     }
 

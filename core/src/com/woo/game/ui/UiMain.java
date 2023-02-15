@@ -455,7 +455,7 @@ public class UiMain implements ApplicationListener {
 
         abilityTooltip.setPosition(400,400);
         abilityTooltip.align(Align.top);
-        abilityTooltip.setSize(250,150);
+        abilityTooltip.setSize(250,50);
         stage.addActor(abilityTooltip);
         abilityTooltip.setVisible(false);
 
@@ -738,6 +738,8 @@ public class UiMain implements ApplicationListener {
                                 }
                                 abilityType.setText(aType);
                                 abilityTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                                abilityTooltip.pack();
+                                abilityTooltip.setWidth(180);
                                 abilityTooltip.setVisible(true);
                             }
                             @Override

@@ -1,5 +1,6 @@
 package com.woo.game;
 
+import com.woo.game.objects.Settings;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.Creature;
 
@@ -26,6 +27,9 @@ public class AbilityFunctions {
         }
         if (val!=0) {
             damage =  val;
+        }
+        if (caster.faction>0) { //TODO: >0 / 1????
+            damage = damage*(Settings.map.get("Difficulty").value/100);
         }
 
         //TODO:DR, DI, idk

@@ -251,10 +251,10 @@ public class Ability {
         }
     }
 
-    //TODO:
-    /*public boolean canSpellQueue(Creature caster) {
-        return (caster==player && caster.gcd<spellQueueWindow && (caster.gcd>0 || caster.isCasting));
-    }*/
+    public boolean canSpellQueue(Creature caster) {
+        return (caster==player && caster.gcd<GlobalVars.spellQueueWindow && (caster.gcd>0 || caster.isCasting));
+    }
+
     public void casterStartCasting(Creature caster) {
         caster.isCasting = true;
         caster.casting.put("name",this.name);

@@ -16,6 +16,7 @@ public class GameObject {
     public boolean lightEmitting = false;
     public int[] lightColors = new int[3];
     public int lightIntensity;
+    public int lightDistance;
 
     //collision box
     public float sizeX = 30;
@@ -54,10 +55,11 @@ public class GameObject {
         //this.id = getGameObjectIdx();
     }
 
-    public void attachLight(int[] color, int intensity) {
+    public void attachLight(int[] color, int intensity, int distance) {
         lightEmitting = true;
         lightColors = color;
         lightIntensity = intensity;
+        lightDistance = distance;
     }
 
     public void move(double val) {
