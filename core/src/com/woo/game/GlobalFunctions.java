@@ -4,6 +4,12 @@ import com.woo.game.objects.gameobjects.Creature;
 
 public class GlobalFunctions {
     public static boolean checkEnemy(Creature caster, Creature target) {
+        //TODO:?
+        //-1 = player pets
+        //0 = player
+        //1 = friendly to player
+        //2 = neutral
+        //3 = enemy to player
         if (caster.faction<2) {
             if (target.faction>1) {
                 return true;

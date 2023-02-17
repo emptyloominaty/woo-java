@@ -4,6 +4,8 @@ import com.woo.game.objects.Settings;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.Creature;
 
+import static com.woo.game.Main.uiMain;
+
 public class AbilityFunctions {
     //TODO: doHeal, applyDot, applyBuff, applyDebuff, applyHot,
     public static void doDamage(Creature caster, Creature target, Ability ability,double spellPower,boolean canCrit, boolean crit100, String school2, double val) {
@@ -35,6 +37,14 @@ public class AbilityFunctions {
         //TODO:DR, DI, idk
 
         target.health -= damage;
+
+        if (Settings.map.get("Floating Combat Text").value>0) {
+            if (caster.faction == 0) {
+                uiMain.addFloatingText((float) (target.x-5+(Math.random()*10)), (float) (target.y-5+(Math.random()*10)), String.valueOf(Math.round(damage)), "damage");
+            } else if (caster.faction == -1) {
+                //TODO:PET DMG FT
+            }
+        }
 
     }
 

@@ -231,12 +231,6 @@ public class Ability {
         caster.gcdMax = caster.gcd;
     }
 
-    public boolean isEnemy(Creature caster, Creature target) {
-        //TODO
-        return false;
-    }
-
-
     public boolean checkDistance(Creature caster, Creature target, float rangeP,boolean dontShow) { //range = 0, dontShow = false
         if (rangeP==0) {
             rangeP = this.range;

@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.objects.Keybinds;
+import com.woo.game.objects.Settings;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.Creature;
 
@@ -499,6 +500,51 @@ public class UiMain implements ApplicationListener {
         stageTop.setDebugAll(true);*/
 
         areaNameLabel.setText(areaName);
+    }
+
+    ArrayList<Label> floatingTextsLabel = new ArrayList<Label>();
+    ArrayList<FloatingText> floatingTexts = new ArrayList<FloatingText>();
+    ArrayList<Integer> floatingTextsFree = new ArrayList<Integer>();
+
+    public void addFloatingText(float x, float y, String text, String type) { //TODO:
+        int id;
+        if (floatingTextsFree.size()>0) {
+            int idF = floatingTextsFree.size()-1;
+            id = floatingTextsFree.get(idF);
+            floatingTextsFree.remove(idF);
+        } else {
+            id = floatingTexts.size();
+        }
+        Label label = new Label(text,skin);
+        //TODO:LABEL COLOR
+        //TODO:size inc and then dec
+        if (floatingTexts.size()<=id) {
+            floatingTexts.add(new FloatingText(x,y,text,type));
+            floatingTextsLabel.add(label);
+        } else {
+            floatingTexts.set(id,new FloatingText(x,y,text,type));
+            floatingTextsLabel.set(id,label);
+        }
+        label.setPosition(x,y);
+        stageBottom.addActor(label);
+        floatingTexts.get(id).id = id;
+        if (Settings.map.get("Floating Combat Text").value>1) {
+            floatingTexts.get(id).moving = true;
+        }
+    }
+
+    public void updateFloatingTexts() {
+        for (int i = 0; i<floatingTexts.size(); i++) {
+            if (floatingTexts.get(i).main()) {
+                removeFloatingText(i);
+            }
+        }
+    }
+
+    public void removeFloatingText(int id) {
+        floatingTexts.get(id).destroyed = true;
+        floatingTextsLabel.get(id).setPosition(-999,-999);
+        floatingTextsFree.add(id);
     }
 
     public void updateCharacterStats() {

@@ -185,6 +185,8 @@ public class Main extends ApplicationAdapter {
 			updateEverySec();
 		}
 
+		uiMain.updateFloatingTexts();
+
 		uiMain.gcdTimerSet(15,0);
 		uiMain.gcdTimerSet(15,1);
 
