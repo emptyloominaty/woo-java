@@ -84,6 +84,8 @@ public class Main extends ApplicationAdapter {
 
 		player = new Player("Player","",false,false,250,250,"",0,"FireMage",0);
 		GOControl.addCreature(player);
+		//TEST
+		player.stats.put("crit",50.0);
 
 		//--Test
 		Creature testCreature = new Creature("test","test",false,false,50,50,"",3,"test",0);
@@ -170,6 +172,9 @@ public class Main extends ApplicationAdapter {
 		uiMain.areaNameLabel.setText(areaName);
 		if (GlobalVars.characterStats) {
 			uiMain.updateCharacterStats();
+		}
+		if (GlobalVars.spellbook) {
+			uiMain.updateSpellbook();
 		}
 
 	}

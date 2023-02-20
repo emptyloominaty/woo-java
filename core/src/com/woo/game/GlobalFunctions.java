@@ -78,4 +78,12 @@ public class GlobalFunctions {
             return Math.round(health)+"";
         }
     }
+    //-----------
+    public static String spellPowerToNumber(double val,Creature caster,String primaryStat) {
+        return Math.round(caster.stats.get(primaryStat) * val)+"";
+    }
+    public static String spellPowerHotToNumber(double val,Creature caster, String primaryStat) {
+        return Math.round(caster.stats.get(primaryStat) * (1 + (caster.stats.get("haste") / 100)))+"";
+    }
+    //-----------
 }

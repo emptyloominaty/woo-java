@@ -139,6 +139,9 @@ public class UiMain implements ApplicationListener {
     public Window characterStats;
     Table characterStatsTable;
 
+    public Window spellbook;
+    Table spellbookTable;
+
     //TODO:UI (Menu)
 
     //font
@@ -490,8 +493,22 @@ public class UiMain implements ApplicationListener {
         // Create the Texture
         borderCharacterStats1 = new Texture(pixmapCS1);
 
-
         //TODO: Spellbook
+        spellbook = new Window("Spellbook",skin);
+        spellbookTable = new Table();
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        skin.add("default",scrollPaneStyle);
+        ScrollPane spellbookScrollPane = new ScrollPane(spellbookTable,skin);
+        spellbook.setSize(600,500);
+        spellbook.padTop(25);
+        spellbook.setPosition(40,Gdx.graphics.getHeight()-560);
+        spellbook.add(spellbookScrollPane).expand().fill();
+        spellbook.setMovable(true);
+        spellbook.setVisible(false);
+        stageTop.addActor(spellbook);
+
+
+
         //TODO: Talents
         //TODO: Inventory
 
@@ -502,11 +519,24 @@ public class UiMain implements ApplicationListener {
         areaNameLabel.setText(areaName);
     }
 
+
+    public void updateSpellbook() {
+        spellbookTable.clear();
+        //TODO: stack + tooltip + drag to actionbar
+        for (Map.Entry<String, Ability> ability : player.abilities.entrySet()) {
+            Ability ab = player.abilities.get(ability.getKey());
+            Image icon = new Image(new Texture (Gdx.files.internal(ab.iconPath)));
+            Label label = new Label(ab.name,skin);
+            spellbookTable.add(icon);
+            spellbookTable.add(label);
+        }
+    }
+
     ArrayList<Label> floatingTextsLabel = new ArrayList<Label>();
     ArrayList<FloatingText> floatingTexts = new ArrayList<FloatingText>();
     ArrayList<Integer> floatingTextsFree = new ArrayList<Integer>();
 
-    public void addFloatingText(float x, float y, String text, String type) { //TODO:
+    public void addFloatingText(float x, float y, String text, String type) {
         int id;
         if (floatingTextsFree.size()>0) {
             int idF = floatingTextsFree.size()-1;
@@ -516,8 +546,11 @@ public class UiMain implements ApplicationListener {
             id = floatingTexts.size();
         }
         Label label = new Label(text,skin);
-        //TODO:LABEL COLOR
-        //TODO:size inc and then dec
+        if (type=="crit") {
+            label.setColor(Color.YELLOW);
+            label.setStyle(labelStyle18);
+        }
+
         if (floatingTexts.size()<=id) {
             floatingTexts.add(new FloatingText(x,y,text,type));
             floatingTextsLabel.add(label);
@@ -525,7 +558,9 @@ public class UiMain implements ApplicationListener {
             floatingTexts.set(id,new FloatingText(x,y,text,type));
             floatingTextsLabel.set(id,label);
         }
-        label.setPosition(x,y);
+        float x2 = (Gdx.graphics.getWidth()/2f) + ((x - cam.position.x)) /GlobalVars.camZoom;
+        float y2 = (Gdx.graphics.getHeight()/2f) + ((y - cam.position.y)) /GlobalVars.camZoom;
+        label.setPosition(x2,y2);
         stageBottom.addActor(label);
         floatingTexts.get(id).id = id;
         if (Settings.map.get("Floating Combat Text").value>1) {

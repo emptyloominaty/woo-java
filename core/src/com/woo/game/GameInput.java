@@ -72,7 +72,7 @@ public class GameInput {
             }
         };
 
-        InputMultiplexer multiplexer = new InputMultiplexer(stage,inputprocessor);
+        InputMultiplexer multiplexer = new InputMultiplexer(uiMain.stageTop,stage,inputprocessor); //TODO:,uiMain.stageBottom
         Gdx.input.setInputProcessor(multiplexer);
     }
 
@@ -104,8 +104,20 @@ public class GameInput {
                 GlobalVars.characterStats = false;
                 uiMain.characterStats.setVisible(false);
             }
-
         }
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("SpellBook")[0]))) {
+            if (!GlobalVars.spellbook) {
+                GlobalVars.spellbook = true;
+                uiMain.spellbook.setVisible(true);
+                //TODO:uiMain.updateSpellbook();
+            } else {
+                GlobalVars.spellbook = false;
+                uiMain.spellbook.setVisible(false);
+            }
+        }
+        //
 
 
 

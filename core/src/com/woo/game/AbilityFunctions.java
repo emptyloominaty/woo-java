@@ -40,7 +40,11 @@ public class AbilityFunctions {
 
         if (Settings.map.get("Floating Combat Text").value>0) {
             if (caster.faction == 0) {
-                uiMain.addFloatingText((float) (target.x-5+(Math.random()*10)), (float) (target.y-5+(Math.random()*10)), String.valueOf(Math.round(damage)), "damage");
+                if (crit==1) {
+                    uiMain.addFloatingText((float) (target.x-5+(Math.random()*10)), (float) (target.y-5+(Math.random()*10)), String.valueOf(Math.round(damage)), "damage");
+                } else {
+                    uiMain.addFloatingText((float) (target.x-5+(Math.random()*10)), (float) (target.y-5+(Math.random()*10)), String.valueOf(Math.round(damage)), "crit");
+                }
             } else if (caster.faction == -1) {
                 //TODO:PET DMG FT
             }

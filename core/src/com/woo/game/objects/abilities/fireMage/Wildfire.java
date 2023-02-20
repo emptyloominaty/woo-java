@@ -9,6 +9,8 @@ import com.woo.game.objects.gameobjects.Creature;
 import com.woo.game.objects.gameobjects.GOControl;
 import com.woo.game.objects.gameobjects.Spell;
 
+import static com.woo.game.Main.player;
+
 
 public class Wildfire extends Ability {
     public Wildfire() {
@@ -21,7 +23,7 @@ public class Wildfire extends Ability {
 
     @Override
     public String getTooltip(Creature caster) {
-        return "Test"; //TODO:
+        return "Deal "+ GlobalFunctions.spellPowerToNumber(this.spellPower,player,"intellect") +" Fire damage to all enemies within "+Math.round(this.range)+"m";
     }
 
     public boolean startCast(Creature caster) {

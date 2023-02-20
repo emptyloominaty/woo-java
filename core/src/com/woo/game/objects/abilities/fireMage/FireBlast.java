@@ -1,6 +1,7 @@
 package com.woo.game.objects.abilities.fireMage;
 
 import com.woo.game.AbilityFunctions;
+import com.woo.game.GlobalFunctions;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.abilities.SpellQueue;
@@ -8,19 +9,21 @@ import com.woo.game.objects.gameobjects.Creature;
 import com.woo.game.objects.gameobjects.GOControl;
 import com.woo.game.objects.gameobjects.Spell;
 
+import static com.woo.game.Main.player;
+
 
 public class FireBlast extends Ability {
     public FireBlast() {
         super("Fire Blast", 5,0,0.65, 0.65, false, true, false, "fire", 40, 1, 0,1);
         this.moveSpeed = 30;
-        this.life = 1.5; //TODO:1.33 ?
+        this.life = 1.33;
         this.spellPower = 0.85;
         this.iconPath = "icons/mage/fire4.png";
     }
 
     @Override
     public String getTooltip(Creature caster) {
-        return "Test"; //TODO:
+        return "Deal "+ GlobalFunctions.spellPowerToNumber(this.spellPower,player,"intellect") +" Fire damage";
     }
 
     public boolean startCast(Creature caster) {
