@@ -173,10 +173,6 @@ public class Main extends ApplicationAdapter {
 		if (GlobalVars.characterStats) {
 			uiMain.updateCharacterStats();
 		}
-		if (GlobalVars.spellbook) {
-			uiMain.updateSpellbook();
-		}
-
 	}
 
 	float timer1 = 0;

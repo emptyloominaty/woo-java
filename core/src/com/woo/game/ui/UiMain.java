@@ -1,6 +1,7 @@
 package com.woo.game.ui;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.woo.game.GameInput;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.objects.Keybinds;
@@ -48,6 +50,8 @@ public class UiMain implements ApplicationListener {
     public Stage stage;
     public Stage stageBottom;
     public Stage stageTop;
+    public Stage stageTop2;
+
     Table table;
     Table tableTopRight;
     Skin skin;
@@ -176,11 +180,15 @@ public class UiMain implements ApplicationListener {
     Texture borderCharacterStats1;
 
 
+    Image dragAbility;
+
+
     public void create () {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/lsans.ttf"));
 
         stageBottom = new Stage();
         stageTop = new Stage();
+        stageTop2 = new Stage();
         stage = new Stage();
         table = new Table();
         table.setFillParent(true);
@@ -460,7 +468,7 @@ public class UiMain implements ApplicationListener {
         abilityTooltip.setPosition(400,400);
         abilityTooltip.align(Align.top);
         abilityTooltip.setSize(250,50);
-        stage.addActor(abilityTooltip);
+        stageTop2.addActor(abilityTooltip);
         abilityTooltip.setVisible(false);
 
         //StageTop
@@ -493,9 +501,10 @@ public class UiMain implements ApplicationListener {
         // Create the Texture
         borderCharacterStats1 = new Texture(pixmapCS1);
 
-        //TODO: Spellbook
+        //Spellbook
         spellbook = new Window("Spellbook",skin);
         spellbookTable = new Table();
+        spellbookTable.align(Align.topLeft);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         skin.add("default",scrollPaneStyle);
         ScrollPane spellbookScrollPane = new ScrollPane(spellbookTable,skin);
@@ -505,8 +514,13 @@ public class UiMain implements ApplicationListener {
         spellbook.add(spellbookScrollPane).expand().fill();
         spellbook.setMovable(true);
         spellbook.setVisible(false);
+        spellbook.setZIndex(40);
         stageTop.addActor(spellbook);
 
+        dragAbility = new Image(new Texture(Gdx.files.internal("icons/default.png")));
+        dragAbility.setSize(48,48);
+        dragAbility.setVisible(false);
+        stageTop2.addActor(dragAbility);
 
 
         //TODO: Talents
@@ -520,15 +534,25 @@ public class UiMain implements ApplicationListener {
     }
 
 
+
+
+
+
     public void updateSpellbook() {
         spellbookTable.clear();
-        //TODO: stack + tooltip + drag to actionbar
+        //TODO: drag to actionbar
         for (Map.Entry<String, Ability> ability : player.abilities.entrySet()) {
             Ability ab = player.abilities.get(ability.getKey());
+            Table table = new Table();
+            //TODO:mastery,talent,passive
             Image icon = new Image(new Texture (Gdx.files.internal(ab.iconPath)));
             Label label = new Label(ab.name,skin);
-            spellbookTable.add(icon);
-            spellbookTable.add(label);
+
+            table.add(icon).size(48);
+            table.add(label).pad(5);
+            spellbookTable.add(table).pad(5).padRight(15);
+
+            addTooltip(table, ab, ab.name,false);
         }
     }
 
@@ -734,8 +758,8 @@ public class UiMain implements ApplicationListener {
             Table costTable = new Table();
 
             if (actionBars[j].abilities[i]!=null) {
-                final String abilityName = actionBars[j].abilities[i];
-                final Ability ability = player.abilities.get(abilityName);
+                String abilityName = actionBars[j].abilities[i];
+                Ability ability = player.abilities.get(abilityName);
                 Image iconImg = new Image(new Texture (Gdx.files.internal(ability.iconPath)));
                 Table iconTable = new Table();
                 iconTable.add(iconImg).pad(1).padTop(2);
@@ -751,89 +775,7 @@ public class UiMain implements ApplicationListener {
                 Image costImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.7f)));
                 costTable.add(costImg).size(actionSize,actionSize);
 
-                tableAB.addListener(
-                        new InputListener() {
-                            @Override
-                            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                                abilityTName.setText(abilityName);
-
-                                String cost = Math.round(ability.cost)+" "+player.resourceName;
-                                abilityCost.setFontScale(1f);
-                                if (ability.cost==0 && ability.secCost==0) {
-                                    cost = "";
-                                    abilityCost.setFontScale(0.01f);
-                                } else if (ability.cost==0 && ability.secCost!=0) {
-                                    cost = ability.secCost+" "+player.secondaryResourceName;
-                                }
-                                abilityCost.setText(cost);
-
-                                String cd = ability.maxCd+" s";
-                                if (ability.charges>1) {
-                                    cd += " ("+ability.charges+" Charges)";
-                                }
-                                cd += " cd";
-                                abilityCd.setFontScale(1f);
-                                if (ability.maxCd==0) {
-                                    cd = "";
-                                    abilityCd.setFontScale(0.01f);
-                                }
-                                abilityCd.setText(cd);
-
-                                String range = "Range: "+Math.round(ability.range)+"m";
-                                abilityRange.setFontScale(1f);
-                                if (ability.range==0) {
-                                    range = "";
-                                    abilityRange.setFontScale(0.01f);
-                                }
-                                if (ability.range==5) {
-                                    range = "Range: Melee";
-                                }
-                                abilityRange.setText(range);
-
-                                String castTime = ability.castTime+"s cast";
-                                abilityCastTime.setFontScale(1f);
-                                if (ability.channeling) {
-                                    castTime = ability.castTime+"s channel";
-                                }
-                                if (ability.castTime==0) {
-                                    castTime = "";
-                                    abilityCastTime.setFontScale(0.01f);
-                                }
-                                abilityCastTime.setText(castTime);
-
-                                abilityDesc.setText(ability.getTooltip(player));
-
-                                String aType = "";
-                                abilityType.setFontScale(1);
-                                if (ability.passive) {
-                                    aType = "Passive";
-                                }
-                                if (ability.talent) {
-                                    aType = "Talent";
-                                }
-                                if (ability.mastery) {
-                                    aType = "Mastery";
-                                }
-                                if (aType.equals("")) {
-                                    abilityType.setFontScale(0.01f);
-                                }
-                                abilityType.setText(aType);
-                                abilityTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
-                                abilityTooltip.pack();
-                                abilityTooltip.setWidth(180);
-                                abilityTooltip.setVisible(true);
-                            }
-                            @Override
-                            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                                abilityTooltip.setVisible(false);
-                            }
-                            @Override
-                            public boolean mouseMoved(InputEvent event, float x, float y) {
-                                abilityTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
-                               return false;
-                            }
-                        }
-                );
+                addTooltip(tableAB, ability, abilityName, true);
                 /*iconImg.addListener(new FocusListener() {
                     @Override
                     public boolean handle(Event event) {
@@ -855,6 +797,106 @@ public class UiMain implements ApplicationListener {
             actionCost.put(i+(j*size),costTable);
             //actionCdTimer.put(i+(j*size),cdTable);
         }
+    }
+
+    public void addTooltip(Table tableAB, final Ability ability, final String abilityName, final boolean actionBar) {
+        tableAB.addListener(
+                new InputListener() {
+                    @Override
+                    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                        abilityTName.setText(abilityName);
+
+                        String cost = Math.round(ability.cost)+" "+player.resourceName;
+                        abilityCost.setFontScale(1f);
+                        if (ability.cost==0 && ability.secCost==0) {
+                            cost = "";
+                            abilityCost.setFontScale(0.01f);
+                        } else if (ability.cost==0 && ability.secCost!=0) {
+                            cost = ability.secCost+" "+player.secondaryResourceName;
+                        }
+                        abilityCost.setText(cost);
+
+                        String cd = ability.maxCd+" s";
+                        if (ability.charges>1) {
+                            cd += " ("+ability.charges+" Charges)";
+                        }
+                        cd += " cd";
+                        abilityCd.setFontScale(1f);
+                        if (ability.maxCd==0) {
+                            cd = "";
+                            abilityCd.setFontScale(0.01f);
+                        }
+                        abilityCd.setText(cd);
+
+                        String range = "Range: "+Math.round(ability.range)+"m";
+                        abilityRange.setFontScale(1f);
+                        if (ability.range==0) {
+                            range = "";
+                            abilityRange.setFontScale(0.01f);
+                        }
+                        if (ability.range==5) {
+                            range = "Range: Melee";
+                        }
+                        abilityRange.setText(range);
+
+                        String castTime = ability.castTime+"s cast";
+                        abilityCastTime.setFontScale(1f);
+                        if (ability.channeling) {
+                            castTime = ability.castTime+"s channel";
+                        }
+                        if (ability.castTime==0) {
+                            castTime = "";
+                            abilityCastTime.setFontScale(0.01f);
+                        }
+                        abilityCastTime.setText(castTime);
+
+                        abilityDesc.setText(ability.getTooltip(player));
+
+                        String aType = "";
+                        abilityType.setFontScale(1);
+                        if (ability.passive) {
+                            aType = "Passive";
+                        }
+                        if (ability.talent) {
+                            aType = "Talent";
+                        }
+                        if (ability.mastery) {
+                            aType = "Mastery";
+                        }
+                        if (aType.equals("")) {
+                            abilityType.setFontScale(0.01f);
+                        }
+                        abilityType.setText(aType);
+                        abilityTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                        abilityTooltip.pack();
+                        abilityTooltip.setWidth(180);
+                        abilityTooltip.setVisible(true);
+                    }
+                    @Override
+                    public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                        abilityTooltip.setVisible(false);
+                    }
+                    @Override
+                    public boolean mouseMoved(InputEvent event, float x, float y) {
+                        abilityTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                        return false;
+                    }
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        if (GameInput.ctrl) {
+                            dragAbility.setVisible(true);
+                            GlobalVars.draggingAbility = true;
+                            GlobalVars.dragAbility = ability;
+                            GlobalVars.dragAbilityName = ability.name;
+                            if (actionBar) {
+                                //TODO: remove ability from action bar
+                            }
+                        }
+                        return true;
+                    }
+                }
+        );
+
     }
 
     public void setActionPress(int slot, int bar, boolean visible) {
@@ -951,6 +993,7 @@ public class UiMain implements ApplicationListener {
     public void resize (int width, int height) {
         //??????????????????
         stage.getViewport().update(width, height, true);
+        stageTop2.getViewport().update(width, height, true);
         stageTop.getViewport().update(width, height, true);
         stageBottom.getViewport().update(width, height, true);
     }
@@ -980,6 +1023,8 @@ public class UiMain implements ApplicationListener {
         stage.draw();
         stageTop.act(GlobalVars.delta);
         stageTop.draw();
+        stageTop2.act(GlobalVars.delta);
+        stageTop2.draw();
     }
 
     @Override

@@ -16,16 +16,23 @@ import static com.woo.game.Main.*;
 
 public class GameInput {
     static boolean strafing = false;
+    public static boolean ctrl = false;
 
     public static void setInputProcessor(Stage stage) {
         InputProcessor inputprocessor = new InputProcessor() {
             @Override
             public boolean keyDown(int keycode) {
+                if (keycode==(Input.Keys.CONTROL_LEFT)) {
+                    ctrl = true;
+                }
                 return false;
             }
 
             @Override
             public boolean keyUp(int keycode) {
+                if (keycode==(Input.Keys.CONTROL_LEFT)) {
+                    ctrl = false;
+                }
                 return false;
             }
 
@@ -51,7 +58,7 @@ public class GameInput {
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                return false;
+                return true;
             }
 
             @Override
@@ -77,7 +84,6 @@ public class GameInput {
     }
 
     public static void handleInput() {
-
         //System.out.println("x: "+Gdx.input.getX()+" y:"+Gdx.input.getY()); //<-- mouse on screen
 
         //-------------------------------
@@ -111,7 +117,7 @@ public class GameInput {
             if (!GlobalVars.spellbook) {
                 GlobalVars.spellbook = true;
                 uiMain.spellbook.setVisible(true);
-                //TODO:uiMain.updateSpellbook();
+                uiMain.updateSpellbook();
             } else {
                 GlobalVars.spellbook = false;
                 uiMain.spellbook.setVisible(false);

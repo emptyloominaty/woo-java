@@ -1,5 +1,6 @@
 package com.woo.game;
 import com.badlogic.gdx.Gdx;
+import com.woo.game.objects.abilities.Ability;
 
 import java.util.HashMap;
 
@@ -14,9 +15,13 @@ public class GlobalVars {
     public static boolean characterStats = false;
     public static boolean spellbook = false;
 
+    public static boolean draggingAbility = false;
+    public static String dragAbilityName = "";
+    public static Ability dragAbility;
+
+    //TODO
     public static float spellbookX = 40;
     public static float spellbookY = Gdx.graphics.getHeight()-560;
-
     public static float characterStatsX = 40;
     public static float characterStatsY = Gdx.graphics.getHeight()-540;
 
