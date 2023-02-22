@@ -14,17 +14,19 @@ public class GlobalVars {
 
     public static boolean characterStats = false;
     public static boolean spellbook = false;
+    public static boolean settings = false;//TODO
 
     public static boolean draggingAbility = false;
     public static String dragAbilityName = "";
     public static Ability dragAbility;
 
-    //TODO
+    //TODO:load and store
     public static float spellbookX = 40;
     public static float spellbookY = Gdx.graphics.getHeight()-560;
     public static float characterStatsX = 40;
     public static float characterStatsY = Gdx.graphics.getHeight()-540;
-
+    public static float settingsX = 40;
+    public static float settingsY = Gdx.graphics.getHeight()-540;
 
     public static void init() {
     }

@@ -42,8 +42,7 @@ public class Wildfire extends Ability {
 
         float angle = 360/20;
         for (int i = 0; i<20; i++) {
-            //TODO:no rng life (450-900) -> (700,700)
-            ParticleSystem.add("fire2",45, caster.direction+(angle*i), caster.x, caster.y);
+            ParticleSystem.add("fire2norng",45, caster.direction+(angle*i), caster.x, caster.y);
             /*TEST: int particleId = ParticleSystem.add("fire",25, caster.direction-180+(angle*i), caster.x, caster.y);
             Spell newSpell = new Spell("test Spell","test",false,false,caster.x,caster.y,"",caster.direction+(angle*i), particleId,true, this.moveSpeed, this.life,this);
             newSpell.caster = caster;

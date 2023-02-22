@@ -21,6 +21,7 @@ import com.woo.game.GameInput;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.objects.Keybinds;
+import com.woo.game.objects.Setting;
 import com.woo.game.objects.Settings;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.Creature;
@@ -146,6 +147,9 @@ public class UiMain implements ApplicationListener {
     public Window spellbook;
     Table spellbookTable;
 
+    public Window settings;
+    Table settingsTable;
+
     //TODO:UI (Menu)
 
     //font
@@ -180,7 +184,7 @@ public class UiMain implements ApplicationListener {
     Texture borderCharacterStats1;
 
 
-    Image dragAbility;
+    public Image dragAbility;
 
 
     public void create () {
@@ -523,6 +527,20 @@ public class UiMain implements ApplicationListener {
         stageTop2.addActor(dragAbility);
 
 
+        //TODO:settings
+        settings = new Window("Settings",skin);
+        settingsTable = new Table();
+        settings.setSize(600,500);
+        settings.padTop(25);
+        settings.setPosition(40,Gdx.graphics.getHeight()-540);
+        settings.add(settingsTable).expand().fill();
+        settings.setMovable(true);
+        settingsTable.align(Align.topLeft);
+        //settings.setVisible(false);
+
+        stageTop.addActor(settings);
+        updateSettings();
+
         //TODO: Talents
         //TODO: Inventory
 
@@ -533,10 +551,27 @@ public class UiMain implements ApplicationListener {
         areaNameLabel.setText(areaName);
     }
 
+    public void updateSettings() {
+        settingsTable.clear();
+        for(Map.Entry<String, Setting> entry : Settings.map.entrySet()) {
+            String key = entry.getKey();
+            Setting setting = Settings.map.get(key);
+           //TODO:
+            if (!(setting.type.equals("slider"))) {
+                Table sTable = new Table();
+                sTable.align(Align.left);
+                Label name = new Label(setting.name,skin);
+                sTable.add(name);
+                //TODO: tables map (categories)
+                settingsTable.add(sTable);
+            } else {
+                //TODO:slider
+            }
+            settingsTable.row();
+        }
 
 
-
-
+    }
 
     public void updateSpellbook() {
         spellbookTable.clear();
@@ -552,7 +587,7 @@ public class UiMain implements ApplicationListener {
             table.add(label).pad(5);
             spellbookTable.add(table).pad(5).padRight(15);
 
-            addTooltip(table, ab, ab.name,false);
+            addTooltip(table, ab, ab.name,false,-1,-1);
         }
     }
 
@@ -618,15 +653,16 @@ public class UiMain implements ApplicationListener {
         Label playerClass = new Label(player.creatureClass,skin);
 
         Label playerLevel = new Label(""+player.level, borderLabelStyle);
-        Label playerXp = new Label(""+player.xp,skin);
-        Label playerXpNext = new Label(""+Math.round(500 * (Math.pow(1.2, player.level)-1)/(1.5-1)),skin);
+        Label playerXp = new Label(""+player.xp, borderLabelStyle);
+        Label playerXpNext = new Label(""+Math.round(500 * (Math.pow(1.2, player.level)-1)/(1.5-1)), borderLabelStyle);
 
         Label levelLabel = new Label("Level",skin);
         Label xpLabel = new Label("Experience",skin);
         Label xpNextLabel = new Label("XP to next level",skin);
 
         playerLevel.setAlignment(Align.center);
-
+        playerXp.setAlignment(Align.center);
+        playerXpNext.setAlignment(Align.center);
         //----------------------------
         Label playerIntellect = new Label(""+Math.round(player.stats.get("intellect")),skin);
         Label playerStrength = new Label(""+Math.round(player.stats.get("strength")),skin);
@@ -688,19 +724,107 @@ public class UiMain implements ApplicationListener {
 
         characterStatsTable.add(intellect).colspan(1);
         characterStatsTable.add(playerIntellect).colspan(1);
-        //TODO:BUTTON +
+
+        Table addIntellectTable = new Table();
+        addIntellectTable.background(skin.newDrawable("white", new Color(1,1,1,0.2f)));
+        Label addIntellect = new Label("+",skin);
+        addIntellectTable.add(addIntellect);
+        addIntellectTable.addListener(
+                new InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        double stat = player.stats.get("intellect");
+                        stat += 1;
+                        player.statsPoints --;
+                        player.stats.put("intellect",stat);
+                        uiMain.updateCharacterStats();
+                        return true;
+                    }
+                });
+        characterStatsTable.add(addIntellectTable).size(25,16).colspan(1);
+        if (player.statsPoints>0) {
+            characterStatsTable.add(new Label(" /"+player.statsPoints,skin));
+        }
+
+
         characterStatsTable.row();
         characterStatsTable.add(strength).colspan(1);
         characterStatsTable.add(playerStrength).colspan(1);
-        //TODO:BUTTON +
+
+        Table addStrengthTable = new Table();
+        addStrengthTable.background(skin.newDrawable("white", new Color(1,1,1,0.2f)));
+        Label addStrength = new Label("+",skin);
+        addStrengthTable.add(addStrength);
+        addStrengthTable.addListener(
+                new InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        double stat = player.stats.get("strength");
+                        stat += 1;
+                        player.statsPoints --;
+                        player.stats.put("strength",stat);
+                        uiMain.updateCharacterStats();
+                        return true;
+                    }
+                });
+        characterStatsTable.add(addStrengthTable).size(25,16).colspan(1);
+        if (player.statsPoints>0) {
+            characterStatsTable.add(new Label(" /" + player.statsPoints, skin));
+        }
         characterStatsTable.row();
         characterStatsTable.add(dexterity).colspan(1);
         characterStatsTable.add(playerDexterity).colspan(1);
-        //TODO:BUTTON +
+
+        Table addDexterityTable = new Table();
+        addDexterityTable.background(skin.newDrawable("white", new Color(1,1,1,0.2f)));
+        Label addDexterity = new Label("+",skin);
+        addDexterityTable.add(addDexterity);
+        addDexterityTable.addListener(
+                new InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        double stat = player.stats.get("dexterity");
+                        stat += 1;
+                        player.statsPoints --;
+                        player.stats.put("dexterity",stat);
+                        uiMain.updateCharacterStats();
+                        return true;
+                    }
+                });
+        characterStatsTable.add(addDexterityTable).size(25,16).colspan(1);
+        if (player.statsPoints>0) {
+            characterStatsTable.add(new Label(" /" + player.statsPoints, skin));
+        }
         characterStatsTable.row();
         characterStatsTable.add(stamina).colspan(1);
         characterStatsTable.add(playerStamina).colspan(1);
-        //TODO:BUTTON +
+
+        Table addStaminaTable = new Table();
+        addStaminaTable.background(skin.newDrawable("white", new Color(1,1,1,0.2f)));
+        Label addStamina = new Label("+",skin);
+        addStaminaTable.add(addStamina);
+        addStaminaTable.addListener(
+                new InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        double stat = player.stats.get("stamina");
+                        stat += 1;
+                        player.statsPoints --;
+                        player.stats.put("stamina",stat);
+                        uiMain.updateCharacterStats();
+                        return true;
+                    }
+                });
+        if (player.statsPoints==0) {
+            addStaminaTable.setVisible(false);
+            addDexterityTable.setVisible(false);
+            addIntellectTable.setVisible(false);
+            addStrengthTable.setVisible(false);
+        }
+        characterStatsTable.add(addStaminaTable).size(25,16).colspan(1);
+        if (player.statsPoints>0) {
+            characterStatsTable.add(new Label(" /" + player.statsPoints, skin));
+        }
         characterStatsTable.row();
         characterStatsTable.add(new Label("",skin));
         characterStatsTable.row();
@@ -728,6 +852,11 @@ public class UiMain implements ApplicationListener {
 
 
     public void createActionBars(boolean top, int size) {
+        if (top) {
+            actionBarMainTop.clear();
+        } else {
+            actionBarMainBottom.clear();
+        }
         int j = 1;
         if (top) {
             j = 0;
@@ -775,7 +904,7 @@ public class UiMain implements ApplicationListener {
                 Image costImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.7f)));
                 costTable.add(costImg).size(actionSize,actionSize);
 
-                addTooltip(tableAB, ability, abilityName, true);
+                addTooltip(tableAB, ability, abilityName, true, j, i);
                 /*iconImg.addListener(new FocusListener() {
                     @Override
                     public boolean handle(Event event) {
@@ -791,6 +920,26 @@ public class UiMain implements ApplicationListener {
             stack.addActor(pressImgTable);
             tableAB.add(stack);
 
+            final int finalJ = j;
+            final int finalI = i;
+            tableAB.addListener(
+                    new InputListener() {
+                        @Override
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                            if (GlobalVars.draggingAbility && !GameInput.ctrl) {
+                                dragAbility.setVisible(false);
+                                GlobalVars.draggingAbility = false;
+                                //GlobalVars.dragAbility
+                                //GlobalVars.dragAbilityName
+                                actions.put(GlobalVars.dragAbilityName,new Action(GlobalVars.dragAbilityName, finalJ, finalI));
+                                uiMain.createActionBars(true,15);
+                                uiMain.createActionBars(false,15);
+
+                            }
+                            return true;
+                        }
+                    });
+
             actionPress.put(i+(j*size),pressImg);
             //actionStacks.put(i+(j*size),stack);
             actionGcdTimer.put(i+(j*size),gcdTable);
@@ -799,7 +948,7 @@ public class UiMain implements ApplicationListener {
         }
     }
 
-    public void addTooltip(Table tableAB, final Ability ability, final String abilityName, final boolean actionBar) {
+    public void addTooltip(Table tableAB, final Ability ability, final String abilityName, final boolean actionBar, final int j, final int i) {
         tableAB.addListener(
                 new InputListener() {
                     @Override
@@ -883,13 +1032,17 @@ public class UiMain implements ApplicationListener {
                     }
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        if (GameInput.ctrl) {
+                        if (GameInput.ctrl && !GlobalVars.draggingAbility) {
                             dragAbility.setVisible(true);
+                            dragAbility.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                            dragAbility.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(ability.iconPath)))));
                             GlobalVars.draggingAbility = true;
                             GlobalVars.dragAbility = ability;
                             GlobalVars.dragAbilityName = ability.name;
                             if (actionBar) {
-                                //TODO: remove ability from action bar
+                                actionBars[j].abilities[i] = null;
+                                uiMain.createActionBars(true,15);
+                                uiMain.createActionBars(false,15);
                             }
                         }
                         return true;

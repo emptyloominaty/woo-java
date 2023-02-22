@@ -37,6 +37,7 @@ public class Creature extends GameObject {
     //TODO:Inventory
     //TODO:Gear
 
+    public int statsPoints = 0;
     public int level = 1;
     public long xp;
     public int faction; //0-player 1-friendly 2-neutral 3>=enemy
@@ -233,11 +234,9 @@ public class Creature extends GameObject {
 
     public void gainXp(float xp) {
         this.xp += xp;
-        System.out.println("XP Gained: "+xp);
         if (this.xp>(500 * (Math.pow(1.2, this.level)-1)/(1.5-1))) {
+            this.statsPoints += 5;
             this.level++;
-            System.out.println("LEVEL UP "+this.level);
-            //TODO: stats
         }
 
     }

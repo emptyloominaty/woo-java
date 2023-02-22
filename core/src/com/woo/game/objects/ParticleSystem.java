@@ -24,7 +24,10 @@ public class ParticleSystem {
         particleFiles = new HashMap<String, String>();
         particleFiles.put("fire","particles/fire.particle");
         particleFiles.put("fire2","particles/fire2.particle");
+        particleFiles.put("fire2norng","particles/fire2norng.particle");
         particleFiles.put("fire64","particles/fire64.particle");
+
+
         //TODO: particleFiles.put
         movingParticles = new HashMap<Integer, MovingParticle>();
         removeMovingParticles = new ArrayList<Integer>();

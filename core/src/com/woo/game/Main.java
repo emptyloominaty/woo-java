@@ -170,9 +170,6 @@ public class Main extends ApplicationAdapter {
 
 	public void updateEverySec() {
 		uiMain.areaNameLabel.setText(areaName);
-		if (GlobalVars.characterStats) {
-			uiMain.updateCharacterStats();
-		}
 	}
 
 	float timer1 = 0;
@@ -184,6 +181,9 @@ public class Main extends ApplicationAdapter {
 		} else {
 			timer1 = 0;
 			updateEverySec();
+		}
+		if (GlobalVars.characterStats) {
+			uiMain.updateCharacterStats();
 		}
 
 		uiMain.updateFloatingTexts();

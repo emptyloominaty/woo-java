@@ -48,6 +48,10 @@ public class GameInput {
                     player.moveToX = mouseInWorld2D.x;
                     player.moveToY = mouseInWorld2D.y;
                 }
+                if (GlobalVars.draggingAbility) {
+                    GlobalVars.draggingAbility = false;
+                    uiMain.dragAbility.setVisible(false);
+                }
                 return false;
             }
 
@@ -86,6 +90,10 @@ public class GameInput {
     public static void handleInput() {
         //System.out.println("x: "+Gdx.input.getX()+" y:"+Gdx.input.getY()); //<-- mouse on screen
 
+        if (GlobalVars.draggingAbility) {
+            uiMain.dragAbility.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+        }
+
         //-------------------------------
         if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
             strafing = true;
@@ -94,10 +102,10 @@ public class GameInput {
         }
 
         //TEST
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_0")[0]))) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_0")[0])) && actionBars[0].abilities[0]!=null) {
             actionBars[0].press(0);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_1")[0]))) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_1")[0])) && actionBars[0].abilities[1]!=null) {
             actionBars[0].press(1);
         }
 
@@ -121,6 +129,16 @@ public class GameInput {
             } else {
                 GlobalVars.spellbook = false;
                 uiMain.spellbook.setVisible(false);
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("Settings")[0]))) {
+            if (!GlobalVars.settings) {
+                GlobalVars.settings = true;
+                uiMain.settings.setVisible(true);
+                uiMain.updateSettings();
+            } else {
+                GlobalVars.settings = false;
+                uiMain.settings.setVisible(false);
             }
         }
         //
