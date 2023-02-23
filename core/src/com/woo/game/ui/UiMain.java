@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.TouchableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -920,7 +921,6 @@ public class UiMain implements ApplicationListener {
             Table stackTable = new Table();
             Table pressImgTable = new Table();
 
-
             Image backgroundImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.3f)));
             stackTable.add(backgroundImg).size(actionSize).pad(1);
 
@@ -933,9 +933,8 @@ public class UiMain implements ApplicationListener {
             Table gcdTable = new Table();
             Table cdTable = new Table();
             Table costTable = new Table();
-
-
-
+            Table test = new Table(); //cdTimeTable
+            Table chargesTable = new Table();
 
             if (actionBars[j].abilities[i]!=null) {
                 String abilityName = actionBars[j].abilities[i];
@@ -949,13 +948,15 @@ public class UiMain implements ApplicationListener {
                 keybind.setStyle(labelStyle18);
 
                 Label cdText = new Label("",skin);
+                cdText.setStyle(labelStyle20);
+                cdText.setColor(0.9f,0.9f,0.4f,1f);
                 Label chargesText = new Label("",skin);
                 stack.add(keybind);
-                stack.add(chargesText);
 
-                Table test = new Table();
+                chargesTable.add(chargesText);
+
                 test.add(cdText);
-                stack.add(test);
+
 
                 actionCdTimes.put(i+(j*size),cdText);
                 actionCharges.put(i+(j*size),chargesText);
@@ -986,8 +987,10 @@ public class UiMain implements ApplicationListener {
             stack.addActor(gcdTable);
             stack.addActor(pressImgTable);
 
-            tableAB.add(stack);
 
+            tableAB.add(stack);
+            tableAB.add(test).padLeft(-48);
+            tableAB.add(chargesTable).padLeft(-24).bottom();
             final int finalJ = j;
             final int finalI = i;
             tableAB.addListener(
@@ -1009,7 +1012,7 @@ public class UiMain implements ApplicationListener {
                     });
 
             actionPress.put(i+(j*size),pressImg);
-            //actionStacks.put(i+(j*size),stack);
+            actionStacks.put(i+(j*size),stack);
             actionGcdTimer.put(i+(j*size),gcdTable);
             actionCost.put(i+(j*size),costTable);
             actionCdTimer.put(i+(j*size),cdTable);
@@ -1125,14 +1128,14 @@ public class UiMain implements ApplicationListener {
     }
 
     public void gcdTimerSet(int slots, int bar) {
+
         //CD, Charges
         for (int i = 0; i<slots; i++) {
             if (actionBars[bar].abilities[i]!=null) {
                 Ability ability = player.abilities.get(actionBars[bar].abilities[i]);
                 if (ability.maxCd>0) {
-
-                    if (ability.cd<ability.maxCd) { //TODO FIX?
-                        //actionCdTimes.get(i + (bar * 15)).setText((Math.round(ability.maxCd-ability.cd))+"s");
+                    if (ability.cd<ability.maxCd) {
+                        actionCdTimes.get(i + (bar * 15)).setText((GlobalFunctions.getTimeString(ability.maxCd-ability.cd))+"");
                     } else {
                         actionCdTimes.get(i + (bar * 15)).setText("");
                     }
@@ -1171,6 +1174,7 @@ public class UiMain implements ApplicationListener {
                 actionCost.get(i + (bar * 15)).setHeight(0);
             }
         }
+
     }
 
     public void addCreatureBar(Creature creature) {

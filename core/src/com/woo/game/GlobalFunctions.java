@@ -79,6 +79,14 @@ public class GlobalFunctions {
         }
     }
     //-----------
+    public static String getTimeString(double time) {
+        if (time>60) {
+            return Math.round(time/60)+"m";
+        } else {
+            return Math.round(time)+"s";
+        }
+    }
+    //-----------
     public static String spellPowerToNumber(double val,Creature caster,String primaryStat) {
         return Math.round(caster.stats.get(primaryStat) * val)+"";
     }
