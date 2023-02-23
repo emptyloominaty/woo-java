@@ -36,11 +36,13 @@ public class Ability {
     public boolean hasteCd = false;
     public boolean hasteGcd = true;
     public float range = 5f;
+    public float rangeSec = 5f;
 
     public double cost = 0;
     public int secCost = 0;
 
     public double spellPower = 0;
+    public double spellPowerSec = 0;
     public double duration = 0;
 
     //prevents multiple uses in a row (nogcd) (nocd/2charges)
@@ -312,7 +314,7 @@ public class Ability {
         }
     }
 
-    public void execute(Creature caster,Creature target) {
+    public void execute(Creature caster,Creature target, float x, float y) {
     }
 
     public void incCd(Creature caster, double inc,int hasteCd) {

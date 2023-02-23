@@ -72,7 +72,9 @@ public class Main extends ApplicationAdapter {
 
 		//test
 		actions.put("Fire Blast",new Action("Fire Blast",0,0));
-		actions.put("Wildfire",new Action("Wildfire",0,1));
+		actions.put("Fire Ball",new Action("Fire Ball",0,1));
+		actions.put("Wildfire",new Action("Wildfire",0,2));
+
 
 		GlobalVars.init();
 		GOControl.reset();

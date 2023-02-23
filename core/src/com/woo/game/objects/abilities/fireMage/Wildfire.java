@@ -61,7 +61,7 @@ public class Wildfire extends Ability {
         //return false;
     }
 
-    public void execute(Creature caster,Creature target) {
+    public void execute(Creature caster,Creature target, float x, float y) {
     }
 
 }

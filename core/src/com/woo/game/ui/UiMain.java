@@ -149,6 +149,8 @@ public class UiMain implements ApplicationListener {
 
     public Window settings;
     Table settingsTable;
+    Map<String,Table> settingsCategories;
+
 
     //TODO:UI (Menu)
 
@@ -246,9 +248,9 @@ public class UiMain implements ApplicationListener {
         // Configure a TextButtonStyle and name it "default". Skin resources are stored by type, so this doesn't overwrite the font.
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = skin.newDrawable("white", Color.DARK_GRAY);
-        textButtonStyle.down = skin.newDrawable("white", Color.RED);
-        textButtonStyle.checked = skin.newDrawable("white", Color.BLUE);
-        textButtonStyle.over = skin.newDrawable("white", Color.LIGHT_GRAY);
+        textButtonStyle.down = skin.newDrawable("white", Color.GREEN);
+        textButtonStyle.checked = skin.newDrawable("white", Color.LIGHT_GRAY);
+        textButtonStyle.over = skin.newDrawable("white", Color.GRAY);
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
 
@@ -536,7 +538,19 @@ public class UiMain implements ApplicationListener {
         settings.add(settingsTable).expand().fill();
         settings.setMovable(true);
         settingsTable.align(Align.topLeft);
-        //settings.setVisible(false);
+        settings.setVisible(false);
+
+        settingsCategories = new HashMap<String,Table>();
+
+        settingsCategories.put("Game",new Table());
+        settingsCategories.put("Video",new Table());
+        settingsCategories.put("Audio",new Table());
+
+        for(Map.Entry<String, Table> entry : settingsCategories.entrySet()) {
+            String key = entry.getKey();
+            settingsTable.add(settingsCategories.get(key)).expand().fill();
+        }
+
 
         stageTop.addActor(settings);
         updateSettings();
@@ -551,23 +565,61 @@ public class UiMain implements ApplicationListener {
         areaNameLabel.setText(areaName);
     }
 
+
+
     public void updateSettings() {
         settingsTable.clear();
+        for(Map.Entry<String, Table> entry : settingsCategories.entrySet()) {
+            String key = entry.getKey();
+            settingsCategories.get(key).clear();
+            Image line = new Image(skin.newDrawable("white", new Color(1,1,1,0.5f)));
+            settingsTable.add(line).height(1).expandX().fillX().padBottom(5);
+            settingsTable.row();
+            Label categoryLabel = new Label(""+key,skin);
+            categoryLabel.setStyle(labelStyle18);
+            categoryLabel.setAlignment(Align.center);
+            settingsCategories.get(key).add(categoryLabel).colspan(8).expandX().fillX();
+            settingsCategories.get(key).align(Align.topLeft);
+            settingsCategories.get(key).row();
+
+            settingsTable.add(settingsCategories.get(key)).expand().fill();
+            settingsTable.row();
+        }
         for(Map.Entry<String, Setting> entry : Settings.map.entrySet()) {
             String key = entry.getKey();
-            Setting setting = Settings.map.get(key);
+            final Setting setting = Settings.map.get(key);
            //TODO:
             if (!(setting.type.equals("slider"))) {
-                Table sTable = new Table();
-                sTable.align(Align.left);
+                Table nameTable = new Table();
+                Table optionsTable = new Table();
+
                 Label name = new Label(setting.name,skin);
-                sTable.add(name);
-                //TODO: tables map (categories)
-                settingsTable.add(sTable);
+                nameTable.add(name);
+
+                for (int i = 0; i<setting.values.length; i++) {
+                    TextButton button = new TextButton(setting.names[i], skin);
+
+                    final int finalI = i;
+                    button.addListener(new ClickListener() {
+                        @Override
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                            setting.value = setting.values[finalI];
+                            updateSettings();
+                            return super.touchDown(event, x, y, pointer, button);
+                        }
+                    });
+                    if (setting.value==setting.values[i]) {
+                        button.setChecked(true);
+                    }
+                    optionsTable.add(button).padLeft(5).padRight(5);
+                }
+
+                settingsCategories.get(setting.category).add(nameTable).left().expandX().padLeft(5);
+                settingsCategories.get(setting.category).add(optionsTable).right().expandX().padLeft(5).pad(1);
             } else {
                 //TODO:slider
             }
-            settingsTable.row();
+            settingsCategories.get(setting.category).row();
         }
 
 
@@ -575,7 +627,6 @@ public class UiMain implements ApplicationListener {
 
     public void updateSpellbook() {
         spellbookTable.clear();
-        //TODO: drag to actionbar
         for (Map.Entry<String, Ability> ability : player.abilities.entrySet()) {
             Ability ab = player.abilities.get(ability.getKey());
             Table table = new Table();
@@ -644,7 +695,6 @@ public class UiMain implements ApplicationListener {
     public void updateCharacterStats() {
         //TODO:optimize?
         characterStatsTable.clear();
-
         Label.LabelStyle borderLabelStyle = new Label.LabelStyle();
         borderLabelStyle.background = new NinePatchDrawable(new NinePatch(borderCharacterStats1,4,4,4,4));
         borderLabelStyle.font = font16;
@@ -852,14 +902,12 @@ public class UiMain implements ApplicationListener {
 
 
     public void createActionBars(boolean top, int size) {
-        if (top) {
-            actionBarMainTop.clear();
-        } else {
-            actionBarMainBottom.clear();
-        }
         int j = 1;
         if (top) {
             j = 0;
+            actionBarMainTop.clear();
+        } else {
+            actionBarMainBottom.clear();
         }
         for (int i = 0; i<size; i++) {
             Table tableAB = new Table();
@@ -883,8 +931,11 @@ public class UiMain implements ApplicationListener {
             stack.addActor(stackTable);
 
             Table gcdTable = new Table();
-            //Table cdTable = new Table();
+            Table cdTable = new Table();
             Table costTable = new Table();
+
+
+
 
             if (actionBars[j].abilities[i]!=null) {
                 String abilityName = actionBars[j].abilities[i];
@@ -896,7 +947,21 @@ public class UiMain implements ApplicationListener {
                 Label keybind = new Label(" "+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0]+" ",skin);
                 keybind.setAlignment(Align.top, Align.right);
                 keybind.setStyle(labelStyle18);
+
+                Label cdText = new Label("",skin);
+                Label chargesText = new Label("",skin);
                 stack.add(keybind);
+                stack.add(chargesText);
+
+                Table test = new Table();
+                test.add(cdText);
+                stack.add(test);
+
+                actionCdTimes.put(i+(j*size),cdText);
+                actionCharges.put(i+(j*size),chargesText);
+
+                Image cdImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.6f)));
+                cdTable.add(cdImg).size(actionSize,actionSize);
 
                 Image gcdImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.6f)));
                 gcdTable.add(gcdImg).size(actionSize,actionSize);
@@ -913,11 +978,14 @@ public class UiMain implements ApplicationListener {
                     }
                 });*/
             }
+            cdTable.setClip(true);
             costTable.setClip(true);
             gcdTable.setClip(true);
+            stack.addActor(cdTable);
             stack.addActor(costTable);
             stack.addActor(gcdTable);
             stack.addActor(pressImgTable);
+
             tableAB.add(stack);
 
             final int finalJ = j;
@@ -944,7 +1012,7 @@ public class UiMain implements ApplicationListener {
             //actionStacks.put(i+(j*size),stack);
             actionGcdTimer.put(i+(j*size),gcdTable);
             actionCost.put(i+(j*size),costTable);
-            //actionCdTimer.put(i+(j*size),cdTable);
+            actionCdTimer.put(i+(j*size),cdTable);
         }
     }
 
@@ -965,7 +1033,7 @@ public class UiMain implements ApplicationListener {
                         }
                         abilityCost.setText(cost);
 
-                        String cd = ability.maxCd+" s";
+                        String cd = ability.maxCd+"s";
                         if (ability.charges>1) {
                             cd += " ("+ability.charges+" Charges)";
                         }
@@ -1057,6 +1125,30 @@ public class UiMain implements ApplicationListener {
     }
 
     public void gcdTimerSet(int slots, int bar) {
+        //CD, Charges
+        for (int i = 0; i<slots; i++) {
+            if (actionBars[bar].abilities[i]!=null) {
+                Ability ability = player.abilities.get(actionBars[bar].abilities[i]);
+                if (ability.maxCd>0) {
+
+                    if (ability.cd<ability.maxCd) { //TODO FIX?
+                        //actionCdTimes.get(i + (bar * 15)).setText((Math.round(ability.maxCd-ability.cd))+"s");
+                    } else {
+                        actionCdTimes.get(i + (bar * 15)).setText("");
+                    }
+
+                    if (ability.maxCharges>1) {
+                        actionCharges.get(i + (bar * 15)).setText(""+ability.charges);
+                    }
+
+                    float height = (float) ((1-(ability.cd / ability.maxCd)) * actionSize);
+                    actionCdTimer.get(i + (bar * 15)).setHeight(height);
+                } else {
+                    actionCdTimer.get(i + (bar * 15)).setHeight(0);
+                }
+            }
+        }
+        //GCD
         if (player.gcd>0 && player.gcdMax>0) {
             float height = (float) ((player.gcd/player.gcdMax)*actionSize);
             for (int i = 0; i<slots; i++) {
@@ -1067,7 +1159,7 @@ public class UiMain implements ApplicationListener {
                 actionGcdTimer.get(i + (bar * 15)).setHeight(0);
             }
         }
-        //cost
+        //Cost
         for (int i = 0; i<slots; i++) {
             if (actionBars[bar].abilities[i]!=null) {
                 if (player.abilities.get(actionBars[bar].abilities[i]).checkCost(player, -9999, false, -9999)) {

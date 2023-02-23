@@ -5,6 +5,7 @@ import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.ai.AiMain;
 import com.woo.game.objects.abilities.Ability;
+import com.woo.game.objects.abilities.fireMage.FireBall;
 import com.woo.game.objects.abilities.fireMage.FireBlast;
 import com.woo.game.objects.abilities.fireMage.Wildfire;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -81,6 +82,7 @@ public class Creature extends GameObject {
 
             abilities.put("Fire Blast",new FireBlast());
             abilities.put("Wildfire",new Wildfire());
+            abilities.put("Fire Ball",new FireBall());
         }
 
         ai = new AiMain(this);

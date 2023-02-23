@@ -108,6 +108,12 @@ public class GameInput {
         if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_1")[0])) && actionBars[0].abilities[1]!=null) {
             actionBars[0].press(1);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_2")[0])) && actionBars[0].abilities[2]!=null) {
+            actionBars[0].press(2);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_3")[0])) && actionBars[0].abilities[3]!=null) {
+            actionBars[0].press(3);
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("Character Stats")[0]))) {
             if (!GlobalVars.characterStats) {

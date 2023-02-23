@@ -3,6 +3,7 @@ package com.woo.game.objects;
 import com.woo.game.objects.file.IniLoadStore;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Settings {
@@ -12,7 +13,7 @@ public class Settings {
 
     public static void init() {
         defaultSettings = "";
-        map = new HashMap<String,Setting>();
+        map = new LinkedHashMap<String,Setting>();
         //Game
         //TODO:??? Difficulty slider 50-200
         map.put("Difficulty",new Setting("Game", new int[]{50, 100, 150, 200},new String[]{"Easy","Normal","Hard","Mythic"},"Difficulty","button",0,0,0,100));

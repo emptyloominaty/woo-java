@@ -69,7 +69,7 @@ public class Spell extends GameObject{
     }
 
     public void collision(Creature target) {
-        ability.execute(caster,target);
+        ability.execute(caster,target,x,y);
         if (particle) {
             ParticleSystem.stop(particleId);
             ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed);
