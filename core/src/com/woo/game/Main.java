@@ -197,6 +197,7 @@ public class Main extends ApplicationAdapter {
 		uiMain.setPlayerHealthBar(player.health, player.healthMax);
 		uiMain.setPlayerManaBar(player.energy, player.energyMax);
 		uiMain.setPlayerSecBar(player.secondaryResource, player.secondaryResourceMax);
+		uiMain.setPlayerXpBar(player.xp-(GlobalFunctions.xpToNextLevel(player.level-1)),(GlobalFunctions.xpToNextLevel(player.level))-(GlobalFunctions.xpToNextLevel(player.level-1)));
 
 		for (int i = GOControl.creatures.size()-1; i>-1; i--) {
 			if (!GOControl.creatures.get(i).destroyed && !GOControl.creatures.get(i).isDead) {

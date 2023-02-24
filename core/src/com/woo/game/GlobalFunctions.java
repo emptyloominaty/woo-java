@@ -70,12 +70,26 @@ public class GlobalFunctions {
     }
     //-----------
     public static String getHealthString(double health) {
-        if (health>999999) {
+        if (health>999999999) {
+            return Math.round(health/1000000000)+"B";
+        } else if (health>999999) {
             return Math.round(health/1000000)+"M";
         } else if (health>999) {
             return Math.round(health/1000)+"K";
         } else {
             return Math.round(health)+"";
+        }
+    }
+    //-----------
+    public static String getString(double val) {
+        if (val>999999999) {
+            return ((double)Math.round(val/100000000)/10)+"B";
+        } else if (val>999999) {
+            return ((double)Math.round(val/100000)/10)+"M";
+        } else if (val>999) {
+            return ((double)Math.round(val/100)/10)+"K";
+        } else {
+            return ((double)Math.round(val*10)/10)+"";
         }
     }
     //-----------
@@ -94,4 +108,7 @@ public class GlobalFunctions {
         return Math.round(caster.stats.get(primaryStat) * (1 + (caster.stats.get("haste") / 100)))+"";
     }
     //-----------
+    public static double xpToNextLevel(int level) {
+        return (500 * (Math.pow(1.2, level)-1)/(1.5-1));
+    }
 }

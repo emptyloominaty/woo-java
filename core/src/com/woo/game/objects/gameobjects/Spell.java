@@ -88,7 +88,7 @@ public class Spell extends GameObject{
     public void draw(ShapeDrawer shapeDrawer) {
         if (!destroyed) {
             shapeDrawer.setColor(Color.RED);
-            shapeDrawer.filledCircle(x, y, 10);
+            shapeDrawer.filledCircle(x, y, 5);
         }
     }
 

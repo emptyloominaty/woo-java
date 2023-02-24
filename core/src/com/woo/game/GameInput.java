@@ -17,6 +17,7 @@ import static com.woo.game.Main.*;
 public class GameInput {
     static boolean strafing = false;
     public static boolean ctrl = false;
+    public static boolean shift = false;
 
     public static void setInputProcessor(Stage stage) {
         InputProcessor inputprocessor = new InputProcessor() {
@@ -24,6 +25,8 @@ public class GameInput {
             public boolean keyDown(int keycode) {
                 if (keycode==(Input.Keys.CONTROL_LEFT)) {
                     ctrl = true;
+                } else if (keycode==(Input.Keys.SHIFT_LEFT)) {
+                    shift = true;
                 }
                 return false;
             }
@@ -32,6 +35,8 @@ public class GameInput {
             public boolean keyUp(int keycode) {
                 if (keycode==(Input.Keys.CONTROL_LEFT)) {
                     ctrl = false;
+                } else if (keycode==(Input.Keys.SHIFT_LEFT)) {
+                    shift = false;
                 }
                 return false;
             }
@@ -87,6 +92,21 @@ public class GameInput {
         Gdx.input.setInputProcessor(multiplexer);
     }
 
+    public static boolean checkMod(String modKey) {
+        if (modKey.equals("CONTROL_LEFT")) {
+            if (ctrl) {
+                return true;
+            }
+            return false;
+        } else if (modKey.equals("SHIFT_LEFT")) {
+            if (shift) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
     public static void handleInput() {
         //System.out.println("x: "+Gdx.input.getX()+" y:"+Gdx.input.getY()); //<-- mouse on screen
 
@@ -102,17 +122,24 @@ public class GameInput {
         }
 
         //TEST
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_0")[0])) && actionBars[0].abilities[0]!=null) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_0")[0])) && actionBars[0].abilities[0]!=null && checkMod(Keybinds.keys.get("ActionBar0_0")[1])) {
             actionBars[0].press(0);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_1")[0])) && actionBars[0].abilities[1]!=null) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_1")[0])) && actionBars[0].abilities[1]!=null && checkMod(Keybinds.keys.get("ActionBar0_1")[1])) {
             actionBars[0].press(1);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_2")[0])) && actionBars[0].abilities[2]!=null) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_2")[0])) && actionBars[0].abilities[2]!=null && checkMod(Keybinds.keys.get("ActionBar0_2")[1])) {
             actionBars[0].press(2);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_3")[0])) && actionBars[0].abilities[3]!=null) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_3")[0])) && actionBars[0].abilities[3]!=null && checkMod(Keybinds.keys.get("ActionBar0_3")[1])) {
             actionBars[0].press(3);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_4")[0])) && actionBars[0].abilities[4]!=null && checkMod(Keybinds.keys.get("ActionBar0_4")[1])) {
+            actionBars[0].press(4);
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_4")[0])) && actionBars[1].abilities[4]!=null && checkMod(Keybinds.keys.get("ActionBar1_4")[1])) {
+            actionBars[1].press(4);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("Character Stats")[0]))) {

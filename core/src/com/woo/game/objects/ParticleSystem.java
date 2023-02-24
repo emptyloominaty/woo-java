@@ -26,6 +26,7 @@ public class ParticleSystem {
         particleFiles.put("fire2","particles/fire2.particle");
         particleFiles.put("fire2norng","particles/fire2norng.particle");
         particleFiles.put("fire64","particles/fire64.particle");
+        particleFiles.put("fireBallExplosion","particles/fireBallExplosion.particle");
 
 
         //TODO: particleFiles.put
@@ -83,7 +84,9 @@ public class ParticleSystem {
 
     public static void startMoving(int id, float x, float y, float direction, double velocity) {
         movingParticles.put(id, new MovingParticle(id,x,y,direction,velocity));
-
+    }
+    public static void startMoving(int id, float x, float y, float direction, double velocity, float life) {
+        movingParticles.put(id, new MovingParticle(id,x,y,direction,velocity, life));
     }
 
     public static void run() {
@@ -103,6 +106,7 @@ class MovingParticle {
     float direction;
     double velocity;
     float life = 1;
+    float maxLife = 1;
     int id;
     MovingParticle(int id, float x, float y, float direction, double velocity) {
         this.x = x;
@@ -110,6 +114,15 @@ class MovingParticle {
         this.direction = direction;
         this.velocity = velocity;
         this.id = id;
+    }
+    MovingParticle(int id, float x, float y, float direction, double velocity, float life) {
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
+        this.velocity = velocity;
+        this.id = id;
+        this.life = life;
+        this.maxLife = life;
     }
     void move() {
         this.life -= GlobalVars.delta;

@@ -26,7 +26,7 @@ public class FireBall extends Ability {
 
     @Override
     public String getTooltip(Creature caster) {
-        return "Deal "+ GlobalFunctions.spellPowerToNumber(this.spellPower,player,"intellect") +" Fire damage and "+ GlobalFunctions.spellPowerToNumber(this.spellPowerSec,player,"intellect") +" Fire damage to enemies within 8 metres";
+        return "Deal "+ GlobalFunctions.spellPowerToNumber(this.spellPower,player,"intellect") +" Fire damage and "+ GlobalFunctions.spellPowerToNumber(this.spellPowerSec,player,"intellect") +" Fire damage to enemies within 8m";
     }
 
     public boolean startCast(Creature caster) {
@@ -56,9 +56,16 @@ public class FireBall extends Ability {
 
     public void execute(Creature caster,Creature target, float x, float y) {
         AbilityFunctions.doDamage(caster,target,this,0,true,false,"",0);
+
+        float angle = 360/20;
+        for (int i = 0; i<19; i++) {
+            ParticleSystem.add("fireBallExplosion",45, caster.direction+(angle*i), x, y);
+        }
+
+
         for (Creature creature : GOControl.creatures) {
             if (!creature.destroyed && creature!=caster && GlobalFunctions.checkEnemy(caster,creature) && (this.rangeSec>GlobalFunctions.getDistance(x,y,creature.x,creature.y))) {
-                AbilityFunctions.doDamage(caster,creature,this,0,true,false,"",0);
+                AbilityFunctions.doDamage(caster,creature,this,this.spellPowerSec,true,false,"",0);
             }
         }
     }

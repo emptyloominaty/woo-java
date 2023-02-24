@@ -46,6 +46,9 @@ public class UiMain implements ApplicationListener {
 
     public int creatureHealthBarWidth = 55;
 
+    public int xpBarWidth = 600;
+    public int xpBarHeight = 6;
+
     int actionSize = 48;
     //
 
@@ -95,6 +98,16 @@ public class UiMain implements ApplicationListener {
     public Label castBarText;
     public Stack castBarStack;
     public Table castBarATable;
+
+    //xp bar
+    public Table tableXpBar;
+    public Image xpBarA;
+    public Label xpBarText;
+    public Stack xpBarStack;
+    public Table xpBarATable;
+
+    public Table xpBarLabelTable;
+    public Label xpBarLabel;
 
     //TODO:player cast bar
 
@@ -552,9 +565,58 @@ public class UiMain implements ApplicationListener {
             settingsTable.add(settingsCategories.get(key)).expand().fill();
         }
 
-
         stageTop.addActor(settings);
         updateSettings();
+
+        //xp bar
+        tableXpBar = new Table();
+        table.addActor(tableXpBar);
+        xpBarATable = new Table();
+        xpBarStack = new Stack();
+        Image xpBarBackground = new Image(skin.newDrawable("white", Color.BLACK));
+        xpBarA = new Image(skin.newDrawable("white", Color.GOLD));
+        xpBarText = new Label("",skin);
+
+        xpBarStack.addActor(xpBarBackground);
+        xpBarATable.add(xpBarA).size(xpBarWidth,xpBarHeight);
+        xpBarStack.addActor(xpBarATable);
+        xpBarStack.addActor(xpBarText);
+        xpBarText.setAlignment(Align.center);
+
+        tableXpBar.add(xpBarStack).size(xpBarWidth,xpBarHeight);
+        tableXpBar.align(Align.center);
+        tableXpBar.setPosition((Gdx.graphics.getWidth()/2f),6);
+
+        //xp
+        xpBarLabelTable = new Table(skin);
+        xpBarLabelTable.background(skin.newDrawable("white",Color.DARK_GRAY));
+        xpBarLabel = new Label("",skin);
+        xpBarLabelTable.add(xpBarLabel);
+        xpBarLabelTable.setVisible(false);
+        stageTop2.addActor(xpBarLabelTable);
+        tableXpBar.addListener(
+                new InputListener() {
+                    @Override
+                    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                        xpBarLabel.setText(GlobalFunctions.getString(player.xp)+"/"+GlobalFunctions.getString(GlobalFunctions.xpToNextLevel(player.level)));
+                        xpBarLabelTable.setPosition(Gdx.input.getX()-90,Gdx.graphics.getHeight()-Gdx.input.getY());
+                        xpBarLabelTable.pack();
+                        xpBarLabelTable.setWidth(180);
+                        xpBarLabelTable.setVisible(true);
+                    }
+                    @Override
+                    public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                        xpBarLabelTable.setVisible(false);
+                    }
+                    @Override
+                    public boolean mouseMoved(InputEvent event, float x, float y) {
+                        xpBarLabel.setText(GlobalFunctions.getString(player.xp)+"/"+GlobalFunctions.getString(GlobalFunctions.xpToNextLevel(player.level)));
+                        xpBarLabelTable.setPosition(Gdx.input.getX()-90,Gdx.graphics.getHeight()-Gdx.input.getY());
+                        return false;
+                    }
+                }
+        );
+
 
         //TODO: Talents
         //TODO: Inventory
@@ -943,7 +1005,16 @@ public class UiMain implements ApplicationListener {
                 Table iconTable = new Table();
                 iconTable.add(iconImg).pad(1).padTop(2);
                 stack.add(iconTable);
-                Label keybind = new Label(" "+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0]+" ",skin);
+
+                Label keybind;
+                if (Keybinds.keys.get("ActionBar"+j+"_"+i+"")[1].equals("SHIFT_LEFT")) {
+                    keybind = new Label(" S"+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0]+" ",skin);
+                } else if (Keybinds.keys.get("ActionBar"+j+"_"+i+"")[1].equals("CONTROL_LEFT")) {
+                    keybind = new Label(" C"+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0]+" ",skin);
+                } else {
+                    keybind = new Label(" "+Keybinds.keys.get("ActionBar"+j+"_"+i+"")[0]+" ",skin);
+                }
+
                 keybind.setAlignment(Align.top, Align.right);
                 keybind.setStyle(labelStyle18);
 
@@ -957,7 +1028,6 @@ public class UiMain implements ApplicationListener {
 
                 test.add(cdText);
 
-
                 actionCdTimes.put(i+(j*size),cdText);
                 actionCharges.put(i+(j*size),chargesText);
 
@@ -965,19 +1035,17 @@ public class UiMain implements ApplicationListener {
                 cdTable.add(cdImg).size(actionSize,actionSize);
 
                 Image gcdImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.6f)));
+                //Image gcdImgBorder = new Image(skin.newDrawable("white", new Color(1,1,1,1)));
+                //gcdTable.add(gcdImgBorder).size(actionSize,1).padRight(-actionSize).padTop(-actionSize);
+                //gcdTable.align(Align.top);
                 gcdTable.add(gcdImg).size(actionSize,actionSize);
+
 
                 Image costImg = new Image(skin.newDrawable("white", new Color(0,0,0,0.7f)));
                 costTable.add(costImg).size(actionSize,actionSize);
 
                 addTooltip(tableAB, ability, abilityName, true, j, i);
-                /*iconImg.addListener(new FocusListener() {
-                    @Override
-                    public boolean handle(Event event) {
-                        System.out.println("HELLO?");
-                        return true;
-                    }
-                });*/
+
             }
             cdTable.setClip(true);
             costTable.setClip(true);
@@ -1017,6 +1085,58 @@ public class UiMain implements ApplicationListener {
             actionCost.put(i+(j*size),costTable);
             actionCdTimer.put(i+(j*size),cdTable);
         }
+    }
+
+    public void gcdTimerSet(int slots, int bar) {
+
+        //CD, Charges
+        for (int i = 0; i<slots; i++) {
+            if (actionBars[bar].abilities[i]!=null) {
+                Ability ability = player.abilities.get(actionBars[bar].abilities[i]);
+                if (ability.maxCd>0) {
+                    if (ability.cd<ability.maxCd) {
+                        actionCdTimes.get(i + (bar * 15)).setText((GlobalFunctions.getTimeString(ability.maxCd-ability.cd))+"");
+                    } else {
+                        actionCdTimes.get(i + (bar * 15)).setText("");
+                    }
+
+                    if (ability.maxCharges>1) {
+                        actionCharges.get(i + (bar * 15)).setText(""+ability.charges);
+                    }
+
+                    float height = (float) ((1-(ability.cd / ability.maxCd)) * actionSize);
+                    actionCdTimer.get(i + (bar * 15)).setHeight(height);
+                } else {
+                    actionCdTimer.get(i + (bar * 15)).setHeight(0);
+                }
+            }
+        }
+        //GCD
+        if (player.gcd>0 && player.gcdMax>0) {
+            float height = (float) ((player.gcd/player.gcdMax)*actionSize);
+            for (int i = 0; i<slots; i++) {
+                if (actionBars[bar].abilities[i]!=null && !player.abilities.get(actionBars[bar].abilities[i]).noGcd) {
+                    actionGcdTimer.get(i+(bar*15)).setHeight(height);
+                }
+            }
+        } else {
+            for (int i = 0; i<slots; i++) {
+                actionGcdTimer.get(i + (bar * 15)).setHeight(0);
+            }
+        }
+        //Cost
+        for (int i = 0; i<slots; i++) {
+            if (actionBars[bar].abilities[i]!=null) {
+                if (player.abilities.get(actionBars[bar].abilities[i]).checkCost(player, -9999, false, -9999)) {
+                    actionCost.get(i + (bar * 15)).setHeight(0);
+                } else {
+                    actionCost.get(i + (bar * 15)).setHeight(actionSize);
+                }
+            } else {
+                actionCost.get(i + (bar * 15)).setHeight(0);
+            }
+        }
+
     }
 
     public void addTooltip(Table tableAB, final Ability ability, final String abilityName, final boolean actionBar, final int j, final int i) {
@@ -1125,56 +1245,6 @@ public class UiMain implements ApplicationListener {
 
     public void setActionPress(int slot, int bar, boolean visible) {
         actionPress.get(slot+(bar*15)).setVisible(visible);
-    }
-
-    public void gcdTimerSet(int slots, int bar) {
-
-        //CD, Charges
-        for (int i = 0; i<slots; i++) {
-            if (actionBars[bar].abilities[i]!=null) {
-                Ability ability = player.abilities.get(actionBars[bar].abilities[i]);
-                if (ability.maxCd>0) {
-                    if (ability.cd<ability.maxCd) {
-                        actionCdTimes.get(i + (bar * 15)).setText((GlobalFunctions.getTimeString(ability.maxCd-ability.cd))+"");
-                    } else {
-                        actionCdTimes.get(i + (bar * 15)).setText("");
-                    }
-
-                    if (ability.maxCharges>1) {
-                        actionCharges.get(i + (bar * 15)).setText(""+ability.charges);
-                    }
-
-                    float height = (float) ((1-(ability.cd / ability.maxCd)) * actionSize);
-                    actionCdTimer.get(i + (bar * 15)).setHeight(height);
-                } else {
-                    actionCdTimer.get(i + (bar * 15)).setHeight(0);
-                }
-            }
-        }
-        //GCD
-        if (player.gcd>0 && player.gcdMax>0) {
-            float height = (float) ((player.gcd/player.gcdMax)*actionSize);
-            for (int i = 0; i<slots; i++) {
-                actionGcdTimer.get(i+(bar*15)).setHeight(height);
-            }
-        } else {
-            for (int i = 0; i<slots; i++) {
-                actionGcdTimer.get(i + (bar * 15)).setHeight(0);
-            }
-        }
-        //Cost
-        for (int i = 0; i<slots; i++) {
-            if (actionBars[bar].abilities[i]!=null) {
-                if (player.abilities.get(actionBars[bar].abilities[i]).checkCost(player, -9999, false, -9999)) {
-                    actionCost.get(i + (bar * 15)).setHeight(0);
-                } else {
-                    actionCost.get(i + (bar * 15)).setHeight(actionSize);
-                }
-            } else {
-                actionCost.get(i + (bar * 15)).setHeight(0);
-            }
-        }
-
     }
 
     public void addCreatureBar(Creature creature) {
@@ -1323,6 +1393,14 @@ public class UiMain implements ApplicationListener {
         }
         secBarText.setText(Math.round(sec)+"/"+Math.round(secMax));
         secBarA.setWidth(width);
+    }
+    public void setPlayerXpBar(double xp,double xpMax) {
+        int width = (int) (xp/xpMax*xpBarWidth);
+        if (width<0) {
+            width = 0;
+        }
+        //manaBarText.setText(Math.round(xp)+"/"+Math.round(xpMax));
+        xpBarA.setWidth(width);
     }
 
 }

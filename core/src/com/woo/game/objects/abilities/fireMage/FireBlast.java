@@ -1,5 +1,7 @@
 package com.woo.game.objects.abilities.fireMage;
 
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.woo.game.AbilityFunctions;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.objects.ParticleSystem;
@@ -40,8 +42,10 @@ public class FireBlast extends Ability {
     public boolean endCast(Creature caster) {
         caster.isCasting = false;
 
-        //TODO: smaller
+
         int particleId = ParticleSystem.add("fire",25, caster.direction-180, caster.x, caster.y);
+        ParticleEffect pe = ParticleSystem.particleList.get(particleId);
+        pe.scaleEffect(0.5f);
         Spell newSpell = new Spell("test Spell","test",false,false,caster.x,caster.y,"",caster.direction, particleId,true, this.moveSpeed, this.life,this);
         newSpell.caster = caster;
         GOControl.addSpell(newSpell);
