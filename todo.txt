@@ -1,0 +1,16 @@
+//TODO:to moving particle
+//TODO:check collision with target
+
+Array<ParticleEmitter> emitters = fireEffect.getEmitters();
+for (ParticleEmitter emitter : emitters) {
+    Array<Particle> particles = emitter.getParticles();
+    for (Particle particle : particles) {
+        // Perform collision detection with the particle
+        if (particle.getPosition().dst(collisionPoint) < collisionRadius) {
+            // Set particle position to collision point
+            particle.setPosition(collisionPoint.x, collisionPoint.y);
+            // Set particle velocity to zero
+            particle.getVelocity().setZero();
+        }
+    }
+}
