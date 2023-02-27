@@ -8,6 +8,7 @@ import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.abilities.fireMage.FireBall;
 import com.woo.game.objects.abilities.fireMage.FireBlast;
 import com.woo.game.objects.abilities.fireMage.Wildfire;
+import com.woo.game.objects.gameobjects.creatures.creatureInit;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
@@ -76,15 +77,6 @@ public class Creature extends GameObject {
 
     public Creature(String name, String description, boolean solid, boolean interactable, float x, float y, String spritePath, int faction, String creatureClass, float direction) {
         super(name, description, solid, interactable, x, y, spritePath,"Creature",direction);
-
-        if (faction==0) {
-            primaryStat = "intellect";
-
-            abilities.put("Fire Blast",new FireBlast());
-            abilities.put("Wildfire",new Wildfire());
-            abilities.put("Fire Ball",new FireBall());
-        }
-
         ai = new AiMain(this);
 
         //TEST
@@ -125,6 +117,10 @@ public class Creature extends GameObject {
         casting.put("name", "");
         casting.put("time", 0.0);
         casting.put("time2", 0.0);
+
+        creatureInit.main(this);
+
+
     }
 
     public void updateStats() {

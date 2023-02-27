@@ -12,6 +12,7 @@ public class Spell extends GameObject{
     public double moveSpeed = 18;
     public float spellSizeX = 35f;
     public float spellSizeY = 35f;
+    public boolean newP = false;
 
     public Creature caster;
     public int particleId;
@@ -71,8 +72,13 @@ public class Spell extends GameObject{
     public void collision(Creature target) {
         ability.execute(caster,target,x,y);
         if (particle) {
-            ParticleSystem.stop(particleId);
-            ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed);
+            if (!newP) {
+                ParticleSystem.stop(particleId);
+                ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed);
+            } else {
+                ParticleSystem.startMoving(particleId,x,y,direction,moveSpeed,0.13f,true);
+            }
+
         }
         destroy();
     }

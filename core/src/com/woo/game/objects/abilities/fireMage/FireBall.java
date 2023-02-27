@@ -44,7 +44,7 @@ public class FireBall extends Ability {
         caster.isCasting = false;
 
         int particleId = ParticleSystem.add("fire",25, caster.direction-180, caster.x, caster.y);
-        Spell newSpell = new Spell("test Spell","test",false,false,caster.x,caster.y,"",caster.direction, particleId,true, this.moveSpeed, this.life,this);
+        Spell newSpell = new Spell("Spell","s: "+this.name,false,false,caster.x,caster.y,"",caster.direction, particleId,true, this.moveSpeed, this.life,this);
         newSpell.caster = caster;
         GOControl.addSpell(newSpell);
 

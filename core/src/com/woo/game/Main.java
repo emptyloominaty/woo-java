@@ -70,7 +70,7 @@ public class Main extends ApplicationAdapter {
 		actionBars[0] = new ActionBar(15,new String[15],0);
 		actionBars[1] = new ActionBar(15,new String[15],1);
 
-		//test
+		//test TODO:function + check class
 		actions.put("Fire Blast",new Action("Fire Blast",0,0));
 		actions.put("Fire Ball",new Action("Fire Ball",0,1));
 		actions.put("Wildfire",new Action("Wildfire",0,2));
@@ -84,7 +84,7 @@ public class Main extends ApplicationAdapter {
 
 		ParticleSystem.init();
 
-		player = new Player("Player","",false,false,250,250,"",0,"FireMage",0);
+		player = new Player("Player","",false,false,250,250,"",0,"Fire Mage",0);
 		GOControl.addCreature(player);
 		//TEST
 		player.stats.put("crit",50.0);

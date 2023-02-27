@@ -23,6 +23,7 @@ public class ParticleSystem {
         particleListFree = new ArrayList<Integer>();
         particleFiles = new HashMap<String, String>();
         particleFiles.put("fire","particles/fire.particle");
+        particleFiles.put("fireSpell","particles/fireSpell.particle");
         particleFiles.put("fire2","particles/fire2.particle");
         particleFiles.put("fire2norng","particles/fire2norng.particle");
         particleFiles.put("fire64","particles/fire64.particle");
@@ -85,8 +86,8 @@ public class ParticleSystem {
     public static void startMoving(int id, float x, float y, float direction, double velocity) {
         movingParticles.put(id, new MovingParticle(id,x,y,direction,velocity));
     }
-    public static void startMoving(int id, float x, float y, float direction, double velocity, float life) {
-        movingParticles.put(id, new MovingParticle(id,x,y,direction,velocity, life));
+    public static void startMoving(int id, float x, float y, float direction, double velocity, float life, boolean newP) {
+        movingParticles.put(id, new MovingParticle(id,x,y,direction,velocity, life, newP));
     }
 
     public static void run() {
@@ -108,6 +109,7 @@ class MovingParticle {
     float life = 1;
     float maxLife = 1;
     int id;
+    boolean newP = false;
     MovingParticle(int id, float x, float y, float direction, double velocity) {
         this.x = x;
         this.y = y;
@@ -115,7 +117,7 @@ class MovingParticle {
         this.velocity = velocity;
         this.id = id;
     }
-    MovingParticle(int id, float x, float y, float direction, double velocity, float life) {
+    MovingParticle(int id, float x, float y, float direction, double velocity, float life, boolean newP) {
         this.x = x;
         this.y = y;
         this.direction = direction;
@@ -123,10 +125,14 @@ class MovingParticle {
         this.id = id;
         this.life = life;
         this.maxLife = life;
+        this.newP = newP;
     }
     void move() {
         this.life -= GlobalVars.delta;
         if (this.life<0) {
+            if (newP) {
+                ParticleSystem.stop(this.id);
+            }
             ParticleSystem.removeMovingParticles.add(this.id);
             return;
         }
