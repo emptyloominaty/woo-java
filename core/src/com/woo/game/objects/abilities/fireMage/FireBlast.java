@@ -42,13 +42,13 @@ public class FireBlast extends Ability {
     public boolean endCast(Creature caster) {
         caster.isCasting = false;
 
-        //fire, 25
-        int particleId = ParticleSystem.add("fireSpell",30, caster.direction-180, caster.x, caster.y);
+        //fireSpell, 30
+        int particleId = ParticleSystem.add("fire",30, caster.direction-180, caster.x, caster.y);
         ParticleEffect pe = ParticleSystem.particleList.get(particleId);
-        pe.scaleEffect(0.9f); //0.5f
+        pe.scaleEffect(0.5f); //0.9f
         Spell newSpell = new Spell("test Spell","test",false,false,caster.x,caster.y,"",caster.direction, particleId,true, this.moveSpeed, this.life,this);
+        //newSpell.newP = true;
         newSpell.caster = caster;
-        newSpell.newP = true;
         GOControl.addSpell(newSpell);
 
         setCd();

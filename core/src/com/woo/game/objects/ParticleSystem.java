@@ -3,6 +3,7 @@ package com.woo.game.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.utils.Array;
 import com.woo.game.GlobalVars;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.GOControl;
@@ -136,6 +137,7 @@ class MovingParticle {
             ParticleSystem.removeMovingParticles.add(this.id);
             return;
         }
+
         double speed = (this.velocity * GlobalVars.pxToMeter) * GlobalVars.delta;
         double angleInRadian = 0;
         angleInRadian = (direction-180) / 180 * Math.PI;

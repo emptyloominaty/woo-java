@@ -90,24 +90,51 @@ public class creatureInit {
                 creature.stats.put("strength",12.0);
                 creature.stats.put("dexterity",15.0);
                 creature.stats.put("stamina",25.0);
+                creature.energy = 100;
+                creature.energyMax = 100;
+                creature.secondaryResource = 0;
+                creature.secondaryResourceMax = 6;
             } else if (creature.creatureClass == "Rogue") { //-----------------------------Rogue
                 creature.primaryStat = "dexterity";
                 creature.stats.put("intellect",10.0);
                 creature.stats.put("strength",10.0);
                 creature.stats.put("dexterity",18.0);
                 creature.stats.put("stamina",25.0);
+                creature.energy = 100;
+                creature.energyMax = 100;
+                creature.secondaryResource = 0;
+                creature.secondaryResourceMax = 6;
             } else if (creature.creatureClass == "Shaman") { //-----------------------------Shaman
                 creature.primaryStat = "intellect";
                 creature.stats.put("intellect",17.0);
                 creature.stats.put("strength",10.0);
                 creature.stats.put("dexterity",10.0);
                 creature.stats.put("stamina",20.0);
+                creature.energy = 100;
+                creature.energyMax = 100;
+                creature.secondaryResource = 0;
+                creature.secondaryResourceMax = 6;
             } else if (creature.creatureClass == "Paladin") {  //-----------------------------Paladin
                 creature.primaryStat = "strength";
                 creature.stats.put("intellect",12.0);
                 creature.stats.put("strength",15.0);
                 creature.stats.put("dexterity",10.0);
                 creature.stats.put("stamina",30.0);
+                creature.energy = 100;
+                creature.energyMax = 100;
+                creature.secondaryResource = 0;
+                creature.secondaryResourceMax = 6;
+            }
+        } else {  //-----------------------------------------------------------------------------------------------------------------
+            if (creature.creatureClass == "Enemy1") {
+                creature.stats.put("stamina",5.0);
+                creature.xpLoot = 15;
+            } else if (creature.creatureClass == "Enemy2") {
+                creature.level = 5;
+                creature.stats.put("stamina",150.0);
+                creature.xpLoot = 50;
+            } else if (creature.creatureClass == "Enemy3") {
+                creature.stats.put("stamina",2.0);
             }
         }
 

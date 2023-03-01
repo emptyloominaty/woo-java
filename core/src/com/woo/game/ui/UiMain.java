@@ -762,8 +762,11 @@ public class UiMain implements ApplicationListener {
         borderLabelStyle.background = new NinePatchDrawable(new NinePatch(borderCharacterStats1,4,4,4,4));
         borderLabelStyle.font = font16;
 
-        Label playerName = new Label(player.name,skin);
-        Label playerClass = new Label(player.creatureClass,skin);
+        Label playerName = new Label(player.name,borderLabelStyle);
+        Label playerClass = new Label(player.creatureClass,borderLabelStyle);
+
+        playerName.setAlignment(Align.center);
+        playerClass.setAlignment(Align.center);
 
         Label playerLevel = new Label(""+player.level, borderLabelStyle);
         Label playerXp = new Label(""+player.xp, borderLabelStyle);

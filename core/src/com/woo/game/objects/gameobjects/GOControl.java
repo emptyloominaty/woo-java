@@ -10,7 +10,7 @@ public class GOControl {
     public static ArrayList<Creature> creatures;
 
     public static ArrayList<Integer> itemsFree;
-    public static ArrayList<Item> items;
+    public static ArrayList<ItemW> items;
 
     public static ArrayList<Integer> worldObjectsFree;
     public static ArrayList<WorldObject> worldObjects;
@@ -23,7 +23,7 @@ public class GOControl {
         gameObjectsFree = new ArrayList<Integer>();
         creatures = new ArrayList<Creature>();
         creaturesFree = new ArrayList<Integer>();
-        items = new ArrayList<Item>();
+        items = new ArrayList<ItemW>();
         itemsFree = new ArrayList<Integer>();
         worldObjects = new ArrayList<WorldObject>();
         worldObjectsFree = new ArrayList<Integer>();
@@ -70,7 +70,7 @@ public class GOControl {
     }
 
     //goControl.addItem(new Item());
-    public static void addItem(Item object) {
+    public static void addItem(ItemW object) {
         int id;
         if (itemsFree.size()>0) {
             int idF = itemsFree.size()-1;
@@ -134,8 +134,8 @@ public class GOControl {
             creaturesFree.add(((Creature) object).typeId);
         } else if (object instanceof Spell) {
             spellsFree.add(((Spell) object).typeId);
-        } else if (object instanceof Item) {
-            itemsFree.add(((Item) object).typeId);
+        } else if (object instanceof ItemW) {
+            itemsFree.add(((ItemW) object).typeId);
         }  else if (object instanceof WorldObject) {
             worldObjectsFree.add(((WorldObject) object).typeId);
         }

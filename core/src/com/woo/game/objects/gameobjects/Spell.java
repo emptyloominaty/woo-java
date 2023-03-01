@@ -26,6 +26,8 @@ public class Spell extends GameObject{
         this.moveSpeed = moveSpeed;
         this.life = life;
         this.ability = ability;
+
+        ParticleSystem.particleList.get(particleId).getEmitters().get(0).addParticles(25);
     }
 
     public void main() {

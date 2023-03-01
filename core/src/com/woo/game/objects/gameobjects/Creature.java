@@ -71,7 +71,7 @@ public class Creature extends GameObject {
     public double moveSpeedIncrease = 1;
     public double reduceEnergyCost = 1;
 
-
+    public int xpLoot = 10;
 
     public AiMain ai;
 
@@ -79,17 +79,15 @@ public class Creature extends GameObject {
         super(name, description, solid, interactable, x, y, spritePath,"Creature",direction);
         ai = new AiMain(this);
 
-        //TEST
         this.healthMax = 50;
         this.health = 50;
         this.energyMax = 100;
         this.energy = 100;
         this.secondaryResourceMax = 5;
         this.secondaryResource = 0;
-        //-----------------------
 
         this.creatureClass = creatureClass;
-        this.stats.put("haste", 10.0);
+        this.stats.put("haste", 0.0);
         this.stats.put("crit", 5.0);
         this.stats.put("mastery", 5.0);
 
@@ -107,9 +105,7 @@ public class Creature extends GameObject {
         this.stats.put("DamageDone", 0.0); //+% damage done
 
         this.faction = faction;
-        //stats.get("haste)
 
-        //{name:"", time:0, time2:0}
         channeling.put("name", "");
         channeling.put("time", 0.0);
         channeling.put("time2", 0.0);
@@ -119,8 +115,6 @@ public class Creature extends GameObject {
         casting.put("time2", 0.0);
 
         creatureInit.main(this);
-
-
     }
 
     public void updateStats() {
@@ -223,7 +217,7 @@ public class Creature extends GameObject {
         //TODO:debuffs = [];
         //TODO:buffs = [];
         if (this.faction>1/*???// && (100>GlobalFunctions.getDistance(player,this))*/) {
-            player.gainXp(10+(this.level*2)); //TODO: xp table
+            player.gainXp(xpLoot+(this.level*2)); //TODO: xp table
             //TODO:loot
         }
 
@@ -232,11 +226,14 @@ public class Creature extends GameObject {
 
     public void gainXp(float xp) {
         this.xp += xp;
-        if (this.xp>(500 * (Math.pow(1.2, this.level)-1)/(1.5-1))) {
-            this.statsPoints += 5;
-            this.level++;
+        for (int i  = 0; i<10; i++) {
+            if (this.xp>(500 * (Math.pow(1.2, this.level)-1)/(1.5-1))) {
+                this.statsPoints += 5;
+                this.level++;
+            } else {
+                return;
+            }
         }
-
     }
 
     public void setMousePos(float x, float y) {
