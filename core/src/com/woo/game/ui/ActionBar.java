@@ -2,7 +2,6 @@ package com.woo.game.ui;
 
 import com.woo.game.GlobalVars;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.woo.game.Main.*;
@@ -12,7 +11,7 @@ public class ActionBar {
     public int slots;
     public String[] abilities;
     public float[] pressTime;
-    public int id = 0;
+    public int id;
     public ActionBar(int slots,String[] abilities, int id) {
         this.slots = slots;
         this.abilities = abilities;
@@ -25,6 +24,7 @@ public class ActionBar {
         player.abilities.get(actionBars[this.id].abilities[slot]).startCast(player);
         uiMain.setActionPress(slot, this.id,true);
         pressTime[slot] = 0.1f;
+        player.moveToPoint = false;
     }
 
     public void main() {

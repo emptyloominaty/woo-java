@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.woo.game.GameInput;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
+import com.woo.game.Maps;
 import com.woo.game.objects.Keybinds;
 import com.woo.game.objects.Setting;
 import com.woo.game.objects.Settings;
@@ -495,16 +496,19 @@ public class UiMain implements ApplicationListener {
         Window.WindowStyle windowStyle = new Window.WindowStyle();
         windowStyle.titleFont = font14;//#a47012
         //windowStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/ui/paper.jpg")));
-        windowStyle.background = skin.newDrawable("white", new Color (0.25f,0.20f,0.15f,0.99f));
+        windowStyle.background = skin.newDrawable("white", Maps.windowColorBorder);
         skin.add("default",windowStyle);
 
         //Character stats
-        characterStats = new Window("Character Stats",skin);
+        characterStats = new Window(" Character Stats",skin);
         characterStatsTable = new Table();
         characterStats.setSize(600,500);
         characterStats.padTop(25);
         characterStats.setPosition(40,Gdx.graphics.getHeight()-540);
-        characterStats.add(characterStatsTable).expand().fill();
+        Table tableBorder2 = new Table();
+        tableBorder2.add(characterStatsTable).expand().fill().pad(10);
+        tableBorder2.background(uiMain.skin.newDrawable("white", Maps.windowColor));
+        characterStats.add(tableBorder2).expand().fill().pad(2).padTop(0);
         characterStats.setMovable(true);
         characterStats.setVisible(false);
 
@@ -522,7 +526,7 @@ public class UiMain implements ApplicationListener {
         borderCharacterStats1 = new Texture(pixmapCS1);
 
         //Spellbook
-        spellbook = new Window("Spellbook",skin);
+        spellbook = new Window(" Spellbook",skin);
         spellbookTable = new Table();
         spellbookTable.align(Align.topLeft);
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
@@ -531,7 +535,10 @@ public class UiMain implements ApplicationListener {
         spellbook.setSize(600,500);
         spellbook.padTop(25);
         spellbook.setPosition(40,Gdx.graphics.getHeight()-560);
-        spellbook.add(spellbookScrollPane).expand().fill();
+        Table tableBorder3 = new Table();
+        tableBorder3.add(spellbookScrollPane).expand().fill().pad(10);
+        tableBorder3.background(uiMain.skin.newDrawable("white", Maps.windowColor));
+        spellbook.add(tableBorder3).expand().fill().pad(2).padTop(0);
         spellbook.setMovable(true);
         spellbook.setVisible(false);
         spellbook.setZIndex(40);
@@ -542,14 +549,16 @@ public class UiMain implements ApplicationListener {
         dragAbility.setVisible(false);
         stageTop2.addActor(dragAbility);
 
-
-        //TODO:settings
-        settings = new Window("Settings",skin);
+        
+        settings = new Window(" Settings",skin);
         settingsTable = new Table();
         settings.setSize(600,500);
         settings.padTop(25);
         settings.setPosition(40,Gdx.graphics.getHeight()-540);
-        settings.add(settingsTable).expand().fill();
+        Table tableBorder = new Table();
+        tableBorder.add(settingsTable).expand().fill().pad(10);
+        tableBorder.background(uiMain.skin.newDrawable("white", Maps.windowColor));
+        settings.add(tableBorder).expand().fill().pad(2).padTop(0);
         settings.setMovable(true);
         settingsTable.align(Align.topLeft);
         settings.setVisible(false);

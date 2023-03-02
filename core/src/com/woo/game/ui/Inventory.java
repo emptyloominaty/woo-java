@@ -1,58 +1,70 @@
 package com.woo.game.ui;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
+import com.woo.game.Maps;
 import com.woo.game.objects.Item;
+import com.woo.game.objects.itemStorage;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.woo.game.Main.uiMain;
 
-public class Inventory {
-    public Map<Integer, Item> items = new HashMap<Integer,Item>();
-    public Window inventory;
-    Table inventoryTable;
+public class Inventory extends itemStorage {
 
-    int sizeX = 8;
-    int sizeY = 8;
+    public Window inventory;
+    public Table inventoryTable;
+    public Table characterGearTable;
+
 
     public int itemSize = 48; //px
 
     public Inventory() {
+        super(8,8);
     }
 
+    public void update() {
 
-    public void itemIn() {
-    }
-
-    public void itemOut() {
     }
 
     public void createUi() {
-        inventory = new Window("Inventory",uiMain.skin);
+        inventory = new Window(" Inventory",uiMain.skin);
         inventoryTable = new Table();
         inventoryTable.align(Align.topLeft);
-        inventory.setSize(600,500);
+        inventory.setSize(800,500);
         inventory.padTop(25);
         inventory.setPosition(40, Gdx.graphics.getHeight()-560);
-        inventory.add(inventoryTable).expand().fill();
+
+        Table tableBorder = new Table();
+        tableBorder.add(inventoryTable).expand().fill().pad(10);
+
+        inventory.add(tableBorder).expand().fill().pad(2).padTop(0);;
         inventory.setMovable(true);
         //inventory.setVisible(false);
         uiMain.stageTop.addActor(inventory);
 
+        tableBorder.background(uiMain.skin.newDrawable("white", Maps.windowColor));
+
         for (int i = 0; i<sizeX; i++) {
             for (int j = 0; j<sizeY; j++) {
                 Table table = new Table();
-                Label label = new Label(" "+i+"-"+j+" |",uiMain.skin); //TODO: Image + Tooltip
-                table.add(label);
-                inventoryTable.add(table).size(itemSize);
+                Image image = new Image(uiMain.skin.newDrawable("white", new Color(0.4f,0.4f,0.4f,1f)));
+                table.add(image).size(itemSize);
+                inventoryTable.add(table).size(itemSize).pad(1);
             }
             inventoryTable.row();
         }
+
+        //TODO:
+        Image image = new Image(uiMain.skin.newDrawable("white",  new Color(0.4f,0.4f,0.4f,1f)));
+        characterGearTable = new Table();
+        characterGearTable.add(image).size(itemSize);
+        characterGearTable.align(Align.topRight);
+        tableBorder.add(characterGearTable).expand().fill().pad(10);
+
+
 
     }
 

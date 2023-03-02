@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.ai.AiMain;
+import com.woo.game.objects.Item;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.abilities.fireMage.FireBall;
 import com.woo.game.objects.abilities.fireMage.FireBlast;
@@ -57,6 +58,8 @@ public class Creature extends GameObject {
     public boolean isDead = false;
     public boolean isInterrupted = false;
     public boolean cantDie = false;
+
+    public Map<String, Item> equippedItems;
 
     public double gcd = 0;
     public double gcdMax = 0.65;

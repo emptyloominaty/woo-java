@@ -121,7 +121,6 @@ public class GameInput {
             strafing = false;
         }
 
-        //TEST
         if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_0")[0])) && actionBars[0].abilities[0]!=null && checkMod(Keybinds.keys.get("ActionBar0_0")[1])) {
             actionBars[0].press(0);
         }
@@ -137,10 +136,85 @@ public class GameInput {
         if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_4")[0])) && actionBars[0].abilities[4]!=null && checkMod(Keybinds.keys.get("ActionBar0_4")[1])) {
             actionBars[0].press(4);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_5")[0])) && actionBars[0].abilities[5]!=null && checkMod(Keybinds.keys.get("ActionBar0_5")[1])) {
+            actionBars[0].press(5);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_6")[0])) && actionBars[0].abilities[6]!=null && checkMod(Keybinds.keys.get("ActionBar0_6")[1])) {
+            actionBars[0].press(6);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_7")[0])) && actionBars[0].abilities[7]!=null && checkMod(Keybinds.keys.get("ActionBar0_7")[1])) {
+            actionBars[0].press(7);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_8")[0])) && actionBars[0].abilities[8]!=null && checkMod(Keybinds.keys.get("ActionBar0_8")[1])) {
+            actionBars[0].press(8);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_9")[0])) && actionBars[0].abilities[9]!=null && checkMod(Keybinds.keys.get("ActionBar0_9")[1])) {
+            actionBars[0].press(9);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_10")[0])) && actionBars[0].abilities[10]!=null && checkMod(Keybinds.keys.get("ActionBar0_10")[1])) {
+            actionBars[0].press(10);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_11")[0])) && actionBars[0].abilities[11]!=null && checkMod(Keybinds.keys.get("ActionBar0_11")[1])) {
+            actionBars[0].press(11);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_12")[0])) && actionBars[0].abilities[12]!=null && checkMod(Keybinds.keys.get("ActionBar0_12")[1])) {
+            actionBars[0].press(12);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_13")[0])) && actionBars[0].abilities[13]!=null && checkMod(Keybinds.keys.get("ActionBar0_13")[1])) {
+            actionBars[0].press(13);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar0_14")[0])) && actionBars[0].abilities[14]!=null && checkMod(Keybinds.keys.get("ActionBar0_14")[1])) {
+            actionBars[0].press(14);
+        }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_0")[0])) && actionBars[1].abilities[0]!=null && checkMod(Keybinds.keys.get("ActionBar1_0")[1])) {
+            actionBars[1].press(0);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_1")[0])) && actionBars[1].abilities[1]!=null && checkMod(Keybinds.keys.get("ActionBar1_1")[1])) {
+            actionBars[1].press(1);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_2")[0])) && actionBars[1].abilities[2]!=null && checkMod(Keybinds.keys.get("ActionBar1_2")[1])) {
+            actionBars[1].press(2);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_3")[0])) && actionBars[1].abilities[3]!=null && checkMod(Keybinds.keys.get("ActionBar1_3")[1])) {
+            actionBars[1].press(3);
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_4")[0])) && actionBars[1].abilities[4]!=null && checkMod(Keybinds.keys.get("ActionBar1_4")[1])) {
             actionBars[1].press(4);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_5")[0])) && actionBars[1].abilities[5]!=null && checkMod(Keybinds.keys.get("ActionBar1_5")[1])) {
+            actionBars[1].press(5);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_6")[0])) && actionBars[1].abilities[6]!=null && checkMod(Keybinds.keys.get("ActionBar1_6")[1])) {
+            actionBars[1].press(6);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_7")[0])) && actionBars[1].abilities[7]!=null && checkMod(Keybinds.keys.get("ActionBar1_7")[1])) {
+            actionBars[1].press(7);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_8")[0])) && actionBars[1].abilities[8]!=null && checkMod(Keybinds.keys.get("ActionBar1_8")[1])) {
+            actionBars[1].press(8);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_9")[0])) && actionBars[1].abilities[9]!=null && checkMod(Keybinds.keys.get("ActionBar1_9")[1])) {
+            actionBars[1].press(9);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_10")[0])) && actionBars[1].abilities[10]!=null && checkMod(Keybinds.keys.get("ActionBar1_10")[1])) {
+            actionBars[1].press(10);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_11")[0])) && actionBars[1].abilities[11]!=null && checkMod(Keybinds.keys.get("ActionBar1_11")[1])) {
+            actionBars[1].press(11);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_12")[0])) && actionBars[1].abilities[12]!=null && checkMod(Keybinds.keys.get("ActionBar1_12")[1])) {
+            actionBars[1].press(12);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_13")[0])) && actionBars[1].abilities[13]!=null && checkMod(Keybinds.keys.get("ActionBar1_13")[1])) {
+            actionBars[1].press(13);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("ActionBar1_14")[0])) && actionBars[1].abilities[14]!=null && checkMod(Keybinds.keys.get("ActionBar1_14")[1])) {
+            actionBars[1].press(14);
+        }
+
+
+
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("Character Stats")[0]))) {
             if (!GlobalVars.characterStats) {
@@ -174,48 +248,50 @@ public class GameInput {
                 uiMain.settings.setVisible(false);
             }
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Keybinds.keys.get("Inventory")[0]))) {
+            if (!GlobalVars.inventory) {
+                GlobalVars.inventory = true;
+                player.inventory.inventory.setVisible(true);
+                player.inventory.update();
+            } else {
+                GlobalVars.inventory = false;
+                player.inventory.inventory.setVisible(false);
+            }
+        }
         //
-
-
-
-        if (Gdx.input.isKeyPressed(Input.Keys.valueOf("T"))) {
-            ParticleSystem.add("fire2",90, player.direction, player.x, player.y);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.valueOf("R"))) {
-            ParticleSystem.add("fire2",45, player.direction, player.x, player.y);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.valueOf("Z"))) {
-            ParticleSystem.add("fire2",18, player.direction, player.x, player.y);
-        }
-
+        move = 1;
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Up")[0]))) {
-            player.move(10,false,0,0);
+            player.move(10*move2,false,0,0);
+            move = 0.7;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Down")[0]))) {
-            player.move(-7,false,0,0);
+            player.move(-7*move2,false,0,0);
+            move = 0.6;
         }
-
-        //TODO:FIX SPEED ("strafe")
+        move2 = 1;
         if (Settings.map.get("Character Movement").value>0 || strafing) {
             player.rotate(GlobalFunctions.getDirection(player.x,player.y,mouseInWorld2D.x,mouseInWorld2D.y));
             //WOO
             if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Left")[0]))) {
-                player.move(10,false,2,0);
+                player.move(10*move,false,2,0);
+                move2 = 0.7;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Right")[0]))) {
-                player.move(10,false,1,0);
+                player.move(10*move,false,1,0);
+                move2 = 0.7;
             }
         } else {
             //WOW
             if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Left")[0]))) {
                 player.rotate(player.direction-2);
+                move2 = 0.7;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.valueOf(Keybinds.keys.get("Move_Right")[0]))) {
                 player.rotate(player.direction+2);
+                move2 = 0.7;
             }
         }
-
-
-
     }
+    static double move = 1;
+    static double move2 = 1;
 }

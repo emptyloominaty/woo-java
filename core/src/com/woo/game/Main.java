@@ -61,6 +61,7 @@ public class Main extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		Maps.init();
 		actionBars[0] = new ActionBar(15,new String[15],0);
 		actionBars[1] = new ActionBar(15,new String[15],1);
 

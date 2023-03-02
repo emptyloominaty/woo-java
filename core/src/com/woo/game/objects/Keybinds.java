@@ -51,6 +51,7 @@ public class Keybinds {
         keys.put("Move_Right", new String[]{"D", ""});
 
         keys.put("Character Stats", new String[]{"C", ""});
+        keys.put("Inventory", new String[]{"B", ""});
         keys.put("SpellBook", new String[]{"P", ""});
         keys.put("Settings", new String[]{"Escape", ""});
         keys.put("Talents", new String[]{"N", ""});

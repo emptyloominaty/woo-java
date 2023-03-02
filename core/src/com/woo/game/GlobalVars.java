@@ -14,7 +14,8 @@ public class GlobalVars {
 
     public static boolean characterStats = false;
     public static boolean spellbook = false;
-    public static boolean settings = false;//TODO
+    public static boolean settings = false;
+    public static boolean inventory = false;
 
     public static boolean draggingAbility = false;
     public static String dragAbilityName = "";
