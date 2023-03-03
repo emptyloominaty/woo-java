@@ -263,7 +263,7 @@ public class UiMain implements ApplicationListener {
         // Configure a TextButtonStyle and name it "default". Skin resources are stored by type, so this doesn't overwrite the font.
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = skin.newDrawable("white", Color.DARK_GRAY);
-        textButtonStyle.down = skin.newDrawable("white", Color.GREEN);
+        textButtonStyle.down = skin.newDrawable("white", Color.LIGHT_GRAY);
         textButtonStyle.checked = skin.newDrawable("white", Color.LIGHT_GRAY);
         textButtonStyle.over = skin.newDrawable("white", Color.GRAY);
         textButtonStyle.font = skin.getFont("default");
@@ -402,18 +402,6 @@ public class UiMain implements ApplicationListener {
         tableCastBar.setPosition(cam.viewportWidth/2,125); //TODO:
         tableCastBar.setVisible(false);
 
-        // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
-        final TextButton button = new TextButton("Click me!", skin);
-        table.add(button).left();
-
-        button.addListener(new ChangeListener() {
-            @Override
-            public void changed (ChangeEvent event, Actor actor) {
-                System.out.println("Button Pressed");
-                button.setText("Good job!");
-            }
-        });
-
         // Add an image actor. Have to set the size, else it would be the size of the drawable (which is the 1x1 texture).
         //table.add(new Image(skin.newDrawable("white", Color.BLACK))).size(64);
         table.top().left();
@@ -512,6 +500,17 @@ public class UiMain implements ApplicationListener {
         characterStats.setMovable(true);
         characterStats.setVisible(false);
 
+        final Button closeButton1 = new TextButton("X", uiMain.skin, "default");
+        characterStats.getTitleTable().add(closeButton1).size(30, 20).padRight(2);
+        closeButton1.addListener(new ChangeListener() {
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                GlobalVars.characterStats = false;
+                characterStats.setVisible(false);
+                closeButton1.setChecked(false);
+            }
+        });
+
         stageTop.addActor(characterStats);
 
         //Border
@@ -544,12 +543,24 @@ public class UiMain implements ApplicationListener {
         spellbook.setZIndex(40);
         stageTop.addActor(spellbook);
 
+        final Button closeButton2 = new TextButton("X", uiMain.skin, "default");
+        spellbook.getTitleTable().add(closeButton2).size(30, 20).padRight(2);
+        closeButton2.addListener(new ChangeListener() {
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                GlobalVars.spellbook = false;
+                spellbook.setVisible(false);
+                closeButton2.setChecked(false);
+            }
+        });
+
+
         dragAbility = new Image(new Texture(Gdx.files.internal("icons/default.png")));
         dragAbility.setSize(48,48);
         dragAbility.setVisible(false);
         stageTop2.addActor(dragAbility);
 
-        
+
         settings = new Window(" Settings",skin);
         settingsTable = new Table();
         settings.setSize(600,500);
@@ -562,6 +573,17 @@ public class UiMain implements ApplicationListener {
         settings.setMovable(true);
         settingsTable.align(Align.topLeft);
         settings.setVisible(false);
+
+        final Button closeButton3 = new TextButton("X", uiMain.skin, "default");
+        settings.getTitleTable().add(closeButton3).size(30, 20).padRight(2);
+        closeButton3.addListener(new ChangeListener() {
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                GlobalVars.settings = false;
+                settings.setVisible(false);
+                closeButton3.setChecked(false);
+            }
+        });
 
         settingsCategories = new HashMap<String,Table>();
 
@@ -677,6 +699,7 @@ public class UiMain implements ApplicationListener {
                         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                             setting.value = setting.values[finalI];
                             updateSettings();
+                            Settings.saveSettings();
                             return super.touchDown(event, x, y, pointer, button);
                         }
                     });

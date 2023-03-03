@@ -60,6 +60,7 @@ public class Creature extends GameObject {
     public boolean cantDie = false;
 
     public Map<String, Item> equippedItems;
+    public long gold = 0; //100
 
     public double gcd = 0;
     public double gcdMax = 0.65;

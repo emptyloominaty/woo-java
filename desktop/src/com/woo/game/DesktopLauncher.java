@@ -13,15 +13,19 @@ public class DesktopLauncher {
 		Path path = Paths.get("test.ini");
 		System.out.println(file.getAbsolutePath());*/
 
-		System.out.println(Settings.map.get("VSync").value);
-
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(60);
-		config.useVsync(false);
+		config.setForegroundFPS(Settings.map.get("Frame Rate Limit").value);
+		if (Settings.map.get("VSync").value==1) {
+			config.useVsync(true);
+		} else{
+			config.useVsync(false);
+		}
 		config.setResizable(false);
-		config.setWindowedMode(1600,900);
+		config.setWindowedMode(1600,900); //TODO:
 		config.setTitle("Woo");
-		//TODO:config.setBackBufferConfig(8,8,8,8,16,0,0);
+		if (Settings.map.get("MSAA").value>0) {
+			config.setBackBufferConfig(8,8,8,8,16,0,Settings.map.get("MSAA").value);
+		}
 		//config.setIdleFPS(30);
 		new Lwjgl3Application(new Main(), config);
 
