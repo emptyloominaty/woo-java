@@ -121,7 +121,7 @@ public class Inventory extends itemStorage {
         gold = new Label("Gold: ",uiMain.skin);
         bottomTable.add(gold);
         bottomTable.align(Align.left);
-        
+
         tableBorder.add(characterGearTable).expand().fill().pad(10);
         tableBorder.row();
         tableBorder.add(bottomTable).expand().fill().pad(10).colspan(2);
