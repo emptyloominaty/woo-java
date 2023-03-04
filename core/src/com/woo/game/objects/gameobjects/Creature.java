@@ -29,10 +29,10 @@ public class Creature extends GameObject {
 
     public double health;
     public double healthMax;
-    public String resourceName = "Mana";
+    public String resourceName = "Resource";
     public double energy;
     public double energyMax;
-    public String secondaryResourceName;
+    public String secondaryResourceName = "Secondary Resource";
     public int secondaryResource;
     public int secondaryResourceMax;
     public Creature target;
@@ -150,7 +150,7 @@ public class Creature extends GameObject {
         //TODO:PETS?
         //TODO:Resource
         if (Objects.equals(resourceName, "Mana")) {
-            this.energy += GlobalVars.delta*(this.energyMax/100)*2;
+            this.energy += GlobalVars.delta*(this.energyMax/100);
         }
         if (energy>energyMax) {
             energy = energyMax;

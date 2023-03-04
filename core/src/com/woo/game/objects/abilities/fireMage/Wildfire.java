@@ -17,7 +17,7 @@ public class Wildfire extends Ability {
         super("Wildfire", 20,0,0.65, 0, false, false, false, "fire", 20, 1, 0,1);
         this.moveSpeed = 20;
         this.life = 1;
-        this.spellPower = 1.35;
+        this.spellPower = 1.3;
         this.iconPath = "icons/mage/fire2.png";
     }
 
