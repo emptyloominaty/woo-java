@@ -161,6 +161,7 @@ public class Main extends ApplicationAdapter {
 			uiMain.addCreatureBar(GOControl.creatures.get(i));
 		}
 
+		player.inventory.init();
 		player.inventory.createUi();
 
 

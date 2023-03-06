@@ -7,12 +7,7 @@ import java.util.Map;
 
 public class Maps {
     //Item Quality
-    public static Color itemNormal = new Color (0xffffffff);
-    public static Color itemRunic = new Color (0x8cebf8ff);
-    public static Color itemMagic = new Color (0x50a3edff);
-    public static Color itemEpic = new Color (0xae16b1ff);
-    public static Color itemLegendary = new Color (0xf7a655ff);
-    public static Color itemMythic = new Color (0xb11616ff);
+    public static Map<String, Color> itemColors = new HashMap<String, Color>();
 
     public static Color windowColorBorder = new Color(new Color(0.18f,0.12f,0.1f,1));
     public static Color windowColor = new Color(new Color(0.25f,0.20f,0.15f,1));
@@ -20,6 +15,13 @@ public class Maps {
     public static Map<Integer, String> itemSlotMap =  new HashMap<Integer, String>();
 
     public static void init() {
+        itemColors.put("Normal",new Color (0xffffffff));
+        itemColors.put("Runic",new Color (0x8cebf8ff));
+        itemColors.put("Magic",new Color (0x50a3edff));
+        itemColors.put("Epic",new Color (0xae16b1ff));
+        itemColors.put("Legendary",new Color (0xf7a655ff));
+        itemColors.put("Mythic",new Color (0xb11616ff));
+
         itemSlotMap.put(0,"potion");
         itemSlotMap.put(1,"food");
         itemSlotMap.put(2,"");

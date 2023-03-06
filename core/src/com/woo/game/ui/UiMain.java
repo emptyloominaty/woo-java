@@ -197,11 +197,14 @@ public class UiMain implements ApplicationListener {
     Label abilityDesc;
     Label abilityCastTime;
 
+    public Table itemTooltip;
+
     //Borders
     Texture borderCharacterStats1;
 
 
     public Image dragAbility;
+    public Image dragItem;
 
 
     public void create () {
@@ -480,6 +483,17 @@ public class UiMain implements ApplicationListener {
         stageTop2.addActor(abilityTooltip);
         abilityTooltip.setVisible(false);
 
+
+        //ItemTooltip
+        itemTooltip = new Table(skin);
+        itemTooltip.setBackground(skin.newDrawable("white", new Color (0.3f,0.3f,0.3f,0.75f)));
+        itemTooltip.setPosition(400,400);
+        itemTooltip.align(Align.top);
+        itemTooltip.setSize(250,50);
+        stageTop2.addActor(itemTooltip);
+        itemTooltip.setVisible(false);
+
+
         //StageTop
         Window.WindowStyle windowStyle = new Window.WindowStyle();
         windowStyle.titleFont = font14;//#a47012
@@ -560,6 +574,10 @@ public class UiMain implements ApplicationListener {
         dragAbility.setVisible(false);
         stageTop2.addActor(dragAbility);
 
+        dragItem = new Image(new Texture(Gdx.files.internal("icons/default.png")));
+        dragItem.setSize(48,48);
+        dragItem.setVisible(false);
+        stageTop2.addActor(dragItem);
 
         settings = new Window(" Settings",skin);
         settingsTable = new Table();

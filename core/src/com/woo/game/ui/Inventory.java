@@ -1,20 +1,27 @@
 package com.woo.game.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.woo.game.GameInput;
 import com.woo.game.GlobalVars;
 import com.woo.game.Maps;
 import com.woo.game.objects.Item;
+import com.woo.game.objects.Settings;
 import com.woo.game.objects.itemStorage;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.woo.game.Main.player;
-import static com.woo.game.Main.uiMain;
+import static com.woo.game.Main.*;
 
 public class Inventory extends itemStorage {
 
@@ -22,6 +29,7 @@ public class Inventory extends itemStorage {
     public Table inventoryTable;
     public Table characterGearTable;
     public Label gold;
+    public Table tableBorder;
 
 
     public int itemSize = 48; //px
@@ -34,24 +42,39 @@ public class Inventory extends itemStorage {
         gold.setText("Gold: "+((double)player.gold/100));
     }
 
-    public void createUi() {
-
+    public void init() {
         inventory = new Window(" Inventory",uiMain.skin);
-        inventoryTable = new Table();
-        inventoryTable.align(Align.topLeft);
         inventory.setSize(800,500);
         inventory.padTop(25);
         inventory.setPosition(40, Gdx.graphics.getHeight()-560);
-
-        Table tableBorder = new Table();
-        tableBorder.add(inventoryTable).expand().fill().pad(10);
-
-        inventory.add(tableBorder).expand().fill().pad(2).padTop(0);;
+        uiMain.stageTop.addActor(inventory);
         inventory.setMovable(true);
         //inventory.setVisible(false);
-        uiMain.stageTop.addActor(inventory);
 
+        final Button closeButton = new TextButton("X", uiMain.skin, "default");
+        inventory.getTitleTable().add(closeButton).size(30, 20).padRight(2);
+        closeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                GlobalVars.inventory = false;
+                player.inventory.inventory.setVisible(false);
+                closeButton.setChecked(false);
+            }
+        });
+        tableBorder = new Table();
+        inventory.add(tableBorder).expand().fill().pad(2).padTop(0);;
         tableBorder.background(uiMain.skin.newDrawable("white", Maps.windowColor));
+
+    }
+
+    public void createUi() {
+        inventoryTable = new Table();
+        inventoryTable.align(Align.topLeft);
+        tableBorder.clear();
+        tableBorder.add(inventoryTable).expand().fill().pad(10);
+        //TEST
+        items.put(0,new Item("Test",19,"Normal",1,1,"icons/mage/fire1.png",new HashMap<String, Map>()));
+        items.put(1,new Item("Test2",19,"Normal",1,1,"icons/mage/fire2.png",new HashMap<String, Map>()));
 
         for (int i = 0; i<sizeX; i++) {
             for (int j = 0; j<sizeY; j++) {
@@ -59,6 +82,55 @@ public class Inventory extends itemStorage {
                 Image image = new Image(uiMain.skin.newDrawable("white", new Color(0.4f,0.4f,0.4f,1f)));
                 table.add(image).size(itemSize);
                 inventoryTable.add(table).size(itemSize).pad(1);
+                if (items.get(i+(j*sizeY))!=null) {
+                    final int finalI = i;
+                    final int finalJ = j;
+                    final Item item = items.get(i+(j*sizeY));
+
+                    image.setDrawable((new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(item.iconPath))))));
+
+                    table.addListener(
+                            new InputListener() {
+                                @Override
+                                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                                    //TODO: UPDATE TEXT
+                                    uiMain.itemTooltip.clear();
+                                    uiMain.itemTooltip.add(new Label("TEST",uiMain.skin));
+
+                                    uiMain.itemTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                                    uiMain.itemTooltip.pack();
+                                    uiMain.itemTooltip.setWidth(180);
+                                    uiMain.itemTooltip.setVisible(true);
+                                }
+                                @Override
+                                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                                    uiMain.itemTooltip.setVisible(false);
+                                }
+                                @Override
+                                public boolean mouseMoved(InputEvent event, float x, float y) {
+                                    uiMain.itemTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                                    return false;
+                                }
+                                @Override
+                                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                    if (GameInput.ctrl && !GlobalVars.draggingItem) {
+                                        uiMain.dragItem.setVisible(true);
+                                        uiMain.dragItem.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                                        uiMain.dragItem.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(item.iconPath)))));
+                                        GlobalVars.draggingItem = true;
+                                        GlobalVars.dragItem = item;
+                                        GlobalVars.dragItemName = item.name;
+
+                                        //TODO: MOVE TO GAMEINPUT PLAYER INVENTORY + FIX null?
+                                        player.inventory.items.put(finalI+(finalJ *sizeY),null);
+                                        System.out.println(finalI+(finalJ *sizeY)+" REMOVED");
+                                        createUi();
+                                    }
+                                    return true;
+                                }
+                            }
+                    );
+                }
             }
             inventoryTable.row();
         }
@@ -125,18 +197,6 @@ public class Inventory extends itemStorage {
         tableBorder.add(characterGearTable).expand().fill().pad(10);
         tableBorder.row();
         tableBorder.add(bottomTable).expand().fill().pad(10).colspan(2);
-
-        final Button closeButton = new TextButton("X", uiMain.skin, "default");
-        inventory.getTitleTable().add(closeButton).size(30, 20).padRight(2);
-        closeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed (ChangeEvent event, Actor actor) {
-                GlobalVars.inventory = false;
-                player.inventory.inventory.setVisible(false);
-                closeButton.setChecked(false);
-            }
-        });
-
         /*tableBorder.setDebug(true);
         characterGearTable.setDebug(true);*/
     }

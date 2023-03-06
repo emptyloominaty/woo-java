@@ -57,9 +57,12 @@ public class GameInput {
                     GlobalVars.draggingAbility = false;
                     uiMain.dragAbility.setVisible(false);
                 }
+                if (GlobalVars.draggingItem) {
+                    GlobalVars.draggingItem = false;
+                    uiMain.dragItem.setVisible(false);
+                }
                 return false;
             }
-
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 return false;
@@ -112,6 +115,9 @@ public class GameInput {
 
         if (GlobalVars.draggingAbility) {
             uiMain.dragAbility.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+        }
+        if (GlobalVars.draggingItem) {
+            uiMain.dragItem.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
         }
 
         //-------------------------------
