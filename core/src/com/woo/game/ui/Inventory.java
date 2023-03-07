@@ -65,6 +65,22 @@ public class Inventory extends itemStorage {
         inventory.add(tableBorder).expand().fill().pad(2).padTop(0);;
         tableBorder.background(uiMain.skin.newDrawable("white", Maps.windowColor));
 
+        //TEST--------
+        Map test1 = new HashMap<String, Map>();
+        Map test2 = new HashMap<String, Map>();
+
+        Map stats1 = new HashMap<String, Double>();
+        stats1.put("haste",2.0);
+        test1.put("stats",stats1);
+
+        Map stats2 = new HashMap<String, Double>();
+        stats2.put("stamina",5.0);
+        stats2.put("intellect",4.0);
+        test2.put("stats",stats2);
+
+        items.put(0,new Item("Test",19,"Normal",1,1,"icons/mage/fire1.png",test1));
+        items.put(1,new Item("Test2",19,"Normal",1,1,"icons/mage/fire2.png",test2));
+        //-----------
     }
 
     public void createUi() {
@@ -72,9 +88,6 @@ public class Inventory extends itemStorage {
         inventoryTable.align(Align.topLeft);
         tableBorder.clear();
         tableBorder.add(inventoryTable).expand().fill().pad(10);
-        //TEST
-        items.put(0,new Item("Test",19,"Normal",1,1,"icons/mage/fire1.png",new HashMap<String, Map>()));
-        items.put(1,new Item("Test2",19,"Normal",1,1,"icons/mage/fire2.png",new HashMap<String, Map>()));
 
         for (int i = 0; i<sizeX; i++) {
             for (int j = 0; j<sizeY; j++) {
@@ -82,20 +95,54 @@ public class Inventory extends itemStorage {
                 Image image = new Image(uiMain.skin.newDrawable("white", new Color(0.4f,0.4f,0.4f,1f)));
                 table.add(image).size(itemSize);
                 inventoryTable.add(table).size(itemSize).pad(1);
+                final int finalI = i;
+                final int finalJ = j;
                 if (items.get(i+(j*sizeY))!=null) {
-                    final int finalI = i;
-                    final int finalJ = j;
                     final Item item = items.get(i+(j*sizeY));
-
                     image.setDrawable((new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(item.iconPath))))));
 
                     table.addListener(
                             new InputListener() {
                                 @Override
                                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                                    //TODO: UPDATE TEXT
                                     uiMain.itemTooltip.clear();
-                                    uiMain.itemTooltip.add(new Label("TEST",uiMain.skin));
+
+                                    Label name = new Label(item.name,uiMain.skin);
+                                    name.setColor(Maps.itemColors.get(item.quality));
+                                    uiMain.itemTooltip.add(name).left().padLeft(5);
+                                    uiMain.itemTooltip.row();
+
+                                    Label ilvl = new Label("Item Level "+item.itemLevel,uiMain.skin);
+                                    ilvl.setColor(new Color(0.9f,0.9f,0.25f,1f));
+                                    uiMain.itemTooltip.add(ilvl).left().padLeft(5);
+                                    uiMain.itemTooltip.row();
+                                    uiMain.itemTooltip.add(new Label("",uiMain.skin)).expandX().fillX().height(2);
+                                    uiMain.itemTooltip.row();
+
+                                    String str = Maps.itemSlotMap.get(item.type);
+                                    String cap = str.substring(0, 1).toUpperCase() + str.substring(1);
+                                    uiMain.itemTooltip.add(new Label(cap,uiMain.skin)).left().padLeft(5);
+                                    uiMain.itemTooltip.add(new Label(item.quality,uiMain.skin)).right().padRight(5);
+                                    uiMain.itemTooltip.row();
+
+                                    Map stats = item.data.get("stats");
+                                    for (Object key : stats.keySet()){
+                                        String str2 = (String)key;
+                                        String key2 = str2.substring(0, 1).toUpperCase() + str2.substring(1);
+
+                                        Label stat = new Label("+"+stats.get(key)+" "+key2,uiMain.skin);
+                                        stat.setColor(new Color(0.1f,0.95f,0.1f,1f));
+                                        uiMain.itemTooltip.add(stat).left().padLeft(5);
+                                        uiMain.itemTooltip.row();
+                                    }
+
+                                    uiMain.itemTooltip.add(new Label(item.weight+"kg",uiMain.skin)).left().padLeft(5);
+                                    uiMain.itemTooltip.add(new Label((item.price/100)+"g",uiMain.skin)).right().padRight(5);
+
+
+                                    uiMain.itemTooltip.row();
+                                    uiMain.itemTooltip.add(new Label("",uiMain.skin)).expandX().fillX().height(5);
+
 
                                     uiMain.itemTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
                                     uiMain.itemTooltip.pack();
@@ -120,10 +167,24 @@ public class Inventory extends itemStorage {
                                         GlobalVars.draggingItem = true;
                                         GlobalVars.dragItem = item;
                                         GlobalVars.dragItemName = item.name;
-
-                                        //TODO: MOVE TO GAMEINPUT PLAYER INVENTORY + FIX null?
-                                        player.inventory.items.put(finalI+(finalJ *sizeY),null);
-                                        System.out.println(finalI+(finalJ *sizeY)+" REMOVED");
+                                        items.put(finalI+(finalJ *sizeY),null);
+                                        createUi();
+                                    } else if (GlobalVars.draggingItem) {
+                                        items.put(finalI+(finalJ *sizeY),GlobalVars.dragItem);
+                                    }
+                                    return true;
+                                }
+                            }
+                    );
+                } else {
+                    table.addListener(
+                            new InputListener() {
+                                @Override
+                                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                    if (GlobalVars.draggingItem) {
+                                        GlobalVars.draggingItem = false;
+                                        uiMain.dragItem.setVisible(false);
+                                        items.put(finalI+(finalJ *sizeY),GlobalVars.dragItem);
                                         createUi();
                                     }
                                     return true;
@@ -136,7 +197,7 @@ public class Inventory extends itemStorage {
         }
 
 
-        //TODO:
+        //TODO: check equipped items + listeners
         characterGearTable = new Table();
         Color color = new Color(0.4f,0.4f,0.4f,1f);
         Image head = new Image(uiMain.skin.newDrawable("white",  color));

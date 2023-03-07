@@ -60,6 +60,7 @@ public class GameInput {
                 if (GlobalVars.draggingItem) {
                     GlobalVars.draggingItem = false;
                     uiMain.dragItem.setVisible(false);
+                    //TODO: drop item
                 }
                 return false;
             }

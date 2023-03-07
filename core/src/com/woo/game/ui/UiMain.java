@@ -120,8 +120,7 @@ public class UiMain implements ApplicationListener {
     //Icon+Duration+Stacks
 
     //TODO:Buff tooltip
-    //TODO:Ability tooltip
-    //TODO:Windows (Inventory, Character, Spellbook, DPS/HPS(Details), Settings????)
+    //TODO:Windows (Talent,DPS/HPS(Details))
 
     //TODO:Creatures texts+bars
     public Map<Integer,Table> creatureTables;
@@ -1108,7 +1107,6 @@ public class UiMain implements ApplicationListener {
             stack.addActor(gcdTable);
             stack.addActor(pressImgTable);
 
-
             tableAB.add(stack);
             tableAB.add(test).padLeft(-48);
             tableAB.add(chargesTable).padLeft(-24).bottom();
@@ -1126,7 +1124,6 @@ public class UiMain implements ApplicationListener {
                                 actions.put(GlobalVars.dragAbilityName,new Action(GlobalVars.dragAbilityName, finalJ, finalI));
                                 uiMain.createActionBars(true,15);
                                 uiMain.createActionBars(false,15);
-
                             }
                             return true;
                         }
