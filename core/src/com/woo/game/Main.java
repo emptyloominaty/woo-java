@@ -237,7 +237,6 @@ public class Main extends ApplicationAdapter {
 
 		//input
 		GameInput.handleInput();
-		handleInput();
 
 		updateGame();
 

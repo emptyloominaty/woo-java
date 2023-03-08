@@ -1,6 +1,7 @@
 package com.woo.game.objects.gameobjects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.ai.AiMain;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.woo.game.Main.player;
+import static com.woo.game.Main.uiMain;
 
 public class Creature extends GameObject {
     public String type;
@@ -46,6 +48,7 @@ public class Creature extends GameObject {
     public int faction; //0-player 1-friendly 2-neutral 3>=enemy
 
     public HashMap<String, Double> stats = new HashMap<>();
+    public HashMap<String, Double> statsB = new HashMap<>();
 
     public boolean isStunned = false;
     public boolean isRooted = false;
@@ -59,7 +62,7 @@ public class Creature extends GameObject {
     public boolean isInterrupted = false;
     public boolean cantDie = false;
 
-    public Map<String, Item> equippedItems;
+    public Map<String, Item> equippedItems = new HashMap<String,Item>();
     public long gold = 0; //100
 
     public double gcd = 0;
@@ -119,10 +122,46 @@ public class Creature extends GameObject {
         casting.put("time2", 0.0);
 
         creatureInit.main(this);
+
+        this.statsB.put("haste", this.stats.get("haste"));
+        this.statsB.put("crit", this.stats.get("crit"));
+        this.statsB.put("mastery", this.stats.get("mastery"));
+
+        this.statsB.put("intellect", this.stats.get("intellect"));
+        this.statsB.put("strength", this.stats.get("strength"));
+        this.statsB.put("dexterity", this.stats.get("dexterity"));
+        this.statsB.put("stamina", this.stats.get("stamina"));
+
+        this.statsB.put("block", this.stats.get("block"));
+        this.statsB.put("parry", this.stats.get("parry"));
+        this.statsB.put("dodge", this.stats.get("dodge"));
+
+        this.statsB.put("magicResistance", this.stats.get("magicResistance"));
+        this.statsB.put("DamageTaken", this.stats.get("DamageTaken"));
+        this.statsB.put("DamageDone", this.stats.get("DamageDone"));
     }
 
     public void updateStats() {
         health = stats.get("Stamina")*5;
+    }
+
+    public void resetStats() {
+        this.stats.put("haste", this.statsB.get("haste"));
+        this.stats.put("crit", this.statsB.get("crit"));
+        this.stats.put("mastery", this.statsB.get("mastery"));
+
+        this.stats.put("intellect", this.statsB.get("intellect"));
+        this.stats.put("strength", this.statsB.get("strength"));
+        this.stats.put("dexterity", this.statsB.get("dexterity"));
+        this.stats.put("stamina", this.statsB.get("stamina"));
+
+        this.stats.put("block", this.statsB.get("block"));
+        this.stats.put("parry", this.statsB.get("parry"));
+        this.stats.put("dodge", this.statsB.get("dodge"));
+
+        this.stats.put("magicResistance", this.statsB.get("magicResistance"));
+        this.stats.put("DamageTaken", this.statsB.get("DamageTaken"));
+        this.stats.put("DamageDone", this.statsB.get("DamageDone"));
     }
 
     public void main() {
@@ -142,13 +181,16 @@ public class Creature extends GameObject {
             }
         }
 
-        //TODO:Floating Texts?
         //AI
         if (this.faction!=0) {
             ai.main();
         }
         //TODO:PETS?
         //TODO:Resource
+        this.health += GlobalVars.delta*0.25; //*increaseHealthRegen
+        if (this.health>this.healthMax) {
+            this.health = this.healthMax;
+        }
         if (Objects.equals(resourceName, "Mana")) {
             this.energy += GlobalVars.delta*(this.energyMax/100);
         }
@@ -191,12 +233,23 @@ public class Creature extends GameObject {
 
         //---------------------------
         //TODO:Reset
-        //healthMax = stats.get("stamina")*5 * increaseHealth;
+        resetStats();
 
-
+        //items
+        for (String key : equippedItems.keySet()){
+            if (equippedItems.get(key)!=null) {
+                for (Object key2 : equippedItems.get(key).data.get("stats").keySet()){
+                    double stat = stats.get(key2);
+                    stat += (double)equippedItems.get(key).data.get("stats").get(key2);
+                    stats.put((String)key2,stat);
+                }
+            }
+        }
         //---------------------------
         //TODO:buffs
         //TODO:debuffs
+
+        healthMax = stats.get("stamina")*5;// * increaseHealth;
 
         //death
         if (health<0) {

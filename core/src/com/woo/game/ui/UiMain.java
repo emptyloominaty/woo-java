@@ -901,7 +901,7 @@ public class UiMain implements ApplicationListener {
                         double stat = player.stats.get("intellect");
                         stat += 1;
                         player.statsPoints --;
-                        player.stats.put("intellect",stat);
+                        player.statsB.put("intellect",stat);
                         uiMain.updateCharacterStats();
                         return true;
                     }
@@ -927,7 +927,7 @@ public class UiMain implements ApplicationListener {
                         double stat = player.stats.get("strength");
                         stat += 1;
                         player.statsPoints --;
-                        player.stats.put("strength",stat);
+                        player.statsB.put("strength",stat);
                         uiMain.updateCharacterStats();
                         return true;
                     }
@@ -951,7 +951,7 @@ public class UiMain implements ApplicationListener {
                         double stat = player.stats.get("dexterity");
                         stat += 1;
                         player.statsPoints --;
-                        player.stats.put("dexterity",stat);
+                        player.statsB.put("dexterity",stat);
                         uiMain.updateCharacterStats();
                         return true;
                     }
@@ -975,7 +975,7 @@ public class UiMain implements ApplicationListener {
                         double stat = player.stats.get("stamina");
                         stat += 1;
                         player.statsPoints --;
-                        player.stats.put("stamina",stat);
+                        player.statsB.put("stamina",stat);
                         uiMain.updateCharacterStats();
                         return true;
                     }

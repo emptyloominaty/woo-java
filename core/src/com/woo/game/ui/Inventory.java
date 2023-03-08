@@ -171,6 +171,22 @@ public class Inventory extends itemStorage {
                                         createUi();
                                     } else if (GlobalVars.draggingItem) {
                                         items.put(finalI+(finalJ *sizeY),GlobalVars.dragItem);
+                                    } else {
+                                        if (item.type>9) {
+                                            //TODO:ring2, trinket2
+                                            Item item2 = null;
+                                            if (player.equippedItems.get(Maps.itemSlotMap.get(item.type))!=null) {
+                                               item2 = player.equippedItems.get(Maps.itemSlotMap.get(item.type));
+                                            }
+                                            player.equippedItems.put(Maps.itemSlotMap.get(item.type), item);
+                                            if (item2!=null) {
+                                                items.put(finalI+(finalJ *sizeY),item2);
+                                            } else {
+                                                items.put(finalI+(finalJ *sizeY),null);
+                                            }
+
+                                            createUi();
+                                        }
                                     }
                                     return true;
                                 }
@@ -196,8 +212,6 @@ public class Inventory extends itemStorage {
             inventoryTable.row();
         }
 
-
-        //TODO: check equipped items + listeners
         characterGearTable = new Table();
         Color color = new Color(0.4f,0.4f,0.4f,1f);
         Image head = new Image(uiMain.skin.newDrawable("white",  color));
@@ -216,7 +230,6 @@ public class Inventory extends itemStorage {
 
         Image legs = new Image(uiMain.skin.newDrawable("white",  color));
         Image feet = new Image(uiMain.skin.newDrawable("white",  color));
-
 
         Table fingerTable = new Table();
         Table trinketTable = new Table();
@@ -250,6 +263,19 @@ public class Inventory extends itemStorage {
         fingerTable.add(finger2).padBottom(5).size(40);
         //characterGearTable.setLayoutEnabled(false);
 
+        if (player.equippedItems.get("head")!=null) {
+            head.setDrawable((new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(player.equippedItems.get("head").iconPath))))));
+            addImgListener(head,player.equippedItems.get("head"),"head");
+        } else {
+            addImgListener(head,null,"head");
+        }
+        if (player.equippedItems.get("weapon")!=null) {
+            weapon.setDrawable((new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(player.equippedItems.get("weapon").iconPath))))));
+            addImgListener(weapon,player.equippedItems.get("weapon"),"weapon");
+        } else {
+            addImgListener(weapon,null,"weapon");
+        }
+
         Table bottomTable = new Table();
         gold = new Label("Gold: ",uiMain.skin);
         bottomTable.add(gold);
@@ -260,6 +286,102 @@ public class Inventory extends itemStorage {
         tableBorder.add(bottomTable).expand().fill().pad(10).colspan(2);
         /*tableBorder.setDebug(true);
         characterGearTable.setDebug(true);*/
+        update();
+    }
+
+    protected void addImgListener(Image image, final Item item, final String slot) {
+        if (item!=null) {
+            image.addListener(
+                    new InputListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            uiMain.itemTooltip.clear();
+
+                            Label name = new Label(item.name,uiMain.skin);
+                            name.setColor(Maps.itemColors.get(item.quality));
+                            uiMain.itemTooltip.add(name).left().padLeft(5);
+                            uiMain.itemTooltip.row();
+
+                            Label ilvl = new Label("Item Level "+item.itemLevel,uiMain.skin);
+                            ilvl.setColor(new Color(0.9f,0.9f,0.25f,1f));
+                            uiMain.itemTooltip.add(ilvl).left().padLeft(5);
+                            uiMain.itemTooltip.row();
+                            uiMain.itemTooltip.add(new Label("",uiMain.skin)).expandX().fillX().height(2);
+                            uiMain.itemTooltip.row();
+
+                            String str = Maps.itemSlotMap.get(item.type);
+                            String cap = str.substring(0, 1).toUpperCase() + str.substring(1);
+                            uiMain.itemTooltip.add(new Label(cap,uiMain.skin)).left().padLeft(5);
+                            uiMain.itemTooltip.add(new Label(item.quality,uiMain.skin)).right().padRight(5);
+                            uiMain.itemTooltip.row();
+
+                            Map stats = item.data.get("stats");
+                            for (Object key : stats.keySet()){
+                                String str2 = (String)key;
+                                String key2 = str2.substring(0, 1).toUpperCase() + str2.substring(1);
+
+                                Label stat = new Label("+"+stats.get(key)+" "+key2,uiMain.skin);
+                                stat.setColor(new Color(0.1f,0.95f,0.1f,1f));
+                                uiMain.itemTooltip.add(stat).left().padLeft(5);
+                                uiMain.itemTooltip.row();
+                            }
+
+                            uiMain.itemTooltip.add(new Label(item.weight+"kg",uiMain.skin)).left().padLeft(5);
+                            uiMain.itemTooltip.add(new Label((item.price/100)+"g",uiMain.skin)).right().padRight(5);
+
+
+                            uiMain.itemTooltip.row();
+                            uiMain.itemTooltip.add(new Label("",uiMain.skin)).expandX().fillX().height(5);
+
+
+                            uiMain.itemTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                            uiMain.itemTooltip.pack();
+                            uiMain.itemTooltip.setWidth(180);
+                            uiMain.itemTooltip.setVisible(true);
+                        }
+                        @Override
+                        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                            uiMain.itemTooltip.setVisible(false);
+                        }
+                        @Override
+                        public boolean mouseMoved(InputEvent event, float x, float y) {
+                            uiMain.itemTooltip.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                            return false;
+                        }
+                        @Override
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                            if (GameInput.ctrl && !GlobalVars.draggingItem) {
+                                uiMain.dragItem.setVisible(true);
+                                uiMain.dragItem.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
+                                uiMain.dragItem.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(item.iconPath)))));
+                                GlobalVars.draggingItem = true;
+                                GlobalVars.dragItem = item;
+                                GlobalVars.dragItemName = item.name;
+                                player.equippedItems.put(slot,null);
+                                createUi();
+                            } else if (GlobalVars.draggingItem) {
+                                player.equippedItems.put(slot,GlobalVars.dragItem);
+                            }
+                            return true;
+                        }
+                    }
+            );
+        } else {
+            image.addListener(
+                    new InputListener() {
+                        @Override
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                            if (GlobalVars.draggingItem) {
+                                GlobalVars.draggingItem = false;
+                                uiMain.dragItem.setVisible(false);
+                                player.equippedItems.put(slot,GlobalVars.dragItem);
+                                createUi();
+                            }
+                            return true;
+                        }
+                    }
+            );        }
+
     }
 
 

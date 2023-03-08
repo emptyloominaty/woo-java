@@ -13,7 +13,6 @@ import com.woo.game.objects.gameobjects.Spell;
 
 import static com.woo.game.Main.*;
 
-
 public class GameInput {
     static boolean strafing = false;
     public static boolean ctrl = false;
