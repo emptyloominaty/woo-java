@@ -65,12 +65,27 @@ public class Inventory extends itemStorage {
         inventory.add(tableBorder).expand().fill().pad(2).padTop(0);;
         tableBorder.background(uiMain.skin.newDrawable("white", Maps.windowColor));
 
+        inventory.addListener(
+                new InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        return true;
+                    }
+                }
+        );
+
         //TEST--------
         Map test1 = new HashMap<String, Map>();
         Map test2 = new HashMap<String, Map>();
+        Map test3 = new HashMap<String, Map>();
+        Map test4 = new HashMap<String, Map>();
+
+        Map test5 = new HashMap<String, Map>();
+        Map test6 = new HashMap<String, Map>();
+        Map test7 = new HashMap<String, Map>();
 
         Map stats1 = new HashMap<String, Double>();
-        stats1.put("haste",2.0);
+        stats1.put("haste",40.0);
         test1.put("stats",stats1);
 
         Map stats2 = new HashMap<String, Double>();
@@ -78,8 +93,35 @@ public class Inventory extends itemStorage {
         stats2.put("intellect",4.0);
         test2.put("stats",stats2);
 
-        items.put(0,new Item("Test",19,"Normal",1,1,"icons/mage/fire1.png",test1));
-        items.put(1,new Item("Test2",19,"Normal",1,1,"icons/mage/fire2.png",test2));
+        Map stats3 = new HashMap<String, Double>();
+        stats3.put("haste",100.0);
+        test3.put("stats",stats3);
+
+        Map stats4 = new HashMap<String, Double>();
+        stats4.put("haste",25.0);
+        stats4.put("intellect",50.0);
+        test4.put("stats",stats4);
+
+        Map stats5 = new HashMap<String, Double>();
+        stats5.put("haste",40.0);
+        test5.put("stats",stats5);
+
+        Map stats6 = new HashMap<String, Double>();
+        stats6.put("crit",40.0);
+        test6.put("stats",stats6);
+
+        Map stats7 = new HashMap<String, Double>();
+        stats7.put("stamina",1.0);
+        test7.put("stats",stats7);
+
+        items.put(0,new Item("Test",19,"Legendary",1,1,"icons/items/weapon/staff/staff_1.png",test1));
+        items.put(1,new Item("Test2",19,"Magic",1,1,"icons/items/weapon/staff/staff_8.png",test2));
+        items.put(2,new Item("Test3",19,"Mythic",1,1,"icons/items/weapon/staff/staff_9.png",test3));
+        items.put(3,new Item("Test4",19,"Mythic",1,1,"icons/items/weapon/staff/staff_15.png",test4));
+
+        items.put(4,new Item("Ring5",17,"Epic",1,0.1,"icons/items/ring/Ring_01.png",test5));
+        items.put(5,new Item("Ring6",17,"Epic",1,0.1,"icons/items/ring/Ring_08.png",test6));
+        items.put(6,new Item("Ring7",17,"Normal",1,0.1,"icons/items/ring/Ring_11.png",test7));
         //-----------
     }
 
@@ -175,10 +217,19 @@ public class Inventory extends itemStorage {
                                         if (item.type>9) {
                                             //TODO:ring2, trinket2
                                             Item item2 = null;
-                                            if (player.equippedItems.get(Maps.itemSlotMap.get(item.type))!=null) {
-                                               item2 = player.equippedItems.get(Maps.itemSlotMap.get(item.type));
+                                            if (item.type!=17 || player.equippedItems.get("ring")==null) {
+                                                if (player.equippedItems.get(Maps.itemSlotMap.get(item.type))!=null) {
+                                                    item2 = player.equippedItems.get(Maps.itemSlotMap.get(item.type));
+                                                }
+                                                player.equippedItems.put(Maps.itemSlotMap.get(item.type), item);
+                                            } else {
+                                                if (player.equippedItems.get("ring2")!=null) {
+                                                    item2 = player.equippedItems.get("ring2");
+                                                }
+                                                player.equippedItems.put("ring2", item);
                                             }
-                                            player.equippedItems.put(Maps.itemSlotMap.get(item.type), item);
+
+
                                             if (item2!=null) {
                                                 items.put(finalI+(finalJ *sizeY),item2);
                                             } else {
@@ -276,6 +327,20 @@ public class Inventory extends itemStorage {
             addImgListener(weapon,null,"weapon");
         }
 
+        if (player.equippedItems.get("ring")!=null) {
+            finger1.setDrawable((new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(player.equippedItems.get("ring").iconPath))))));
+            addImgListener(finger1,player.equippedItems.get("ring"),"ring");
+        } else {
+            addImgListener(finger1,null,"ring");
+        }
+
+        if (player.equippedItems.get("ring2")!=null) {
+            finger2.setDrawable((new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(player.equippedItems.get("ring2").iconPath))))));
+            addImgListener(finger2,player.equippedItems.get("ring2"),"ring2");
+        } else {
+            addImgListener(finger2,null,"ring2");
+        }
+
         Table bottomTable = new Table();
         gold = new Label("Gold: ",uiMain.skin);
         bottomTable.add(gold);
@@ -360,7 +425,19 @@ public class Inventory extends itemStorage {
                                 player.equippedItems.put(slot,null);
                                 createUi();
                             } else if (GlobalVars.draggingItem) {
+                                Item item2 = null;
+                                if (player.equippedItems.get(slot)!=null) {
+                                    item2 = player.equippedItems.get(slot);
+                                }
                                 player.equippedItems.put(slot,GlobalVars.dragItem);
+                                if (item2!=null) {
+                                    GlobalVars.dragItem = item2;
+                                    GlobalVars.dragItemName = item2.name;
+                                    uiMain.dragItem.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(item2.iconPath)))));
+                                } else {
+                                    GlobalVars.draggingItem = false;
+                                }
+                                createUi();
                             }
                             return true;
                         }
@@ -380,8 +457,8 @@ public class Inventory extends itemStorage {
                             return true;
                         }
                     }
-            );        }
-
+            );
+        }
     }
 
 

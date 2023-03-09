@@ -1145,7 +1145,12 @@ public class UiMain implements ApplicationListener {
                 Ability ability = player.abilities.get(actionBars[bar].abilities[i]);
                 if (ability.maxCd>0) {
                     if (ability.cd<ability.maxCd) {
-                        actionCdTimes.get(i + (bar * 15)).setText((GlobalFunctions.getTimeString(ability.maxCd-ability.cd))+"");
+                        double cd = ability.maxCd-ability.cd;
+                        if (ability.hasteCd) {
+                            cd = (ability.maxCd-ability.cd) / (1 + (player.stats.get("haste") / 100));
+                        }
+
+                        actionCdTimes.get(i + (bar * 15)).setText((GlobalFunctions.getTimeString(cd))+"");
                     } else {
                         actionCdTimes.get(i + (bar * 15)).setText("");
                     }
@@ -1206,7 +1211,17 @@ public class UiMain implements ApplicationListener {
                         }
                         abilityCost.setText(cost);
 
-                        String cd = ability.maxCd+"s";
+
+
+                        //     double castTimeA = ability.castTime;
+                        //                        if (ability.hasteCd) {
+                        //                            castTimeA = castTimeA * (1 + (player.stats.get("haste") / 100));
+                        //                        }
+                        double cdd = ability.maxCd;
+                        if (ability.hasteCd) {
+                            cdd = (double)Math.round((cdd / (1 + (player.stats.get("haste") / 100)))*10)/10;
+                        }
+                        String cd = cdd+"s";
                         if (ability.charges>1) {
                             cd += " ("+ability.charges+" Charges)";
                         }
@@ -1229,7 +1244,7 @@ public class UiMain implements ApplicationListener {
                         }
                         abilityRange.setText(range);
 
-                        String castTime = ability.castTime+"s cast";
+                        String castTime = ((double)Math.round((ability.castTime / (1 + (player.stats.get("haste") / 100)))*100)/100)+"s cast";
                         abilityCastTime.setFontScale(1f);
                         if (ability.channeling) {
                             castTime = ability.castTime+"s channel";
