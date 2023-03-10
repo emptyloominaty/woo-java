@@ -58,6 +58,8 @@ public class UiMain implements ApplicationListener {
     public Stage stageTop;
     public Stage stageTop2;
 
+    public Table tableBuffs;
+
     Table table;
     Table tableTopRight;
     Skin skin;
@@ -213,6 +215,9 @@ public class UiMain implements ApplicationListener {
         stageTop = new Stage();
         stageTop2 = new Stage();
         stage = new Stage();
+
+        tableBuffs = new Table();
+
         table = new Table();
         table.setFillParent(true);
         tableTopRight = new Table();
@@ -305,6 +310,8 @@ public class UiMain implements ApplicationListener {
         table.row();
 
         areaNameLabel = new Label("",skin);
+        tableTopRight.add(tableBuffs).pad(5).right();
+        tableTopRight.row();
         tableTopRight.add(areaNameLabel).pad(5).right();
         tableTopRight.row();
         tableTopRight.add(positionLabel).pad(5).right();
@@ -404,8 +411,6 @@ public class UiMain implements ApplicationListener {
         tableCastBar.setPosition(cam.viewportWidth/2,125); //TODO:
         tableCastBar.setVisible(false);
 
-        // Add an image actor. Have to set the size, else it would be the size of the drawable (which is the 1x1 texture).
-        //table.add(new Image(skin.newDrawable("white", Color.BLACK))).size(64);
         table.top().left();
         tableTopRight.top().right();
 
@@ -1425,6 +1430,7 @@ public class UiMain implements ApplicationListener {
         stage.dispose();
         stageBottom.dispose();
         stageTop.dispose();
+        stageTop2.dispose();
         generator.dispose();
         font10.dispose();
         font12.dispose();

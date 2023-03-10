@@ -1,8 +1,6 @@
 package com.woo.game.objects.gameobjects.creatures;
 
-import com.woo.game.objects.abilities.fireMage.FireBall;
-import com.woo.game.objects.abilities.fireMage.FireBlast;
-import com.woo.game.objects.abilities.fireMage.Wildfire;
+import com.woo.game.objects.abilities.fireMage.*;
 import com.woo.game.objects.gameobjects.Creature;
 
 import java.util.Objects;
@@ -25,6 +23,10 @@ public class creatureInit {
                 creature.energyMax = 185 + creature.stats.get("intellect");
                 creature.secondaryResource = 0;
                 creature.secondaryResourceMax = 5;
+
+                creature.abilities.put("Blink",new Blink());
+                creature.abilities.put("Healing",new Healing());
+                creature.abilities.put("Regenerate",new Regenerate());
 
                 creature.abilities.put("Fire Blast",new FireBlast());
                 creature.abilities.put("Wildfire",new Wildfire());

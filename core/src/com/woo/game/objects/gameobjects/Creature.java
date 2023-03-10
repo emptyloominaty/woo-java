@@ -2,6 +2,7 @@ package com.woo.game.objects.gameobjects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.woo.game.AbilityFunctions;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.ai.AiMain;
@@ -11,6 +12,7 @@ import com.woo.game.objects.abilities.fireMage.FireBall;
 import com.woo.game.objects.abilities.fireMage.FireBlast;
 import com.woo.game.objects.abilities.fireMage.Wildfire;
 import com.woo.game.objects.gameobjects.creatures.creatureInit;
+import com.woo.game.objects.other.Buff;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
@@ -74,6 +76,9 @@ public class Creature extends GameObject {
     public Map<String, Object> channeling = new HashMap<>();
     public Map<String, Object> casting = new HashMap<>();
     public Map<String, Ability> abilities = new HashMap<>();
+
+    public ArrayList<Buff> buffs = new ArrayList<>();
+
 
     public double moveSpeedIncrease = 1;
     public double reduceEnergyCost = 1;
@@ -247,6 +252,50 @@ public class Creature extends GameObject {
         }
         //---------------------------
         //TODO:buffs
+        for (int i = 0; i<this.buffs.size();i++) {
+            if (this.buffs.get(i).type=="hot") {
+                if (this.buffs.get(i).timer<1) {
+                    this.buffs.get(i).timer+= (GlobalVars.delta)*(1 + (this.buffs.get(i).caster.stats.get("haste") / 100));
+                } else {
+                    AbilityFunctions.doHeal(this.buffs.get(i).caster,this,this.buffs.get(i).ability,this.buffs.get(i).spellPower,true,false,0,0,"hot");
+                    this.buffs.get(i).timer = 0;
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+            if (!this.buffs.get(i).ability.permanentBuff) {
+                this.buffs.get(i).duration -= GlobalVars.delta;
+                if (this.buffs.get(i).duration < 0 || this.buffs.get(i).stacks <= 0) {
+                    if (this.buffs.get(i).type=="hot") {
+                        AbilityFunctions.doHeal(this.buffs.get(i).caster,this,this.buffs.get(i).ability,this.buffs.get(i).spellPower*this.buffs.get(i).timer,true,false,0,0,"hot");
+                    }
+                    this.buffs.get(i).ability.endBuff(this,i);
+                    this.buffs.remove(i);
+                    i--;
+                } else {
+                    this.buffs.get(i).ability.runBuff(this, this.buffs.get(i), i);
+                }
+            } else {
+                if (this.buffs.get(i).duration==-1) {
+                    this.buffs.get(i).ability.endBuff(this,i);
+                    this.buffs.remove(i);
+                    i--;
+                } else {
+                    this.buffs.get(i).ability.runBuff(this, this.buffs.get(i), i);
+                }
+            }
+        }
+
+
         //TODO:debuffs
 
         healthMax = stats.get("stamina")*5;// * increaseHealth;
@@ -375,6 +424,30 @@ public class Creature extends GameObject {
             this.y += vy;
         }
     }
+    public void move(double val,boolean ability) {
+        if (!ability) {
+            return;
+        }
+        double speed = (val * GlobalVars.pxToMeter);
+        double angleInRadian = (direction-180) / 180 * Math.PI;
+
+        double vx = Math.sin(angleInRadian) * speed;
+        double vy = Math.cos(angleInRadian) * speed;
+
+        if (this.isCasting && this.abilities.get(this.casting.get("name")).castTime>0 && !this.canMoveWhileCasting) {
+            this.isCasting = false;
+            this.gcd = 0;
+        }
+        if (this.isChanneling && !this.canMoveWhileCasting) {
+            this.abilities.get(this.channeling.get("name")).endChanneling(this);
+            this.isChanneling = false;
+        }
+        if (!this.isStunned && !this.isRooted && !this.isDead) {
+            this.x += vx;
+            this.y += vy;
+        }
+    }
+
 
     public void rotate(float dir) { //0-360
         if (!isStunned && !isRooted && !isRolling) {

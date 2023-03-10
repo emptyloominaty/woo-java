@@ -12,10 +12,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.woo.game.objects.Keybinds;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.abilities.SpellQueue;
-import com.woo.game.ui.Action;
-import com.woo.game.ui.ActionBar;
-import com.woo.game.ui.Inventory;
-import com.woo.game.ui.UiMain;
+import com.woo.game.ui.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import com.woo.game.objects.gameobjects.*;
@@ -59,6 +56,8 @@ public class Main extends ApplicationAdapter {
 
 	Rectangle viewportRect = new Rectangle();
 
+	public static BuffBar buffBar;
+
 	@Override
 	public void create () {
 		Maps.init();
@@ -69,7 +68,9 @@ public class Main extends ApplicationAdapter {
 		actions.put("Fire Blast",new Action("Fire Blast",0,0));
 		actions.put("Fire Ball",new Action("Fire Ball",0,1));
 		actions.put("Wildfire",new Action("Wildfire",0,2));
-
+		actions.put("Blink",new Action("Blink",0,3));
+		actions.put("Healing",new Action("Healing",0,4));
+		actions.put("Regenerate",new Action("Regenerate",0,5));
 
 		GlobalVars.init();
 		GOControl.reset();
@@ -81,8 +82,6 @@ public class Main extends ApplicationAdapter {
 
 		player = new Player("Player","",false,false,250,250,"",0,"Fire Mage",0);
 		GOControl.addCreature(player);
-		//TEST
-		player.stats.put("crit",50.0);
 
 		//--Test
 		Creature testCreature = new Creature("test","test",false,false,50,50,"",3,"Enemy1",0);
@@ -164,7 +163,11 @@ public class Main extends ApplicationAdapter {
 		player.inventory.init();
 		player.inventory.createUi();
 
+		//TEST
+		player.stats.put("stamina",80.0);
+		player.statsB.put("stamina",80.0);
 
+		buffBar = new BuffBar();
 
 		debugPerf[63] = 0;
 		debugPerf[0] = 0;

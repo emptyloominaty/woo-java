@@ -3,6 +3,7 @@ package com.woo.game.objects.abilities;
 import com.woo.game.GlobalVars;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.objects.gameobjects.Creature;
+import com.woo.game.objects.other.Buff;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -105,11 +106,11 @@ public class Ability {
         return true;
     }
 
-    /*public void runBuff(Creature target, TODO Buff,int id) {
+    public void runBuff(Creature target, Buff buff, int id) {
 
-    }*/
+    }
 
-    public void endBuff(Creature target) {
+    public void endBuff(Creature target, int buffId) {
 
     }
 
