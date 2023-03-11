@@ -5,6 +5,7 @@ import com.woo.game.GlobalFunctions;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.abilities.SpellQueue;
 import com.woo.game.objects.gameobjects.Creature;
+import com.woo.game.objects.other.Buff;
 
 import static com.woo.game.Main.player;
 
@@ -22,6 +23,10 @@ public class Regenerate extends Ability {
     @Override
     public String getTooltip(Creature caster) {
         return "Spell that heals you for "+ GlobalFunctions.spellPowerToNumber(this.spellPower,player,"intellect") +" over "+this.duration;
+    }
+
+    public String getBuffTooltip(Creature caster, Creature target, Buff buff) {
+        return "Heals every "+(1 / (1+(buff.caster.stats.get("haste")/100)))+"s for "+GlobalFunctions.spellPowerToNumber(buff.spellPower,buff.caster,buff.caster.primaryStat);
     }
 
     public boolean startCast(Creature caster) {

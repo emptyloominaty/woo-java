@@ -238,6 +238,9 @@ public class Main extends ApplicationAdapter {
 			actionBars[i].main();
 		}
 
+		//buff/debuff bars
+		buffBar.update();
+
 		//input
 		GameInput.handleInput();
 

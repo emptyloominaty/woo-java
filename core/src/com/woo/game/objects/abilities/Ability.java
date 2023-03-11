@@ -1,5 +1,9 @@
 package com.woo.game.objects.abilities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.woo.game.GlobalVars;
 import com.woo.game.GlobalFunctions;
 import com.woo.game.objects.gameobjects.Creature;
@@ -94,12 +98,22 @@ public class Ability {
 
     }
 
-    public String getTooltip(Creature caster) { //TODO: stats
-        return ""; //TODO:
+    public TextureRegionDrawable textureRegionDrawable;
+    public TextureRegion textureRegion;
+    public Texture texture ;
+
+    public void generateTexture() {
+        textureRegionDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(this.iconPath))));
+        textureRegion = new TextureRegion(new Texture(Gdx.files.internal(this.iconPath)));
+        texture = new Texture(Gdx.files.internal(this.iconPath));
     }
 
-    public String getBuffTooltip(Creature caster, Creature target) { //TODO:Buff object
-        return ""; //TODO:
+    public String getTooltip(Creature caster) {
+        return "";
+    }
+
+    public String getBuffTooltip(Creature caster, Creature target, Buff buff) {
+        return "";
     }
 
     public boolean cast(Creature caster) {

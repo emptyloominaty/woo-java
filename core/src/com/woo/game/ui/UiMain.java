@@ -310,11 +310,12 @@ public class UiMain implements ApplicationListener {
         table.row();
 
         areaNameLabel = new Label("",skin);
-        tableTopRight.add(tableBuffs).pad(5).right();
-        tableTopRight.row();
+
         tableTopRight.add(areaNameLabel).pad(5).right();
         tableTopRight.row();
         tableTopRight.add(positionLabel).pad(5).right();
+        tableTopRight.row();
+
 
         debug1 = new Label(" ",skin);
         debug2 = new Label(" ",skin);
@@ -1296,7 +1297,7 @@ public class UiMain implements ApplicationListener {
                         if (GameInput.ctrl && !GlobalVars.draggingAbility) {
                             dragAbility.setVisible(true);
                             dragAbility.setPosition(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
-                            dragAbility.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(ability.iconPath)))));
+                            dragAbility.setDrawable(ability.textureRegionDrawable);
                             GlobalVars.draggingAbility = true;
                             GlobalVars.dragAbility = ability;
                             GlobalVars.dragAbilityName = ability.name;

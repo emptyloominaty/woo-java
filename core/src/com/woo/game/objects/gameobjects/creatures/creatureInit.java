@@ -1,8 +1,11 @@
 package com.woo.game.objects.gameobjects.creatures;
 
+import com.woo.game.GlobalVars;
+import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.abilities.fireMage.*;
 import com.woo.game.objects.gameobjects.Creature;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class creatureInit {
@@ -175,6 +178,10 @@ public class creatureInit {
 
 
 
+
+        for (Map.Entry<String, Ability> ability : creature.abilities.entrySet()) {
+            creature.abilities.get(ability.getKey()).generateTexture();
+        }
 
 
         creature.health = creature.stats.get("stamina")*5;
