@@ -29,7 +29,8 @@ public class ParticleSystem {
         particleFiles.put("fire2norng","particles/fire2norng.particle");
         particleFiles.put("fire64","particles/fire64.particle");
         particleFiles.put("fireBallExplosion","particles/fireBallExplosion.particle");
-
+        particleFiles.put("blink","particles/blink.particle");
+        particleFiles.put("blink2","particles/blink2.particle");
 
         //TODO: particleFiles.put
         movingParticles = new HashMap<Integer, MovingParticle>();
@@ -55,7 +56,7 @@ public class ParticleSystem {
             particleList.set(id,new ParticleEffect());
         }
 
-        particleList.get(id).load(Gdx.files.internal(particleFiles.get(particleFile)),Gdx.files.internal("Textures"));
+        particleList.get(id).load(Gdx.files.internal(particleFiles.get(particleFile)),Gdx.files.internal("Textures/particle"));
         particleList.get(id).getEmitters().first().setPosition(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f);
 
         ParticleEmitter emitter = particleList.get(id).getEmitters().first();

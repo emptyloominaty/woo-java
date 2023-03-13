@@ -2,6 +2,7 @@ package com.woo.game.objects.abilities.fireMage;
 
 import com.woo.game.AbilityFunctions;
 import com.woo.game.GlobalFunctions;
+import com.woo.game.GlobalVars;
 import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.abilities.SpellQueue;
@@ -38,12 +39,31 @@ public class Blink extends Ability {
         return false;
     }
 
-    public boolean endCast(Creature caster) {
+    public boolean endCast(final Creature caster) {
         caster.isCasting = false;
+        final float range = this.range;
 
-        //TODO:Particles 1
-        caster.move(this.range,true);
-        //TODO:Particles 2
+        ParticleSystem.add("blink",360, 0, caster.x, caster.y);
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        caster.move(range,true);
+                    }
+                },
+                100
+        );
+
+        double speed = (range * GlobalVars.pxToMeter);
+        double angleInRadian = (caster.direction-180) / 180 * Math.PI;
+
+        double vx = Math.sin(angleInRadian) * speed;
+        double vy = Math.cos(angleInRadian) * speed;
+        double x = caster.x + vx;
+        double y = caster.y + vy;
+        ParticleSystem.add("blink2",360, 0, (float)x, (float)y);
+
+
 
         setCd();
         caster.useEnergy(this.cost,this.secCost);

@@ -7,6 +7,7 @@ import com.woo.game.GlobalFunctions;
 import com.woo.game.GlobalVars;
 import com.woo.game.ai.AiMain;
 import com.woo.game.objects.Item;
+import com.woo.game.objects.ParticleSystem;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.abilities.fireMage.FireBall;
 import com.woo.game.objects.abilities.fireMage.FireBlast;
@@ -479,10 +480,9 @@ public class Creature extends GameObject {
             this.abilities.get(this.channeling.get("name")).endChanneling(this);
             this.isChanneling = false;
         }
-        if (!this.isStunned && !this.isRooted && !this.isDead) {
-            this.x += vx;
-            this.y += vy;
-        }
+        this.x += vx;
+        this.y += vy;
+
     }
 
 
