@@ -91,7 +91,7 @@ public class GameInput {
             }
         };
 
-        InputMultiplexer multiplexer = new InputMultiplexer(uiMain.stageTop,stage,inputprocessor); //TODO:,uiMain.stageBottom
+        InputMultiplexer multiplexer = new InputMultiplexer(uiMain.stageTop,stage,uiMain.stageBottom,inputprocessor);
         Gdx.input.setInputProcessor(multiplexer);
     }
 

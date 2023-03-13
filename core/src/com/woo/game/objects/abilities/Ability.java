@@ -332,6 +332,9 @@ public class Ability {
 
     public void execute(Creature caster,Creature target, float x, float y) {
     }
+    public void execute(Creature caster,Creature target, float x, float y, double val) {
+    }
+
 
     public void incCd(Creature caster, double inc,int hasteCd) {
         if (hasteCd==-1) {

@@ -27,6 +27,7 @@ import com.woo.game.objects.Setting;
 import com.woo.game.objects.Settings;
 import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.Creature;
+import com.woo.game.objects.other.Buff;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -550,7 +551,7 @@ public class UiMain implements ApplicationListener {
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         skin.add("default",scrollPaneStyle);
         ScrollPane spellbookScrollPane = new ScrollPane(spellbookTable,skin);
-        spellbook.setSize(600,500);
+        spellbook.setSize(700,500);
         spellbook.padTop(25);
         spellbook.setPosition(40,Gdx.graphics.getHeight()-560);
         Table tableBorder3 = new Table();
@@ -671,13 +672,11 @@ public class UiMain implements ApplicationListener {
                 }
         );
 
-
-        //TODO: Talents
-        //TODO: Inventory
-
         /*stage.setDebugAll(true);
         stageBottom.setDebugAll(true);
         stageTop.setDebugAll(true);*/
+
+        init2();
 
         areaNameLabel.setText(areaName);
     }
@@ -739,12 +738,14 @@ public class UiMain implements ApplicationListener {
             }
             settingsCategories.get(setting.category).row();
         }
-
-
     }
 
     public void updateSpellbook() {
         spellbookTable.clear();
+        int i = 0;
+        Label l = new Label("",skin);
+        spellbookTable.add(l).colspan(4).fillX().expandX();
+        spellbookTable.row();
         for (Map.Entry<String, Ability> ability : player.abilities.entrySet()) {
             Ability ab = player.abilities.get(ability.getKey());
             Table table = new Table();
@@ -752,11 +753,42 @@ public class UiMain implements ApplicationListener {
             Image icon = new Image(new Texture (Gdx.files.internal(ab.iconPath)));
             Label label = new Label(ab.name,skin);
 
-            table.add(icon).size(48);
-            table.add(label).pad(5);
-            spellbookTable.add(table).pad(5).padRight(15);
+            Label passive = new Label("Passive",skin);
+            Label talent = new Label("Talent",skin);
+            Label mastery = new Label("Mastery",skin);
 
+            passive.setColor(0.5f,0.5f,0.5f,1f);
+            passive.setStyle(labelStyle14);
+            talent.setColor(0.5f,0.5f,0.5f,1f);
+            talent.setStyle(labelStyle14);
+            mastery.setColor(0.5f,0.5f,0.5f,1f);
+            mastery.setStyle(labelStyle14);
+
+            Table tableText = new Table();
+            tableText.add(label).top();
+
+            if (ab.talent) {
+                tableText.row();
+                tableText.add(talent);
+            }
+            if (ab.passive) {
+                tableText.row();
+                tableText.add(passive);
+            }
+            if (ab.mastery) {
+                tableText.row();
+                tableText.add(mastery);
+            }
+            table.add(icon).size(48);
+            table.add(tableText).pad(5);
+
+            spellbookTable.add(table).pad(5).padRight(15).colspan(1);
             addTooltip(table, ab, ab.name,false,-1,-1);
+            i++;
+            if (i>3) {
+                spellbookTable.row();
+                i=0;
+            }
         }
     }
 
@@ -1318,15 +1350,15 @@ public class UiMain implements ApplicationListener {
         actionPress.get(slot+(bar*15)).setVisible(visible);
     }
 
-    public void addCreatureBar(Creature creature) {
+    public void addCreatureBar(final Creature creature) {
         if (creature.faction!=0) {
             Table tableC = new Table();
             this.stageBottom.addActor(tableC);
-            Label label = new Label(creature.name+" ("+creature.level+")",skin); //TODO:
-            label.setStyle(labelStyle12);
+            /*Label label = new Label(creature.name+" ("+creature.level+")",skin); //TODO:
+            label.setStyle(labelStyle12);*/
             Label labelHealth = new Label ("10/10",skin);
             labelHealth.setStyle(labelStyle10);
-            tableC.add(label).size(160,18);
+            //tableC.add(label).size(160,18);
             tableC.row();
 
             Table tableH = new Table();
@@ -1341,23 +1373,83 @@ public class UiMain implements ApplicationListener {
             stackH.add(labelHealth);
             tableC.add(stackH);
 
-            label.setAlignment(Align.center);
+            //label.setAlignment(Align.center);
             labelHealth.setAlignment(Align.center);
             tableC.align(Align.center);
             tableC.setPosition(creature.x, creature.y);
+            tableC.addListener(
+                    new InputListener() {
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                            updateCreatureInfoTable(creature.name,Math.round(creature.health)+" ("+Math.round((creature.health/creature.healthMax)*100)+"%)","Level: "+creature.level,"",Color.WHITE);
+                        }
+                        @Override
+                        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                            updateCreatureInfoTable("","","","",Color.WHITE);
+                        }
+                        @Override
+                        public boolean mouseMoved(InputEvent event, float x, float y) {
+                            updateCreatureInfoTable(creature.name,Math.round(creature.health)+" ("+Math.round((creature.health/creature.healthMax)*100)+"%)","Level: "+creature.level,"",Color.WHITE);
+                            return false;
+                        }
+                    }
+            );
 
             creatureTables.put(creature.typeId,tableC);
-            creatureNames.put(creature.typeId,label);
+            //creatureNames.put(creature.typeId,label);
             creatureHealthText.put(creature.typeId,labelHealth);
             creatureHealthBar.put(creature.typeId,healthBarC);
 
         }
     }
+
+    public Table creatureInfoTable;
+    public Label[] creatureInfoLabels;
+
+    public void init2() {
+        creatureInfoTable = new Table();
+        creatureInfoLabels = new Label[4];
+        for (int i = 0; i<creatureInfoLabels.length; i++) {
+            creatureInfoLabels[i] = new Label("",skin);
+        }
+
+        creatureInfoLabels[0].setStyle(labelStyle16);
+        creatureInfoLabels[1].setStyle(labelStyle14);
+        creatureInfoLabels[2].setStyle(labelStyle14);
+        creatureInfoLabels[3].setStyle(labelStyle14);
+
+        creatureInfoLabels[1].setColor(Color.LIGHT_GRAY);
+        creatureInfoLabels[2].setColor(Color.LIGHT_GRAY);
+        creatureInfoLabels[3].setColor(Color.LIGHT_GRAY);
+
+
+
+        creatureInfoTable.add(creatureInfoLabels[0]).colspan(2).center();
+        creatureInfoTable.row();
+        creatureInfoTable.add(creatureInfoLabels[1]).padRight(5);
+        creatureInfoTable.add(creatureInfoLabels[2]).padLeft(5);
+        creatureInfoTable.row();
+        creatureInfoTable.add(creatureInfoLabels[3]).colspan(2).center();
+
+        creatureInfoTable.top();
+        creatureInfoTable.setPosition(uiMain.stage.getWidth()/2, Gdx.graphics.getHeight()-10);
+        stageTop.addActor(creatureInfoTable);
+    }
+
+
+    public void updateCreatureInfoTable(String string0, String string1, String string2, String string3, Color color) {
+        creatureInfoLabels[0].setColor(color);
+        creatureInfoLabels[0].setText(string0);
+        creatureInfoLabels[1].setText(string1);
+        creatureInfoLabels[2].setText(string2);
+        creatureInfoLabels[3].setText(string3);
+    }
+
     public void updateCreatureBar(Creature creature) {
         if (creature.faction!=0) {
             float x = (Gdx.graphics.getWidth()/2f) + ((creature.x - cam.position.x)) /GlobalVars.camZoom;
             float y = (Gdx.graphics.getHeight()/2f) + ((creature.y - cam.position.y)) /GlobalVars.camZoom;
-            creatureNames.get(creature.typeId).setText(creature.name+" ("+creature.level+")");
+            //creatureNames.get(creature.typeId).setText(creature.name+" ("+creature.level+")");
             double health = creature.health;
             if (health<0) {
                 health = 0;

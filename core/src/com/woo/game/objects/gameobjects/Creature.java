@@ -64,6 +64,8 @@ public class Creature extends GameObject {
     public boolean isInterrupted = false;
     public boolean cantDie = false;
 
+    public boolean immuneToMagic = false;
+
     public Map<String, Item> equippedItems = new HashMap<String,Item>();
     public long gold = 0; //100
 
@@ -78,6 +80,7 @@ public class Creature extends GameObject {
     public Map<String, Ability> abilities = new HashMap<>();
 
     public ArrayList<Buff> buffs = new ArrayList<>();
+    public ArrayList<Buff> debuffs = new ArrayList<>();
 
 
     public double moveSpeedIncrease = 1;
@@ -251,7 +254,7 @@ public class Creature extends GameObject {
             }
         }
         //---------------------------
-        //TODO:buffs
+        //buffs
         for (int i = 0; i<this.buffs.size();i++) {
             if (this.buffs.get(i).type=="hot") {
                 if (this.buffs.get(i).timer<1) {
@@ -296,7 +299,41 @@ public class Creature extends GameObject {
         }
 
 
-        //TODO:debuffs
+        //debuffs
+        for (int i = 0; i<this.debuffs.size(); i++) {
+            if (Objects.equals(this.debuffs.get(i).type, "dot")) {
+                if (this.debuffs.get(i).timer<1) {
+                    this.debuffs.get(i).timer+= (GlobalVars.delta)*(1 + (this.debuffs.get(i).caster.stats.get("haste") / 100));
+                } else {
+                    this.debuffs.get(i).timer = 0;
+                    AbilityFunctions.doDamage(this.debuffs.get(i).caster,this,this.debuffs.get(i).ability,this.debuffs.get(i).spellPower,true,false,"",0);
+                    if (this.isDead) {
+                        break;
+                    }
+                }
+            }
+
+
+            if (!this.debuffs.get(i).ability.permanentBuff) {
+                this.debuffs.get(i).duration -= GlobalVars.delta;
+                if (this.debuffs.get(i).duration < 0) {
+                    if (Objects.equals(this.debuffs.get(i).type, "dot")) {
+                        AbilityFunctions.doDamage(this.debuffs.get(i).caster,this,this.debuffs.get(i).ability,this.debuffs.get(i).spellPower*this.debuffs.get(i).timer,true,false,"",0);
+                    }
+                    this.debuffs.get(i).ability.endBuff(this,i);
+                    this.debuffs.remove(i);
+                    i--;
+                } else {
+                    this.debuffs.get(i).ability.runBuff(this, this.debuffs.get(i), i);
+                }
+            } else {
+                if (this.debuffs.get(i).duration==-1) {
+                    this.debuffs.get(i).ability.endBuff(this,i);
+                    this.debuffs.remove(i);
+                    i--;
+                }
+            }
+        }
 
         healthMax = stats.get("stamina")*5;// * increaseHealth;
 

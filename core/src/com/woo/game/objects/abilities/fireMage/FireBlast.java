@@ -16,7 +16,7 @@ import static com.woo.game.Main.player;
 
 public class FireBlast extends Ability {
     public FireBlast() {
-        super("Fire Blast", 5,0,0.65, 0.65, false, true, false, "fire", 40, 1, 0,1);
+        super("Fire Blast", 5,0,1, 1, false, true, false, "fire", 40, 1, 0,1);
         this.moveSpeed = 30;
         this.life = 1.33;
         this.spellPower = 0.85;

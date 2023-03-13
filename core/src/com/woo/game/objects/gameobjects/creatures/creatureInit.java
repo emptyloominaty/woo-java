@@ -31,6 +31,7 @@ public class creatureInit {
                 creature.abilities.put("Healing",new Healing());
                 creature.abilities.put("Regenerate",new Regenerate());
 
+                creature.abilities.put("Fire Mastery", new FireMastery());
                 creature.abilities.put("Fire Blast",new FireBlast());
                 creature.abilities.put("Wildfire",new Wildfire());
                 creature.abilities.put("Fire Ball",new FireBall());

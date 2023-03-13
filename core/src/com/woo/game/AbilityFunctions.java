@@ -5,10 +5,11 @@ import com.woo.game.objects.abilities.Ability;
 import com.woo.game.objects.gameobjects.Creature;
 import com.woo.game.objects.other.Buff;
 
+import java.util.Objects;
+
 import static com.woo.game.Main.uiMain;
 
 public class AbilityFunctions {
-    //TODO: doHeal, applyDot, applyBuff, applyDebuff, applyHot,
     public static void doDamage(Creature caster, Creature target, Ability ability,double spellPower,boolean canCrit, boolean crit100, String school2, double val) {
         //caster,target,ability, 0,true,false,"",0
         int crit = 1;
@@ -33,6 +34,12 @@ public class AbilityFunctions {
         }
         if (caster.faction>0) { //TODO: >0 / 1????
             damage = damage*(Settings.map.get("Difficulty").value/100);
+        }
+
+        if (Objects.equals(caster.creatureClass, "Fire Mage")) {
+            if (!Objects.equals(ability.name, "Fire Mastery")) {
+                caster.abilities.get("Fire Mastery").execute(caster,target,0,0,damage);
+            }
         }
 
         //TODO:DR, DI, idk
@@ -120,5 +127,56 @@ public class AbilityFunctions {
     }
 
 
+
+    public static boolean applyDot(Creature caster, Creature target, Ability ability, double duration, double extDuration, double spellPowerDot, double duration2) {
+        //caster,target,ability,0,0,0,0
+
+        if (duration2==0) {
+            duration2 = ability.duration;
+        }
+
+        if (target.immuneToMagic) {
+            return false;
+        }
+
+        if (!target.isDead) {
+            for (int i = 0; i < target.debuffs.size(); i++) {
+                if (target.debuffs.get(i).name == ability.name && target.debuffs.get(i).caster == caster) {
+                    target.debuffs.get(i).duration += duration2;
+                    target.debuffs.get(i).extendedDuration += 0;
+                    if (target.debuffs.get(i).duration > duration2 * 1.3) {
+                        target.debuffs.get(i).duration = duration2 * 1.3;
+                    }
+                    return true;
+                }
+            }
+            double spellPower = ability.spellPower;
+            if (spellPowerDot != 0) {
+                spellPower = spellPowerDot;
+            }
+
+            /*TODO:if (target.isReflectingSpell) {
+                for (let i = 0; i<target.buffs.length; i++) {
+                    for (let j = 0; j<target.buffs.get(i).effect.length; j++) {
+                        if (target.buffs.get(i).effect[j].name=="reflectSpell") {
+                            if (target.buffs.get(i).effect[j].removeOnReflect) {
+                                target.buffs.get(i).duration = -1
+                            }
+                            target = caster
+                            break
+                        }
+                    }
+                }
+            }*/
+
+            if (duration == 0) {
+                target.debuffs.add(new Buff(ability.name, ability.school, "dot", ability.effects, 0, duration2, duration2, 0, spellPower / ability.duration, caster, ability));
+            } else {
+                target.debuffs.add(new Buff(ability.name, ability.school, "dot", ability.effects, 0, duration, duration2, extDuration, spellPower / ability.duration, caster, ability));
+            }
+            return true;
+        }
+        return false;
+    }
 
 }

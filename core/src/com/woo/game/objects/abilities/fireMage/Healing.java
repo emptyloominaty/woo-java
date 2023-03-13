@@ -15,7 +15,7 @@ import static com.woo.game.Main.player;
 
 public class Healing extends Ability {
     public Healing() {
-        super("Healing", 10,0,0.65, 1, false, true, false, "arcane", 40, 1, 0,1);
+        super("Healing", 10,0,1, 1.5, false, true, false, "arcane", 40, 1, 0,1);
         this.moveSpeed = 30;
         this.life = 1.33;
         this.spellPower = 1.5;

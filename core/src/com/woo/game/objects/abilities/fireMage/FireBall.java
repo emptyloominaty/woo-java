@@ -14,7 +14,7 @@ import static com.woo.game.Main.player;
 
 public class FireBall extends Ability {
     public FireBall() {
-        super("Fire Ball", 10,0,0.65, 0.65, false, true, false, "fire", 40, 1, 4,1);
+        super("Fire Ball", 10,0,1, 1, false, true, false, "fire", 40, 1, 4,1);
         this.hasteCd = true;
         this.moveSpeed = 30;
         this.life = 1.33;

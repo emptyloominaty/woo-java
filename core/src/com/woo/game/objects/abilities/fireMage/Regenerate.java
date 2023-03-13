@@ -12,7 +12,7 @@ import static com.woo.game.Main.player;
 
 public class Regenerate extends Ability {
     public Regenerate() {
-        super("Regenerate", 35,0,0.65, 0, false, true, false, "arcane", 40, 1, 0,1);
+        super("Regenerate", 35,0,1, 0, false, true, false, "arcane", 40, 1, 0,1);
         this.duration = 8;
         this.moveSpeed = 30;
         this.life = 1.33;
