@@ -1399,7 +1399,6 @@ public class UiMain implements ApplicationListener {
             //creatureNames.put(creature.typeId,label);
             creatureHealthText.put(creature.typeId,labelHealth);
             creatureHealthBar.put(creature.typeId,healthBarC);
-
         }
     }
 
@@ -1422,8 +1421,6 @@ public class UiMain implements ApplicationListener {
         creatureInfoLabels[2].setColor(Color.LIGHT_GRAY);
         creatureInfoLabels[3].setColor(Color.LIGHT_GRAY);
 
-
-
         creatureInfoTable.add(creatureInfoLabels[0]).colspan(2).center();
         creatureInfoTable.row();
         creatureInfoTable.add(creatureInfoLabels[1]).padRight(5);
@@ -1435,7 +1432,6 @@ public class UiMain implements ApplicationListener {
         creatureInfoTable.setPosition(uiMain.stage.getWidth()/2, Gdx.graphics.getHeight()-10);
         stageTop.addActor(creatureInfoTable);
     }
-
 
     public void updateCreatureInfoTable(String string0, String string1, String string2, String string3, Color color) {
         creatureInfoLabels[0].setColor(color);
@@ -1563,7 +1559,6 @@ public class UiMain implements ApplicationListener {
         if (width<0) {
             width = 0;
         }
-        //manaBarText.setText(Math.round(xp)+"/"+Math.round(xpMax));
         xpBarA.setWidth(width);
     }
 
